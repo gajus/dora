@@ -4,86 +4,184 @@ namespace ay\thorax\form;
 class Input {
 	private
 		$form,
-		$rules = [],
-		$name,
-		$name_path,
-		$value,
-		$label;
-
-	public function __construct (\ay\thorax\Form $form, $name) {
+		$index,
+		$attributes = ['type' => 'text'],
+		$parameters,
+		$multiple; // boolean Does this input represent an array? (e.g. foo[])
+	
+	/**
+	 * @param array $parameters Used to pass options to the <select> input.
+	 * @param array $index Used to assign value when there is an input representing array data (e.g. foo[]).
+	 */
+	public function __construct (\ay\thorax\Form $form, $name, array $attributes = [], array $parameters = [], $index = 0) {
 		$this->form = $form;
-		$this->name = $name;
+		$this->attributes['name'] = $name;
+		$this->index = $index;
+		$this->parameters = $parameters;
 		
-		$path = explode('[', $name, 2);
+		$this->multiple = strpos(strrev($name), '][') === 0;
 		
-		$this->name_path = [array_shift($path)];
+		foreach ($attributes as $k => $v) {
+			$this->setAttribute($k, $v);
+		}
+	}
+	
+	private function getValue () {
+		$name_path = $this->getNamePath();
+		$form_data = $this->form->getData();
 		
-		if ($path) {
-			$path = mb_substr($path[0], 0, -1);
-			$path = explode('][', $path);
-			
-			$this->name_path = array_merge($this->name_path, $path);
+		if ($this->multiple) {
+			array_pop($name_path);
 		}
 		
-		$data = $form->getData();
+		if ($name_path != array_filter($name_path)) {
+			throw new \ErrorException('Unsupported multidimensional input format.');
+		}
 		
-		foreach ($this->name_path as $fp) {
-			if (isset($data[$fp])) {
-				$data = $data[$fp];
+		foreach ($name_path as $fp) {
+			if (isset($form_data[$fp])) {
+				$form_data = $form_data[$fp];
 			} else {
-				$data = null;
+				$form_data = null;
 				
 				break;
 			}
 		}
 		
-		if (is_string($data)) {
-			$this->value = $data;
+		return $form_data;
+	}
+	
+	/**
+	 * [name="a[b][c]"] is converted to array ['a', 'b', 'c'].
+	 */
+	private function getNamePath () {
+		$path = explode('[', $this->attributes['name'], 2);
+		
+		$name_path = [array_shift($path)];
+		
+		if ($path) {
+			$path = mb_substr($path[0], 0, -1);
+			$path = explode('][', $path);
+			
+			$name_path = array_merge($name_path, $path);
 		}
-	}
-	
-	public function getName () {
-		return $this->name;
-	}
-	
-	public function getValue () {
-		return $this->value;
-	}
-	
-	public function getLabel () {
-		return $this->label ? $this->label : ucwords(str_replace('_', ' ', end($this->name_path)));
-	}
-	
-	public function setLabel ($label) {
-		$this->label = $label;
+		
+		return $name_path;
 	}
 
-	public function __toString () {
-		return '<input name="' . $this->name . '" value="' . $this->value . '">';
-	}
-	
-	public function setType ($type) {
-		
-	}
-	
-	public function setRule (Rule $rule) {
-		$name = $rule->getName();
-	
-		$this->rules = [$rule];
-	
-		return $this;
-	}
-	
-	public function isValid () {
-		$failed = [];
-	
-		foreach ($this->rules as $r) {
-			$rule = $r->isValid($this);
-			ay( $rule );
+	/**
+	 * Type checking ommission is intentional. PHP does not provide scalar
+	 * data type hinting. Non-scallar variables will thrown an error when
+	 * cast to string. Manual validation is an unnecessary overhead.
+	 *
+	 * There is no value escaping either. It is assumed that pre-caution
+	 * steps (e.g. FILTER_SANITIZE_SPECIAL_CHARS) are already taken.
+	 *
+	 * $name cannot be an integer (relavent when constructor attributes array
+	 * contains only value). Do not assume that ['checked'] is checked="checked".
+	 */
+	private function setAttribute ($name, $value) {
+		if ($name === 'name') {
+			throw new \ErrorException('Name cannot be overwritten.');
+		} else if (is_int($name)) {
+			throw new \ErrorException('Missing parameter value.');
 		}
+		
+		$this->attributes[$name] = $value;
+	}
 	
-	#	ay(  );
+	private function getAttribute ($name) {
+		return $this->attributes[$name];
+	}
 	
-		ay( $this->rules );
+	public function getAttributeString () {
+		$attributes = $this->attributes;
+
+		$attributes_string = '';
+		
+		switch ($this->attributes['type']) {
+			case 'checkbox':
+			case 'radio':
+				if (!isset($this->attributes['value'])) {
+					throw new \ErrorException('input[type="radio"] value attribute is required.');
+				}
+				
+				$value = $this->getValue();
+				
+				#ay($this->attributes['value'], $value);
+				
+				if ($attributes['name'] == 'foo[checkbox_multiple][]') {
+					#ay( $value, $attributes['value'] );
+				}
+				
+				if ($attributes['value'] == $value || is_array($value) && in_array($attributes['value'], $value)) {
+					$attributes['checked'] = 'checked';
+				}
+				
+				break;
+			
+			case 'textarea':
+				unset($attributes['type']);
+				break;
+		}
+		
+		ksort($attributes); // To make the unit testing simpler.
+		
+		foreach ($attributes as $k => $v) {
+			$attributes_string .= ' ' . $k . '="' . $v . '"';
+		}
+		
+		return $attributes_string;
+	}
+	
+	public function __toString () {
+		$value = $this->getValue();
+		
+		$attributes_string = $this->getAttributeString();
+	
+		switch ($this->attributes['type']) {
+			case 'select':
+				if (!isset($this->parameters['options'])) {
+					$this->parameters['options'] = [];
+				}
+				
+				#if ($this->parameters['name'] ===)
+				
+				$options_string	= '';
+				
+				foreach ($this->parameters['options'] as $v => $l) {
+					$selected = '';
+					
+					if ($value && (is_array($value) && in_array($v, $value) || $value == $v)) {
+						$selected = ' selected="selected"';
+					}
+				
+					$options_string	.= '<option value="' . $v . '"' . $selected . '>' . $l . '</option>';
+				}
+			
+				$input = '<select ' . $attributes_string . '>' . $options_string . '</select>';
+				break;
+			
+			case 'textarea':
+				if (is_array($value)) {
+					$value = isset($value[$this->index]) ? $value[$this->index] : '';
+				}
+			
+				$input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
+				break;
+		
+			case 'password':
+				$input = '<input ' . $attributes_string . '>';
+				break;
+			default:
+				if (is_array($value)) {
+					$value = isset($value[$this->index]) ? $value[$this->index] : '';
+				}
+			
+				$input = '<input ' . $attributes_string . ' value="' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '">';
+				break;
+		}
+		
+		return $input;
 	}
 }
