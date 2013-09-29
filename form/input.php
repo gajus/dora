@@ -30,9 +30,9 @@ class Input {
 		}
 	}
 	
-	public function getName () {
-		if (isset($this->parameters['name'])) {
-			return $this->parameters['name'];
+	public function getLabel () {
+		if (isset($this->parameters['label'])) {
+			return $this->parameters['label'];
 		}
 		
 		return implode(array_map('ucfirst', array_filter($this->getNamePath())), ' ');
