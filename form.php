@@ -11,7 +11,7 @@ class Form {
 		$this->data = $data === null ? $_POST : $data;
 	}
 	
-	public function input ($name, array $attributes = [], array $parameters = []) {
+	public function input ($name, array $attributes = null, array $parameters = null) {
 		$this->input_index[$name] = isset($this->input_index[$name]) ? $this->input_index[$name] + 1 : 0;
 	
 		$input = new form\Input($this, $name, $attributes, $parameters, $this->input_index[$name]);

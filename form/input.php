@@ -13,17 +13,29 @@ class Input {
 	 * @param array $parameters Used to pass options to the <select> input.
 	 * @param array $index Used to assign value when there is an input representing array data (e.g. foo[]).
 	 */
-	public function __construct (\ay\thorax\Form $form, $name, array $attributes = [], array $parameters = [], $index = 0) {
+	public function __construct (\ay\thorax\Form $form, $name, array $attributes = null, array $parameters = null, $index = 0) {
 		$this->form = $form;
 		$this->attributes['name'] = $name;
 		$this->index = $index;
-		$this->parameters = $parameters;
+		$this->parameters = $parameters === null ? [] : $parameters;
 		
 		$this->multiple = strpos(strrev($name), '][') === 0;
+		
+		if ($attributes === null) {
+			return;
+		}
 		
 		foreach ($attributes as $k => $v) {
 			$this->setAttribute($k, $v);
 		}
+	}
+	
+	public function getName () {
+		if (isset($this->parameters['name'])) {
+			return $this->parameters['name'];
+		}
+		
+		return implode(array_map('ucfirst', array_filter($this->getNamePath())), ' ');
 	}
 	
 	private function getValue () {
