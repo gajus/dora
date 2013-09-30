@@ -4,10 +4,10 @@ namespace ay\thorax;
 class Form {
 	private
 		$uid,
-		$uid_index = 0,
 		$data = [],
 		$input_index = [],
-		$is_submitted = false;
+		$is_submitted = false,
+		$messages = [];
 	
 	public function __construct (array $data = null) {
 		$this->data = $data === null ? [] : $data;
@@ -16,8 +16,10 @@ class Form {
 		
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
 		
-		if (isset($_SESSION['thorax']['flash'][$this->uid]['input'])) {
-			$this->data = $_SESSION['thorax']['flash'][$this->uid]['input'];
+		unset($caller);
+		
+		if (isset($_SESSION['thorax']['flash']['form'][$this->getUid()])) {
+			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
 		}
 		
 		if (isset($_POST['thorax']['uid']) && $_POST['thorax']['uid'] == $this->uid) {
@@ -27,9 +29,9 @@ class Form {
 			
 			$this->is_submitted = true;
 			
-			$_SESSION['thorax']['flash'][$this->uid]['input'] = $this->data;
+			$_SESSION['thorax']['flash']['form'][$this->getUid()] = $this->data;
 		} else {
-			unset($_SESSION['thorax']['flash']);
+			unset($_SESSION['thorax']['flash']['form'][$this->getUid()]);
 		}
 	}
 	
@@ -45,16 +47,15 @@ class Form {
 		return $input;
 	}
 	
-	public function is ($event) {
-		if ($event === 'submitted') {
-			return $this->is_submitted;
-		}
+	public function getInputIndex () {
+		return $this->input_index;
 	}
 	
-	private
-		$messages = [];
+	public function isSubmitted () {
+		return $this->is_submitted;
+	}
 	
-	public function inbox ($input_name) {
+	/*public function inbox ($input_name) {
 		return isset($this->messages[$input_name]) ? $this->messages[$input_name] : [];
 	}
 	
@@ -68,7 +69,7 @@ class Form {
 		}
 		
 		$this->messages[$input_name][$name][] = $value;
-	}
+	}*/
 	
 	public function getData () {
 		return $this->data;
@@ -78,13 +79,9 @@ class Form {
 		return $this->uid;
 	}
 	
-	public function getUidIndex () {
-		return $this->uid_index++;
-	}
-	
-	public function clearFlash () {
-		unset($_SESSION['thorax']['flash'][$this->uid]['input']);
-	}
+	/*public function flush () {
+		unset($_SESSION['thorax']['flash'][$this->uid]);
+	}*/
 }
 
 /**
@@ -112,7 +109,7 @@ class Form {
  * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
  * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
  */
-function array_merge_recursive_distinct ( array &$array1, array &$array2 )	{
+function array_merge_recursive_distinct (array &$array1, array &$array2) {
 	$merged = $array1;
 	
 	foreach ( $array2 as $key => &$value ) {

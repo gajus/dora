@@ -3,12 +3,14 @@ namespace ay\thorax\form;
 
 class Input {
 	private
+		$uid,
 		$form,
 		$index,
+		$inbox = [],
 		$attributes = ['type' => null],
 		$parameters,
 		$multiple, // boolean Does this input represent an array? (e.g. foo[])
-		$displayed = false; // boolean Has the input been casted to string?
+		$is_displayed = false; // boolean Has the input been casted to string?
 	
 	/**
 	 * @param array $parameters Used to pass options to the <select> input.
@@ -22,6 +24,12 @@ class Input {
 		
 		$this->multiple = strpos(strrev($name), '][') === 0;
 		
+		$caller = debug_backtrace()[0];
+		
+		$this->uid = crc32($caller['file'] . '_' . $caller['line'] . '_' . $this->attributes['name'] . '_' . $this->index);
+		
+		unset($caller);
+		
 		if ($attributes === null) {
 			return;
 		}
@@ -29,12 +37,31 @@ class Input {
 		foreach ($attributes as $k => $v) {
 			$this->setAttribute($k, $v);
 		}
+		
+		register_shutdown_function(function () {
+			if (!empty($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()])) {
+				
+				header('Location: ' . $_SERVER['REQUEST_URI']);
+			}
+		});
+	}
+
+	/**
+	 * The value will be kept until the next time input is stringified.
+	 * This may happen on second page load.
+	 */
+	public function pushInbox ($value) {
+		$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()][] = $value;
 	}
 	
-	public function inbox ($name) {
-		$inbox = $this->form->inbox($this->attributes['name']);
+	public function getInbox () {
+		if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
+			$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
+			
+			unset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
+		}
 		
-		return isset($inbox[$name]) ? $inbox[$name] : [];
+		return $this->inbox;
 	}
 	
 	public function getId () {
@@ -42,7 +69,7 @@ class Input {
 			return $this->attributes['id'];
 		}
 		
-		if ($this->displayed) {
+		if ($this->is_displayed) {
 			throw new \ErrorException('input[id] was not defined at the time of creating the input. Too late to generate random [id].');
 		}
 		
@@ -71,7 +98,7 @@ class Input {
 		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
 	}
 	
-	private function getValue () {
+	public function getValue () {
 		$name_path = $this->getNamePath();
 		$form_data = $this->form->getData();
 		
@@ -130,7 +157,7 @@ class Input {
 	 * contains only value). Do not assume that ['checked'] is checked="checked".
 	 */
 	public function setAttribute ($name, $value) {
-		if ($this->displayed) {
+		if ($this->is_displayed) {
 			throw new \ErrorException('Too late to set attribute value.');
 		}
 	
@@ -161,10 +188,6 @@ class Input {
 				
 				$value = $this->getValue();
 				
-				#if ($attributes['name'] == 'foo[checkbox_multiple][]') {
-					#ay( $value, $attributes['value'] );
-				#}
-				
 				if ($this->attributes['value'] == $value || is_array($value) && in_array($this->attributes['value'], $value)) {
 					$attributes['checked'] = 'checked';
 				}
@@ -187,8 +210,18 @@ class Input {
 		return $attributes_string;
 	}
 	
+	public function getUid () {
+		return $this->uid;
+	}
+	
 	public function __toString () {
-		$this->displayed = true;
+		if ($this->is_displayed) {
+			throw new \ErrorException('Input has already been stringified.');
+		}
+		
+		$this->getInbox(); // trigger flush
+		
+		$this->is_displayed = true;
 		
 		if (array_key_exists('options', $this->parameters)) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
@@ -200,10 +233,6 @@ class Input {
 			$this->attributes['type'] = 'text';
 		}
 		
-		if ($this->attributes['type'] === 'submit' && $this->index !== 0) {
-			throw new \ErrorException('Every input[type="submit"] must have a unique name within the form.');
-		}
-		
 		$value = $this->getValue();
 		
 		$attributes_string = trim($this->getAttributeString());
@@ -213,8 +242,6 @@ class Input {
 				if (!isset($this->parameters['options'])) {
 					$this->parameters['options'] = [];
 				}
-				
-				#if ($this->parameters['name'] ===)
 				
 				$options_string	= '';
 				
@@ -251,10 +278,11 @@ class Input {
 				break;
 		}
 		
-		if (!$this->form->getUidIndex()) {
+		#if (!$this->form->getUidIndex()) {
+		if ($this->attributes['type'] === 'submit') {
 			$input = '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">' . $input;
 		}
-		
+				
 		return $input;
 	}
 }

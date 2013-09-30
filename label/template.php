@@ -14,10 +14,8 @@ class Template {
 		$this->label = $label;
 	}
 	
-	public function label ($parameters) {
-		$this->label_parameters = array_merge($this->label_parameters, $parameters);
-		
-		return $this;
+	public function getInput () {
+		return $this->input;
 	}
 	
 	public function __toString () {
