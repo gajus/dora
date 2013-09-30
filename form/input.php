@@ -87,6 +87,10 @@ class Input {
 			}
 		}
 		
+		if ($form_data === null && isset($this->attributes['value'])) {
+			$form_data = $this->attributes['value'];
+		}
+		
 		return $form_data;
 	}
 	
@@ -133,7 +137,7 @@ class Input {
 		$this->attributes[$name] = $value;
 	}
 	
-	private function getAttribute ($name) {
+	public function getAttribute ($name) {
 		return $this->attributes[$name];
 	}
 	
@@ -155,7 +159,7 @@ class Input {
 					#ay( $value, $attributes['value'] );
 				#}
 				
-				if ($attributes['value'] == $value || is_array($value) && in_array($attributes['value'], $value)) {
+				if ($this->attributes['value'] == $value || is_array($value) && in_array($this->attributes['value'], $value)) {
 					$attributes['checked'] = 'checked';
 				}
 				
@@ -165,6 +169,8 @@ class Input {
 				unset($attributes['type']);
 				break;
 		}
+		
+		unset($attributes['value']);
 		
 		ksort($attributes); // To make the unit testing simpler.
 		
@@ -177,7 +183,7 @@ class Input {
 	
 	public function __toString () {
 		$this->displayed = true;
-	
+		
 		if (array_key_exists('options', $this->parameters)) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
 				throw new \ErrorException('Unsupported parameter "options" in [input="' . $this->attributes['type'] . '"] context.');
@@ -187,7 +193,11 @@ class Input {
 		} else if (!isset($this->attributes['type'])) {
 			$this->attributes['type'] = 'text';
 		}
-	
+		
+		if ($this->attributes['type'] === 'submit' && $this->index !== 0) {
+			throw new \ErrorException('Every input[type="submit"] must have a unique name within the form.');
+		}
+		
 		$value = $this->getValue();
 		
 		$attributes_string = trim($this->getAttributeString());
@@ -233,6 +243,16 @@ class Input {
 			
 				$input = '<input ' . $attributes_string . ' value="' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '">';
 				break;
+		}
+		
+		if ($this->attributes['type'] === 'submit') {
+			$caller = debug_backtrace()[0]; // Where was __toString triggered?
+			
+			$uid = crc32($caller['file'] . '_' . $caller['line'] . '_' . $this->attributes['name']);
+			
+			$this->attributes['thorax_uid'] = $uid;
+			
+			$input = '<input type="hidden" name="thorax[submit]" value="' . $uid . '">' . $input;
 		}
 		
 		return $input;
