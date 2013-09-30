@@ -5,9 +5,10 @@ class Input {
 	private
 		$form,
 		$index,
-		$attributes = ['type' => 'text'],
+		$attributes = ['type' => null],
 		$parameters,
-		$multiple; // boolean Does this input represent an array? (e.g. foo[])
+		$multiple, // boolean Does this input represent an array? (e.g. foo[])
+		$displayed = false; // boolean Has the input been casted to string?
 	
 	/**
 	 * @param array $parameters Used to pass options to the <select> input.
@@ -30,12 +31,38 @@ class Input {
 		}
 	}
 	
+	public function getId () {
+		if (isset($this->attributes['id'])) {
+			return $this->attributes['id'];
+		}
+		
+		if ($this->displayed) {
+			throw new \ErrorException('input[id] was not defined at the time of creating the input. Too late to generate random [id].');
+		}
+		
+		$this->attributes['id'] = 'thorax-input-id-' . mt_rand(100000,999999);
+		
+		return $this->attributes['id'];
+	}
+	
 	public function getLabel () {
 		if (isset($this->parameters['label'])) {
 			return $this->parameters['label'];
 		}
 		
-		return implode(array_map('ucfirst', array_filter($this->getNamePath())), ' ');
+		$name_path = $this->getNamePath();
+		
+		if (strpos($this->attributes['name'], '_') !== false) {
+			$temp_name_path = [];
+		
+			foreach ($name_path as $path) {
+				$temp_name_path = array_merge($temp_name_path, explode('_', $path));
+			}
+			
+			$name_path = $temp_name_path;
+		}
+		
+		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
 	}
 	
 	private function getValue () {
@@ -92,7 +119,11 @@ class Input {
 	 * $name cannot be an integer (relavent when constructor attributes array
 	 * contains only value). Do not assume that ['checked'] is checked="checked".
 	 */
-	private function setAttribute ($name, $value) {
+	public function setAttribute ($name, $value) {
+		if ($this->displayed) {
+			throw new \ErrorException('Too late to set attribute value.');
+		}
+	
 		if ($name === 'name') {
 			throw new \ErrorException('Name cannot be overwritten.');
 		} else if (is_int($name)) {
@@ -120,11 +151,9 @@ class Input {
 				
 				$value = $this->getValue();
 				
-				#ay($this->attributes['value'], $value);
-				
-				if ($attributes['name'] == 'foo[checkbox_multiple][]') {
+				#if ($attributes['name'] == 'foo[checkbox_multiple][]') {
 					#ay( $value, $attributes['value'] );
-				}
+				#}
 				
 				if ($attributes['value'] == $value || is_array($value) && in_array($attributes['value'], $value)) {
 					$attributes['checked'] = 'checked';
@@ -147,10 +176,22 @@ class Input {
 	}
 	
 	public function __toString () {
+		$this->displayed = true;
+	
+		if (array_key_exists('options', $this->parameters)) {
+			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
+				throw new \ErrorException('Unsupported parameter "options" in [input="' . $this->attributes['type'] . '"] context.');
+			}
+			
+			$this->attributes['type'] = 'select';
+		} else if (!isset($this->attributes['type'])) {
+			$this->attributes['type'] = 'text';
+		}
+	
 		$value = $this->getValue();
 		
-		$attributes_string = $this->getAttributeString();
-	
+		$attributes_string = trim($this->getAttributeString());
+		
 		switch ($this->attributes['type']) {
 			case 'select':
 				if (!isset($this->parameters['options'])) {
