@@ -30,11 +30,7 @@ class Label {
 	}
 	
 	public function input ($name, array $attributes = null, array $parameters = null) {
-		$this->input_index[$name] = isset($this->input_index[$name]) ? $this->input_index[$name] + 1 : 0;
-	
-		$input = new form\Input($this->form, $name, $attributes, $parameters, $this->input_index[$name]);
-	
-		$this->input[] = $input;
+		$input = $this->form->input($name, $attributes, $parameters);
 		
 		return new label\Template($this->form, $this, $input);
 	}

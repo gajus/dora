@@ -4,38 +4,57 @@ namespace ay\thorax;
 class Rule {
 	private
 		$form,
-		$rules = [],
 		$rule,
-		$map = [];
+		$index = [];
 
-	public function __construct (Form $form) {
+	public function __construct (Form $form, $path = 'is_eq_a') {
 		$this->form = $form;
 		
-		$this->load('*.js');
-		
-		$this->rule = $this->rules['is_eq_a'];
+		$this->load($path);
 	}
 	
-	public function load ($path) {
-		if (strpos($path, '/') !== 0) {
-			$path = __DIR__ . '/ruler/library/' . $path;
+	public function load ($requested_path) {
+		if (strpos($requested_path, '/') !== 0) {
+			$path = __DIR__ . '/rules/library/' . $requested_path;
+		}
+		
+		if (strpos(strrev($path), 'sj.') === false && file_exists($path . '.js')) {
+			$path .= '.js';
+		}
+		
+		if (!file_exists($path)) {
+			throw new \ErrorException('Rule "' . $requested_path . '" not found.');
 		}
 	
-		foreach (glob($path) as $rule) {
-			$filename = pathinfo($rule)['filename'];
+		$filename = pathinfo($path)['filename'];
 			
-			$this->rules[$filename] = new Ruler\Rule($filename, file_get_contents($rule));
+		$this->rule = new rules\Rule($filename, file_get_contents($path));
+	}
+	
+	/**
+	 * @param string $input_name Begining input_name with bachslash will assume it is a regular expression.
+	 */
+	public function add ($input_name) {
+		if (is_array($input_name)) {
+			foreach ($input_name as $in) {
+				$this->add($in);
+			}
+			
+			return;
 		}
-	}
 	
-	public function add ($input_name) { // Regex
-		$this->map[] = $input_name;
+		$this->index[] = $input_name;
 		
-		$this->map = array_unique($this->map);
+		$this->index = array_unique($this->index);
 	}
 	
-	public function getFailed () {
+	//public function getInvalidInput () {
+	public function getErrors () {
 		$index = $this->form->getInputIndex();
+		
+		ay('#', $index);
+		
+		/*
 		
 		$failed = [];
 		
@@ -50,7 +69,7 @@ class Rule {
 					$failed[] = $input[0];
 				}
 			}
-		}
+		}*/
 		
 		return $failed;
 	}
