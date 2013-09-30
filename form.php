@@ -51,6 +51,25 @@ class Form {
 		}
 	}
 	
+	private
+		$messages = [];
+	
+	public function inbox ($input_name) {
+		return isset($this->messages[$input_name]) ? $this->messages[$input_name] : [];
+	}
+	
+	public function send ($input_name, $name, $value = null) {
+		if (!isset($this->messages[$input_name])) {
+			$this->messages[$input_name] = [];
+		}
+		
+		if (!isset($this->messages[$input_name][$name])) {
+			$this->messages[$input_name][$name] = [];
+		}
+		
+		$this->messages[$input_name][$name][] = $value;
+	}
+	
 	public function getData () {
 		return $this->data;
 	}

@@ -31,6 +31,12 @@ class Input {
 		}
 	}
 	
+	public function inbox ($name) {
+		$inbox = $this->form->inbox($this->attributes['name']);
+		
+		return isset($inbox[$name]) ? $inbox[$name] : [];
+	}
+	
 	public function getId () {
 		if (isset($this->attributes['id'])) {
 			return $this->attributes['id'];
