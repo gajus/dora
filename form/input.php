@@ -245,14 +245,8 @@ class Input {
 				break;
 		}
 		
-		if ($this->attributes['type'] === 'submit') {
-			$caller = debug_backtrace()[0]; // Where was __toString triggered?
-			
-			$uid = crc32($caller['file'] . '_' . $caller['line'] . '_' . $this->attributes['name']);
-			
-			$this->attributes['thorax_uid'] = $uid;
-			
-			$input = '<input type="hidden" name="thorax[submit]" value="' . $uid . '">' . $input;
+		if (!$this->form->getUidIndex()) {
+			$input = '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">' . $input;
 		}
 		
 		return $input;
