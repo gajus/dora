@@ -4,11 +4,11 @@ namespace ay\thorax\input;
 class Error {
 	private
 		$input,
-		$response;
+		$message;
 
-	public function __construct (\ay\thorax\form\Input $input, array $response) {
+	public function __construct (\ay\thorax\form\Input $input, $message) {
 		$this->input = $input;
-		$this->response = $response;
+		$this->message = $message;
 	}
 	
 	public function getInput () {
@@ -16,6 +16,6 @@ class Error {
 	}
 	
 	public function getMessage () {
-		return $this->response['message'];
+		return $this->message;
 	}
 }

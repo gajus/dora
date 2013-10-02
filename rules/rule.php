@@ -49,6 +49,6 @@ class Rule {
 		
 		#ay($this, $input, $response);
 		
-		return new \ay\thorax\input\Error($input, $response);
+		return new \ay\thorax\input\Error($input, $response['message']);
 	}
 }

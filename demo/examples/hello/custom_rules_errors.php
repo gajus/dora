@@ -12,6 +12,8 @@ $form->addRule('is_eq_a', ['foo']);
 </form>
 <?php
 if ($form->isSubmitted()) {
+	$form->getInputIndex()['foo'][0]->pushInbox( new \ay\thorax\input\Error($form->getInputIndex()['foo'][0], 'best'));
+	
 	$form->getErrors(true);
 	
 	header('Location: ' . $_SERVER['REQUEST_URI']);
