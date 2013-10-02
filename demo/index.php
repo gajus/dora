@@ -67,7 +67,8 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 </head>
 <body>
 	<div id="examples">
-		<?=$example('hello/form_input', 'Form & input')?>
+		
+		<?php /*  <?=$example('hello/form_input', 'Form & input')?>
 		<?=$example('hello/form_input_2', 'Form & input #2')?>
 		<?=$example('hello/attributes', 'Manipulating attributes')?>
 		<?=$example('hello/dynamic_attributes', 'Dynamic attributes')?>
@@ -76,9 +77,9 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 		<?=$example('hello/templates_2', 'Templates #2')?>
 		<?=$example('hello/submit', 'Submit')?>
 		<?=$example('hello/validation', 'Validation')?>
-		<?=$example('hello/validation_2', 'Validation #2')?>
+		<?=$example('hello/validation_2', 'Validation #2')?><?=$example('hello/messages', 'Messages')?>*/?>
+		<?=$example('hello/custom_rules_errors', 'Custom Rules & Errors')?>
 		
-		<?php /* <?=$example('hello/custom_rules', 'Custom Rules')?> <?=$example('hello/messages', 'Messages')?>*/?>
 	</div>
 	
 	<div id="thorax">

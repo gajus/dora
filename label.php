@@ -20,7 +20,7 @@ class Label {
 				
 				if ($inbox) {
 					foreach ($inbox as $i) {
-						if ($i instanceof Error) {
+						if ($i instanceof \ay\thorax\input\Error) {
 							$errors[] = $i->getMessage();
 						}
 					}

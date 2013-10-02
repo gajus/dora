@@ -31,7 +31,7 @@ class Input {
 		if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
 			$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
 			
-			unset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
+			//unset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
 		}
 		
 		$this->properties = $properties === null ? [] : $properties;
@@ -53,14 +53,12 @@ class Input {
 	 * @param object $value
 	 */
 	public function pushInbox ($value) {
-		#if (!is_object($value)) {
-		#	throw new \InvalidArgumentException('Only serializable object type value can be passed.');
-		#}
-		
-		if ($this->is_stringified) {
-			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()][] = $value;
-		} else {
-			$this->inbox[] = $value;
+		$this->inbox[] = $value;
+	}
+	
+	public function __destruct () {
+		if ($this->form->isSubmitted()) {
+			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()] = $this->inbox;
 		}
 	}
 	
@@ -68,11 +66,7 @@ class Input {
 	 * @return array
 	 */
 	public function getInbox () {
-		if (!isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
-			return $this->inbox;
-		}
-		
-		return array_merge($this->inbox, $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
+		return $this->inbox;
 	}
 	
 	public function getUid () {
@@ -118,9 +112,12 @@ class Input {
 	private function getValue () {
 		$name_path = $this->getNamePath();
 		$form_data = $this->form->getData();
+		$array = false;
 		
 		if (strpos(strrev($this->attributes['name']), '][') === 0) { // Is this an array? e.g. foo[]
 			array_pop($name_path);
+			
+			$array = true;
 		}
 		
 		if ($name_path != array_filter($name_path)) {
@@ -135,6 +132,10 @@ class Input {
 				
 				break;
 			}
+		}
+		
+		if ($array && !isset($this->attributes['multiple']) && isset($form_data[$this->index])) {
+			$form_data = $form_data[$this->index];
 		}
 		
 		if ($form_data === null && isset($this->attributes['value'])) {

@@ -21,7 +21,7 @@ class Form {
 		unset($caller);
 		
 		if (isset($_POST['thorax']['uid']) && $_POST['thorax']['uid'] == $this->getUid()) {
-			unset($_POST['thorax']['uid']);
+			unset($_POST['thorax']);
 			
 			$this->data = array_merge_recursive_distinct($this->data, $_POST);
 			
@@ -32,6 +32,12 @@ class Form {
 			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
 			
 			unset($_SESSION['thorax']['flash']['form'][$this->getUid()]);
+		}
+	}
+	
+	public function __destruct () {
+		if ($this->isSubmitted()) {
+			unset($_SESSION['thorax']['flash']['inbox'][$this->getUid()]);
 		}
 	}
 	

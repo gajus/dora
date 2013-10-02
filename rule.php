@@ -86,12 +86,12 @@ class Rule {
 		
 		$errors = [];
 		
-		foreach ($subject as $input) {
-			#foreach ($inputs as $input) {
-				if ($error = $this->rule->getError($input[0])) {
+		foreach ($subject as $inputs) {
+			foreach ($inputs as $input) {
+				if ($error = $this->rule->getError($input)) {
 					$errors[] = $error;
 				}
-			#}
+			}
 		}
 		
 		return $errors;
