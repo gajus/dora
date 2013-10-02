@@ -1,6 +1,7 @@
 var	rule = function (value) {
 	var response = {
 		passed: false,
+		message: '{thorax.label} must be eq to "a".',
 		value: value
 	};
 	

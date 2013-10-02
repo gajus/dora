@@ -19,7 +19,10 @@ class Rule {
 		return $this->body;
 	}
 	
-	public function isValid (\ay\thorax\form\Input $input) {
+	/**
+	 * @returns boolean|\ay\thorax\Error
+	 */
+	public function getError (\ay\thorax\form\Input $input) {
 		$v8 = new \V8Js();
 		
 		$parameters = [
@@ -30,6 +33,22 @@ class Rule {
 		
 		$response = $v8->executeString($this->body, null, \V8Js::FLAG_FORCE_ARRAY);
 		
-		return $response;
+		if (!array_key_exists('passed', $response)) {
+			throw new \ErrorException('Invalid rule. Missing "passed" property.');
+		}
+		
+		if (!array_key_exists('message', $response)) {
+			throw new \ErrorException('Invalid rule. Missing "message" property.');
+		}
+		
+		if ($response['passed']) {
+			return false;
+		}
+		
+		$response['message'] = str_replace(['{thorax.label}'], [$input->getLabel()], $response['message']);
+		
+		#ay($this, $input, $response);
+		
+		return new \ay\thorax\Error($this, $input, $response);
 	}
 }

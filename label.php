@@ -7,18 +7,38 @@ class Label {
 		$template;
 	
 	/**
-	 * @param closure $template The first parameter passed to the template is Input instance.
+	 * @param closure $template
 	 */
 	public function __construct (Form $form, $template = null) {
 		$this->form = $form;
 		
 		if ($template === null) {
-			$template = function ($input, $label) {
-				return '
-				<div class="thorax-row">
-					<label for="' . $input->getId() . '">' . $input->getLabel() . '</label>
-					' . $input . '
-				</div>';
+			$template = function (form\Input $input, Form $form) {
+				$inbox = $input->getInbox();
+				
+				$errors = [];
+				
+				if ($inbox) {
+					foreach ($inbox as $i) {
+						if ($i instanceof Error) {
+							$errors[] = $i->getMessage();
+						}
+					}
+				}
+				
+				$rules = array_map(function ($e) { return 'thorax-rule-' . $e->getName(); }, $input->getRules());
+				
+				ob_start();?>
+				<div class="thorax-row <?=implode(' ', $rules)?>">
+					<label for="<?=$input->getAttribute('id')?>"><?=$input->getLabel()?></label>
+					<?=$input?>
+					<?php if ($errors):?>
+					<ul class="thorax-error">
+						<li><?=implode('</li><li>', $errors)?></li>
+					</ul>
+					<?php endif;?>
+				</div>
+				<?php return ob_get_clean();
 			};
 		}
 		

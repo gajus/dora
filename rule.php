@@ -5,17 +5,22 @@ class Rule {
 	private
 		$form,
 		$rule,
-		$index = [];
+		$pattern_index = [];
 
-	public function __construct (Form $form, $path = 'is_eq_a') {
+	public function __construct (Form $form, $path, array $add = []) {
 		$this->form = $form;
+		$this->form->registerRule($this);
 		
-		$this->load($path);
+		$this->loadRule($path);
+		
+		$this->add($add);
 	}
 	
-	public function load ($requested_path) {
-		if (strpos($requested_path, '/') !== 0) {
-			$path = __DIR__ . '/rules/library/' . $requested_path;
+	private function loadRule ($rule_file) {
+		if (strpos($rule_file, '/') !== 0) {
+			$path = __DIR__ . '/rules/library/' . $rule_file;
+		} else {
+			$path = $rule_file;
 		}
 		
 		if (strpos(strrev($path), 'sj.') === false && file_exists($path . '.js')) {
@@ -23,7 +28,7 @@ class Rule {
 		}
 		
 		if (!file_exists($path)) {
-			throw new \ErrorException('Rule "' . $requested_path . '" not found.');
+			throw new \ErrorException('Rule "' . $rule_file . '" not found.');
 		}
 	
 		$filename = pathinfo($path)['filename'];
@@ -32,7 +37,7 @@ class Rule {
 	}
 	
 	/**
-	 * @param string $input_name Name begining with a "/" (backslash) will be interpreted as regular-expression.
+	 * @param string $input_name Name begining with a "/" (backslash) will be interpreted as a regular-expression.
 	 */
 	public function add ($input_name) {
 		if (is_array($input_name)) {
@@ -43,38 +48,53 @@ class Rule {
 			return;
 		}
 	
-		$this->index[] = $input_name;
+		$this->pattern_index[] = $input_name;
 		
-		$this->index = array_unique($this->index);
+		$this->pattern_index = array_unique($this->pattern_index);
 	}
 	
-	public function getSubject () {
+	public function getName () {
+		return $this->rule->getName();
+	}
+	
+	public function isInputMember (form\Input $input) {
+		$input_name = $input->getAttribute('name');
+		
+		foreach ($this->pattern_index as $pattern) {
+			if (strpos($pattern, '/') === 0 && preg_match($pattern, $input_name) || $pattern === $input_name) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function getInputIndex () {
 		$index = $this->form->getInputIndex();
 		
-		return _array_intersect_ukey($index, array_flip($this->index), function ($a, $b) {
+		return _array_intersect_ukey($index, array_flip($this->pattern_index), function ($a, $b) {
 			if (strpos($b, '/') === 0) {
 				return preg_match($b, $a) > 0 ? 0 : -1;
 			}
 			
-			return $a != $b;
+			return $a == $b ? 0 : -1;
 		});
 	}
 	
-	//public function getInvalidInput () {
 	public function getErrors () {
-		$subject = $this->getSubject();
+		$subject = $this->getInputIndex();
 		
-		$failed_test = [];
+		$errors = [];
 		
 		foreach ($subject as $input) {
 			#foreach ($inputs as $input) {
-				if (($test = $this->rule->isValid($input[0])) && !$test['passed']) {
-					$failed_test[] = $input[0];
+				if ($error = $this->rule->getError($input[0])) {
+					$errors[] = $error;
 				}
 			#}
 		}
 		
-		return $failed_test;
+		return $errors;
 	}
 }
 

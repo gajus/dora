@@ -7,44 +7,67 @@ class Form {
 		$data = [],
 		$input_index = [],
 		$is_submitted = false,
-		$messages = [];
-	
+		$labels = [],
+		$rules = [];
+		
 	public function __construct (array $data = null) {
 		$this->data = $data === null ? [] : $data;
 		
-		$caller = debug_backtrace()[0]; // Where was __toString triggered?
+		// Generate persistent Form UID.
+		$caller = debug_backtrace(null, 1)[0];
 		
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
 		
 		unset($caller);
 		
-		if (isset($_SESSION['thorax']['flash']['form'][$this->getUid()])) {
-			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
-		}
-		
-		if (isset($_POST['thorax']['uid']) && $_POST['thorax']['uid'] == $this->uid) {
-			unset($_POST['thorax']);
+		if (isset($_POST['thorax']['uid']) && $_POST['thorax']['uid'] == $this->getUid()) {
+			unset($_POST['thorax']['uid']);
 			
 			$this->data = array_merge_recursive_distinct($this->data, $_POST);
 			
-			$this->is_submitted = true;
-			
 			$_SESSION['thorax']['flash']['form'][$this->getUid()] = $this->data;
-		} else {
+			
+			$this->is_submitted = true;
+		} else if (isset($_SESSION['thorax']['flash']['form'][$this->getUid()])) {
+			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
+			
 			unset($_SESSION['thorax']['flash']['form'][$this->getUid()]);
 		}
 	}
 	
 	public function input ($name, array $attributes = null, array $parameters = null) {
-		if (!isset($this->input_index[$name])) {
-			$this->input_index[$name] = [];
+		return new form\Input($this, $name, $attributes, $parameters);
+	}
+
+	public function addLabel ($template = null) {
+		return new Label($this, $template);
+	}
+	
+	public function addRule ($path, array $add = []) {
+		return new Rule($this, $path, $add);
+	}
+	
+	public function getRules () {
+		return $this->rules;
+	}
+	
+	/**
+	 * @param boolean $stream
+	 */
+	public function getErrors ($stream = false) {
+		$errors = [];
+	
+		foreach ($this->rules as $rule) {
+			$errors = array_merge($errors, $rule->getErrors());
 		}
 		
-		$input = new form\Input($this, $name, $attributes, $parameters, count($this->input_index[$name]));
+		if ($stream && $errors) {
+			foreach ($errors as $error) {
+				$error->getInput()->pushInbox($error);
+			}
+		}
 		
-		$this->input_index[$name][] = $input;
-		
-		return $input;
+		return $errors;
 	}
 	
 	public function getInputIndex () {
@@ -55,22 +78,6 @@ class Form {
 		return $this->is_submitted;
 	}
 	
-	/*public function inbox ($input_name) {
-		return isset($this->messages[$input_name]) ? $this->messages[$input_name] : [];
-	}
-	
-	public function send ($input_name, $name, $value = null) {
-		if (!isset($this->messages[$input_name])) {
-			$this->messages[$input_name] = [];
-		}
-		
-		if (!isset($this->messages[$input_name][$name])) {
-			$this->messages[$input_name][$name] = [];
-		}
-		
-		$this->messages[$input_name][$name][] = $value;
-	}*/
-	
 	public function getData () {
 		return $this->data;
 	}
@@ -79,9 +86,47 @@ class Form {
 		return $this->uid;
 	}
 	
-	/*public function flush () {
-		unset($_SESSION['thorax']['flash'][$this->uid]);
-	}*/
+	/**
+	 * While not enforced (debug_backtrace is expensive), this method
+	 * is ought to be called only from Input __construct context.
+	 *
+	 * @return integer Incremental input name index.
+	 */
+	public function registerInput (form\Input $input) {
+		// @todo Does the Input belong to this Form?
+		
+		$input_name = $input->getAttribute('name');
+		
+		if (!isset($this->input_index[$input_name])) {
+			$this->input_index[$input_name] = [];
+		} else {
+			foreach ($this->input_index[$input_name] as $i) {
+				if ($input === $i) {
+					throw new \ErrorException('Input is already registered.');
+				}
+			}
+		}
+		
+		$this->input_index[$input_name][] = $input;
+		
+		return count($this->input_index[$input_name]) - 1;
+	}
+	
+	/**
+	 * While not enforced (debug_backtrace is expensive), this method
+	 * is ought to be called only from Rule __construct context.
+	 */
+	public function registerRule (Rule $rule) {
+		// @todo Does the Rule belong to this Form?
+		
+		foreach ($this->rules as $r) {
+			if ($r === $rule) {
+				throw new \ErrorException('Rule is already registered.');
+			}
+		}
+		
+		$this->rules[] = $rule;
+	}
 }
 
 /**
