@@ -53,9 +53,9 @@ class Input {
 	 * @param object $value
 	 */
 	public function pushInbox ($value) {
-		if (!is_object($value)) {
-			throw new \InvalidArgumentException('Only serializable object type value can be passed.');
-		}
+		#if (!is_object($value)) {
+		#	throw new \InvalidArgumentException('Only serializable object type value can be passed.');
+		#}
 		
 		if ($this->is_stringified) {
 			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()][] = $value;

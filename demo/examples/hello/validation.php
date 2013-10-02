@@ -1,10 +1,10 @@
 <?php
 $form = new \ay\thorax\Form();
 
-$label = new \ay\thorax\Label($form, function ($input) {
+$label = $form->addLabel(function ($input) {
 	ob_start();?>
 	<div class="thorax-row">
-		<label for="<?=$input->getId()?>"><?=$input->getLabel()?></label>
+		<label for="<?=$input->getAttribute('id')?>"><?=$input->getLabel()?></label>
 		<?=$input?>
 		<?php if ($input->getInbox()):?>
 		<pre><?=implode(' ', $input->getInbox())?></pre>
@@ -14,7 +14,7 @@ $label = new \ay\thorax\Label($form, function ($input) {
 	return ob_get_clean();
 });
 
-$rule = new \ay\thorax\Rule($form);
+$rule = $form->addRule('is_eq_a');
 
 // Attach rule to input[name="first_name"].
 $rule->add('first_name');

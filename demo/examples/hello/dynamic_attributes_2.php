@@ -10,7 +10,7 @@ echo $input;
 ob_clean();
 
 try {
-	$input->getId();
+	$input->getAttribute('id');
 } catch (\ErrorException $e) {
 	?>
 	<p>Retrieving random <code>input[id]</code> is not possible after the input has been displayed.</p>

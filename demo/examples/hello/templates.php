@@ -11,7 +11,7 @@ echo $label->input('test');
 $label = new \ay\thorax\Label($form, function ($input) {
 	return '
 	<div class="thorax-row custom">
-		<label for="' . $input->getId() . '">' . $input->getLabel() . '</label>
+		<label for="' . $input->getAttribute('id') . '">' . $input->getLabel() . '</label>
 		' . $input . '
 	</div>';
 });

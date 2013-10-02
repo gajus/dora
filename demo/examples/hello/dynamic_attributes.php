@@ -7,7 +7,7 @@ $form = new \ay\thorax\Form($data = [
 $input = $form->input('user[password_test]', ['type' => 'password']);
 
 // Retrieving input[id] when one is not defined will generate a random [id].
-$input->getId();
+$input->getAttribute('id');
 
 // Default input label is derived from input[name].
 ?>

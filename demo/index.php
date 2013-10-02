@@ -64,7 +64,6 @@ $example = function ($name, $example_label = null, $display = ['code', 'demo', '
 	</div>
 
 	<div id="examples">
-		<?php /*
 		<?=$example('hello/basic', 'Building')?>
 		<?=$example('hello/dynamic_attributes', 'Dynamic attributes')?>
 		<?=$example('hello/dynamic_attributes_2', 'Dynamic attributes #2')?>
@@ -74,7 +73,7 @@ $example = function ($name, $example_label = null, $display = ['code', 'demo', '
 		<?=$example('hello/handling', 'Handling')?>
 		<?=$example('hello/messages', 'Messages')?>
 		<?=$example('hello/validation', 'Validation')?>
-		<?=$example('hello/validation_2', 'Validation #2')?> */?>
+		<?=$example('hello/validation_2', 'Validation #2')?>
 		<?=$example('hello/validation_3', 'Validation #3')?>
 	</div>
 	
