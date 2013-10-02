@@ -5,7 +5,7 @@ li { margin: 0; padding: 0; }
 
 li { list-style: none; }
 
-body { font: 14px/20px proxima-nova, 'Helvetica Neue'; background: #F5F5F5; padding: 60px 0 0 0; }
+body { font: 14px/20px proxima-nova, 'Helvetica Neue'; background: #F5F5F5; }
 
 h1,
 h2,
@@ -31,24 +31,32 @@ p {
 	}
 }
 
-#header {
+#thorax {
 	height: 60px; position: fixed; z-index: 9; width: 450px; top: 0; right: 0; background: #F4D03F;
 	
-	h1 { float: left; margin: 0 20px; }
+	h1 { padding: 0 20px; }
 	
 	.github {
-		float: right; background: #fff url('../images/GitHub-Mark-32px.png') no-repeat 20px 50%; line-height: 60px; padding: 0 20px 0 72px; color: #000; text-decoration: none; cursor: pointer;
+		display: block; background: #F5F5F5 url('../images/GitHub-Mark-32px.png') no-repeat 20px 50%; line-height: 60px; padding: 0 20px 0 72px; color: #000; text-decoration: none; cursor: pointer;
 		
 		&:hover { background-color: #F4D03F; }
+	}
+	
+	.index {
+		display: block; background: #fff; padding: 10px 20px 20px 20px; font: normal 14px/20px Georgia, 'Times New Roman', sans-serif;
+		
+		li { margin: 10px 0 0 0; list-style: inside decimal; }
+		
+		a { color: #C0392B; }
 	}
 }
 
 #examples {
-	width: 1100px; margin: 40px; overflow: hidden;
+	width: 1100px; margin: 0 40px 40px 40px; overflow: hidden;
 }
 
 .example {
-	margin: 20px 0 0 0;
+	padding: 40px 0 0 0;
 	
 	h3 {
 		font: normal 20px/30px Georgia, 'Times New Roman', sans-serif; margin: 15px 20px 20px 20px;
@@ -149,7 +157,7 @@ p {
 		}
 	}
 	
-	&:first-child { margin: 0; }
+	&:first-child { padding: 60px 0 0 0; }
 }
 
 input,

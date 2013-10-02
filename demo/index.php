@@ -9,7 +9,11 @@ ob_start();
 
 require __DIR__ . '/demo.php';
 
-$example = function ($name, $example_label, $display = ['code', 'demo', 'markup']) {
+$index = [];
+
+$example = function ($name, $example_label, $display = ['code', 'demo', 'markup']) use (&$index) {
+	$index[str_replace('/', '__', $name)] = $example_label;
+	
 	ob_start();					
 	require __DIR__ . '/examples/' . $name . '.php';
 	$output = ob_get_clean();
@@ -62,12 +66,6 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 	<link href="static/css/frontend.css" rel="stylesheet">
 </head>
 <body>
-	<div id="header">
-		<h1>Thorax (alpha)</h1>
-		
-		<a href="https://github.com/gajus/thorax" target="_blank" class="github">GitHub</a>
-	</div>
-
 	<div id="examples">
 		<?=$example('hello/form_input', 'Form & input')?>
 		<?=$example('hello/form_input_2', 'Form & input #2')?>
@@ -80,15 +78,17 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 		<?=$example('hello/validation', 'Validation')?>
 		<?=$example('hello/validation_2', 'Validation #2')?>
 		
-		<?php /*
+		<?php /* <?=$example('hello/custom_rules', 'Custom Rules')?> <?=$example('hello/messages', 'Messages')?>*/?>
+	</div>
+	
+	<div id="thorax">
+		<h1>Thorax</h1>
 		
-		
-		
-		
-		<?=$example('hello/messages', 'Messages')?>
-		
-		<?=$example('hello/validation_2', 'Validation #2')?>
-		<?=$example('hello/validation_3', 'Validation #3')?>*/?>
+		<ul class="index">
+			<?php foreach ($index as $id => $name):?>
+			<li><a href="#example-<?=$id?>"><?=$name?></a></li>
+			<?php endforeach;?>
+		</ul>
 	</div>
 	
 	<script src="static/js/prism/prism.js"></script>
