@@ -35,8 +35,8 @@ class Form {
 		}
 	}
 	
-	public function input ($name, array $attributes = null, array $parameters = null) {
-		return new form\Input($this, $name, $attributes, $parameters);
+	public function input ($name, array $attributes = null, array $properties = null) {
+		return new form\Input($this, $name, $attributes, $properties);
 	}
 
 	public function addLabel ($template = null) {

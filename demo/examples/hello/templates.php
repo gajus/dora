@@ -1,19 +1,21 @@
 <?php
 $form = new \ay\thorax\Form();
 
-// Use labels to build form.
-$label = new \ay\thorax\Label($form);
+$default_label = $form->addLabel();
 
-// This is using the default template (see /ay/thorax/label.php).
-echo $label->input('test');
+echo $default_label->input('foo');
 
 // Here is how you build your own template.
-$label = new \ay\thorax\Label($form, function ($input) {
-	return '
+$custom_label = $form->addLabel(function (\ay\thorax\form\Input $input) {
+	ob_start();
+	?>
 	<div class="thorax-row custom">
-		<label for="' . $input->getAttribute('id') . '">' . $input->getLabel() . '</label>
-		' . $input . '
-	</div>';
+		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
+		<?=$input?>
+	</div>
+	<?php
+	return ob_get_clean();
 });
 
-echo $label->input('test', null, ['label' => 'Test Label']);
+echo $custom_label->input('bar', null, ['label' => 'Bar Custom Label']);
+echo $custom_label->input('baz', null, ['label' => 'Baz Custom Label']);

@@ -30,7 +30,7 @@ class Label {
 				
 				ob_start();?>
 				<div class="thorax-row <?=implode(' ', $rules)?>">
-					<label for="<?=$input->getAttribute('id')?>"><?=$input->getLabel()?></label>
+					<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 					<?=$input?>
 					<?php if ($errors):?>
 					<ul class="thorax-error">
@@ -49,8 +49,8 @@ class Label {
 		$this->template = $template;
 	}
 	
-	public function input ($name, array $attributes = null, array $parameters = null) {
-		$input = $this->form->input($name, $attributes, $parameters);
+	public function input ($name, array $attributes = null, array $properties = null) {
+		$input = $this->form->input($name, $attributes, $properties);
 		
 		return new label\Template($this->form, $this, $input);
 	}

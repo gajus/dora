@@ -8,13 +8,13 @@ class Input {
 		$index,
 		$inbox = [],
 		$attributes = ['type' => null],
-		$parameters,
+		$properties,
 		$is_stringified = false; // boolean Has the input been casted to string?
 	
 	/**
-	 * @param array $parameters Used to pass options to the <select> input.
+	 * @param array $properties Used to pass options to the <select> input.
 	 */
-	public function __construct (\ay\thorax\Form $form, $name, array $attributes = null, array $parameters = null) {
+	public function __construct (\ay\thorax\Form $form, $name, array $attributes = null, array $properties = null) {
 		$this->attributes['name'] = $name;
 		
 		$this->form = $form;
@@ -34,7 +34,7 @@ class Input {
 			unset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
 		}
 		
-		$this->parameters = $parameters === null ? [] : $parameters;
+		$this->properties = $properties === null ? [] : $properties;
 		
 		if ($attributes === null) {
 			return;
@@ -79,13 +79,25 @@ class Input {
 		return $this->uid;
 	}
 	
+	public function getProperty($name) {
+		if ($name === 'label') {
+			return $this->getLabel();
+		}
+		
+		if (!isset($this->properties[$name])) {
+			throw new \ErrorException('Unknown property "' . $name . '".');
+		}
+		
+		return $this->properties[$name];
+	}
+	
 	/**
 	 * @return string Human-friedly input name. Label is either derived
 	 * from the Input name or defined at the time of creating the Input.
 	 */
-	public function getLabel () {
-		if (isset($this->parameters['label'])) {
-			return $this->parameters['label'];
+	private function getLabel () {
+		if (isset($this->properties['label'])) {
+			return $this->properties['label'];
 		}
 		
 		$name_path = $this->getNamePath();
@@ -103,7 +115,7 @@ class Input {
 		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
 	}
 	
-	public function getValue () {
+	private function getValue () {
 		$name_path = $this->getNamePath();
 		$form_data = $this->form->getData();
 		
@@ -176,10 +188,12 @@ class Input {
 	public function getAttribute ($name) {
 		if ($name === 'id' && !isset($this->attributes['id'])) {
 			if ($this->is_stringified) {
-				throw new \ErrorException('input[id] was not defined at the time of creating the input. Too late to generate random [id].');
+				throw new \ErrorException('Too late to generate random [id].');
 			}
 			
 			$this->attributes['id'] = 'thorax-input-id-' . mt_rand(100000,999999);
+		} else if ($name === 'value') {
+			return $this->getValue();
 		}
 		
 		if (!isset($this->attributes[$name])) {
@@ -257,7 +271,7 @@ class Input {
 		
 		// Default input type is "text". If "options" parameter is passed,
 		// input is assumed to be <select>.
-		if (array_key_exists('options', $this->parameters)) {
+		if (array_key_exists('options', $this->properties)) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
 				throw new \ErrorException('Unsupported parameter "options" in [input="' . $this->attributes['type'] . '"] context.');
 			}
@@ -273,16 +287,16 @@ class Input {
 		
 		switch ($this->attributes['type']) {
 			case 'select':
-				if (!isset($this->parameters['options'])) {
-					$this->parameters['options'] = [];
+				if (!isset($this->properties['options'])) {
+					$this->properties['options'] = [];
 				}
 				
 				$options_string	= '';
 				
-				foreach ($this->parameters['options'] as $v => $l) {
+				foreach ($this->properties['options'] as $v => $l) {
 					$selected = '';
 					
-					if ($value && (is_array($value) && in_array($v, $value) || $value == $v)) {
+					if ((is_array($value) && in_array($v, $value) || $value == $v)) {
 						$selected = ' selected="selected"';
 					}
 				

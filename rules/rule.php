@@ -26,7 +26,7 @@ class Rule {
 		$v8 = new \V8Js();
 		
 		$parameters = [
-			'value' => $input->getValue()
+			'value' => $input->getAttribute('value')
 		];
 		
 		$v8->parameters = $parameters;
@@ -45,7 +45,7 @@ class Rule {
 			return false;
 		}
 		
-		$response['message'] = str_replace(['{thorax.label}'], [$input->getLabel()], $response['message']);
+		$response['message'] = str_replace(['{thorax.label}'], [$input->getProperty('label')], $response['message']);
 		
 		#ay($this, $input, $response);
 		

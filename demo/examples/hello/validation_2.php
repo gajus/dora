@@ -1,8 +1,7 @@
 <?php
 $form = new \ay\thorax\Form();
 
-// Rule has to be applied before the form is generated.
-// This allows Label to access Rule properties.
+// It is a looks a lot less messy without all the comments.
 $form->addRule('is_eq_a', ['first_name']);
 
 $label = $form->addLabel();
@@ -13,6 +12,7 @@ $label = $form->addLabel();
 </form>
 <?php
 if ($form->isSubmitted()) {
+	// Shorthand method to pass errors to the Input.
 	$form->getErrors(true);
 	
 	header('Location: ' . $_SERVER['REQUEST_URI']);

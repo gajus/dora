@@ -11,6 +11,7 @@ li {
 body {
   font: 14px/20px proxima-nova, 'Helvetica Neue';
   background: #F5F5F5;
+  padding: 60px 0 0 0;
 }
 h1,
 h2,
@@ -20,15 +21,8 @@ h3 {
 }
 h1 {
   font-size: 30px;
-  line-height: 50px;
-  margin: 0 40px;
-  color: #F5F5F5;
-  text-shadow: 1px 1px 0 #b8b1ac, -1px -1px 0 #ffffff, 1px 0 2px #b8b1ac;
+  line-height: 60px;
   letter-spacing: 1px;
-}
-h1:hover {
-  color: #b8b1ac;
-  text-shadow: none;
 }
 h2 {
   font-size: 20px;
@@ -52,15 +46,29 @@ p {
   margin: 0;
 }
 #header {
-  height: 50px;
-  border-bottom: 1px solid #b8b1ac;
+  height: 60px;
   position: fixed;
   z-index: 9;
-  left: 0;
+  width: 450px;
   top: 0;
   right: 0;
-  background: #F5F5F5;
-  display: none;
+  background: #F4D03F;
+}
+#header h1 {
+  float: left;
+  margin: 0 20px;
+}
+#header .github {
+  float: right;
+  background: #ffffff url('../images/GitHub-Mark-32px.png') no-repeat 20px 50%;
+  line-height: 60px;
+  padding: 0 20px 0 72px;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+#header .github:hover {
+  background-color: #F4D03F;
 }
 #examples {
   width: 1100px;
@@ -73,6 +81,10 @@ p {
 .example h3 {
   font: normal 20px/30px Georgia, 'Times New Roman', sans-serif;
   margin: 15px 20px 20px 20px;
+}
+.example h3 a {
+  text-decoration: none;
+  color: #000;
 }
 .example .description {
   width: 200px;
@@ -126,21 +138,40 @@ p {
   border: 1px solid #ccc;
   width: 298px;
 }
-.example .tab.demo input,
-.example .tab.demo textarea,
-.example .tab.demo select {
+.example .tab.demo dl {
+  display: block;
+  background: #fff;
+  padding: 20px;
+  width: 260px;
+}
+.example .tab.demo dl dt {
+  font-weight: 500;
+  float: left;
+  width: 100px;
+}
+.example .tab.demo > .body > *,
+.example .tab.demo > .body > form > * {
   margin: 10px 0 0 0;
 }
-.example .tab.demo input:first-child,
-.example .tab.demo textarea:first-child,
-.example .tab.demo select:first-child {
+.example .tab.demo > .body > *:first-child,
+.example .tab.demo > .body > form > *:first-child {
   margin: 0;
 }
+.example .tab.demo .thorax-buttons {
+  overflow: hidden;
+}
+.example .tab.demo .thorax-buttons > input {
+  float: left;
+  margin: 0 10px 0 0;
+}
 .example .tab.demo .thorax-message {
-  background: #00BA84;
+  background: #C0392B;
   color: #fff;
   width: 280px;
   padding: 10px;
+}
+.example .tab.demo .thorax-message.success {
+  background: #00BA84;
 }
 .example .tab.demo .thorax-row {
   background: #FAFAFA;
@@ -149,6 +180,8 @@ p {
 }
 .example .tab.demo .thorax-row label {
   font-weight: 500;
+  display: block;
+  margin: 0 0 10px 0;
 }
 .example .tab.demo .thorax-row .thorax-error {
   width: 300px;

@@ -5,14 +5,14 @@ li { margin: 0; padding: 0; }
 
 li { list-style: none; }
 
-body { font: 14px/20px proxima-nova, 'Helvetica Neue'; background: #F5F5F5; }
+body { font: 14px/20px proxima-nova, 'Helvetica Neue'; background: #F5F5F5; padding: 60px 0 0 0; }
 
 h1,
 h2,
 h3 { font-weight: normal; margin: 0; }
 
-h1 { font-size: 30px; line-height: 50px; margin: 0 40px; color: #F5F5F5; text-shadow: 1px 1px 0 #b8b1ac, -1px -1px 0 #fff, 1px 0 2px #b8b1ac; letter-spacing: 1px;
-	&:hover { color: #b8b1ac; text-shadow: none; }
+h1 {
+	font-size: 30px; line-height: 60px; letter-spacing: 1px;
 }
 
 h2 { font-size: 20px; line-height: 20px; margin: 40px; background: #F4D03F; padding: 20px; text-transform: uppercase; width: 1060px; }
@@ -32,7 +32,15 @@ p {
 }
 
 #header {
-	height: 50px; border-bottom: 1px solid #b8b1ac; position: fixed; z-index: 9; left: 0; top: 0; right: 0; background: #F5F5F5; display: none;
+	height: 60px; position: fixed; z-index: 9; width: 450px; top: 0; right: 0; background: #F4D03F;
+	
+	h1 { float: left; margin: 0 20px; }
+	
+	.github {
+		float: right; background: #fff url('../images/GitHub-Mark-32px.png') no-repeat 20px 50%; line-height: 60px; padding: 0 20px 0 72px; color: #000; text-decoration: none; cursor: pointer;
+		
+		&:hover { background-color: #F4D03F; }
+	}
 }
 
 #examples {
@@ -42,7 +50,11 @@ p {
 .example {
 	margin: 20px 0 0 0;
 	
-	h3 { font: normal 20px/30px Georgia, 'Times New Roman', sans-serif; margin: 15px 20px 20px 20px; }
+	h3 {
+		font: normal 20px/30px Georgia, 'Times New Roman', sans-serif; margin: 15px 20px 20px 20px;
+		
+		a { text-decoration: none; color: #000; }
+	}
 	
 	.description {
 		width: 200px; float: left;
@@ -80,22 +92,35 @@ p {
 				margin: 20px 0; border: 1px solid #ccc; width: 298px;
 			}
 			
-			input,
-			textarea,
-			select {
+			dl {
+				display: block; background: #fff; padding: 20px; width: 260px;
+				
+				dt { font-weight: 500; float: left; width: 100px; }
+			}
+			
+			& > .body > *,
+			& > .body > form > * {
 				margin: 10px 0 0 0;
 				
 				&:first-child { margin: 0; }
 			}
 			
+			.thorax-buttons {
+				overflow: hidden;
+				
+				> input { float: left; margin: 0 10px 0 0; }
+			}
+			
 			.thorax-message {
-				background: #00BA84; color: #fff; width: 280px; padding: 10px;
+				background: #C0392B; color: #fff; width: 280px; padding: 10px;
+				
+				&.success { background: #00BA84; }
 			}
 			
 			.thorax-row {
 				background: #FAFAFA; background: #fff; padding: 20px;
 				
-				label { font-weight: 500; }
+				label { font-weight: 500; display: block; margin: 0 0 10px 0; }
 				
 				.thorax-error {
 					width: 300px;

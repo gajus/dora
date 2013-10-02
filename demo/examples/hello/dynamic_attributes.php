@@ -1,17 +1,24 @@
 <?php
-$form = new \ay\thorax\Form($data = [
-	'user' => ['password_test' => 'test'] // Password [value] will be intentionally omitted.
-]);
+$form = new \ay\thorax\Form();
 
-// "input" method returns instance of \ay\thorax\form\Input.
-$input = $form->input('user[password_test]', ['type' => 'password']);
-
-// Retrieving input[id] when one is not defined will generate a random [id].
-$input->getAttribute('id');
-
-// Default input label is derived from input[name].
+// Requesting [id] attribute when one does not exist will force a new (random) id.
+$foo = $form->input('foo');
 ?>
-<p><?=$input->getLabel()?></p>
+<dl>
+	<dt>Id</dt>
+	<dd><?=$foo->getAttribute('id')?></dd>
+</dl>
 <?php
-// casting \ay\thorax\form\Input to string will trigger __toString method.
-echo $input;
+
+$bar = $form->input('bar');
+
+echo $bar;
+
+// This will not work if you request a dynamic attribute after input has been stringified.
+try {
+	$bar->getAttribute('id');
+} catch (\ErrorException $e) {
+	?>
+	<div class="thorax-message"><?=$e->getMessage()?></div>
+	<?php
+}
