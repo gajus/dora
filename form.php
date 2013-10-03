@@ -10,9 +10,11 @@ class Form {
 		$labels = [],
 		$rules = [];
 		
-	public function __construct (array $data = null) {
-		$this->data = $data === null ? [] : $data;
-		
+	/**
+	 * @param array $default_data Data used to prefill the form.
+	 * @param array $input Input data will overwrite $default_data. Defaults to $_POST.
+	 */
+	public function __construct (array $default_data = null, array $input = null) {
 		// Generate persistent Form UID.
 		$caller = debug_backtrace(null, 1)[0];
 		
@@ -20,18 +22,25 @@ class Form {
 		
 		unset($caller);
 		
-		if (isset($_POST['thorax']['uid']) && $_POST['thorax']['uid'] == $this->getUid()) {
-			unset($_POST['thorax']);
+		// Locate input source
+		if ($input === null) {
+			$input = $_POST;
+		}
+		
+		// Capture submit event
+		if (isset($input['thorax']['uid']) && $input['thorax']['uid'] == $this->getUid()) {
+			unset($input['thorax']);
 			
-			$this->data = $_POST;
+			$_SESSION['thorax']['flash']['form'][$this->getUid()] = $input;
 			
-			$_SESSION['thorax']['flash']['form'][$this->getUid()] = $this->data;
-			
+			$this->data = $input;
 			$this->is_submitted = true;
 		} else if (isset($_SESSION['thorax']['flash']['form'][$this->getUid()])) {
 			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
 			
 			unset($_SESSION['thorax']['flash']['form'][$this->getUid()]);
+		} else if ($default_data !== null) {
+			$this->data = $default_data;
 		}
 	}
 	
