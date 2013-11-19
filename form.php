@@ -16,7 +16,7 @@ class Form {
 	 */
 	public function __construct (array $default_data = null, array $input = null) {
 		// Generate persistent Form UID.
-		$caller = debug_backtrace(null, 1)[0];
+		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 		
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
 		
@@ -44,11 +44,11 @@ class Form {
 		}
 	}
 	
-	public function __destruct () {
+	/*public function __destruct () {
 		if ($this->isSubmitted()) {
 			unset($_SESSION['thorax']['flash']['inbox'][$this->getUid()]);
 		}
-	}
+	}*/
 	
 	public function input ($name, array $attributes = null, array $properties = null) {
 		return new form\Input($this, $name, $attributes, $properties);
@@ -91,8 +91,6 @@ class Form {
 		foreach ($this->rules as $rule) {
 			$r = '(function () { var rule = ' . $rule->getFunction() . ', pattern = ' . json_encode($rule->getPattern()) . ';}())';
 			
-			
-			
 			$rules[] = $r;
 			#ay( $rule->getFunction() );
 		}
@@ -117,13 +115,18 @@ class Form {
 	}
 	
 	/**
-	 * While not enforced (debug_backtrace is expensive), this method
-	 * is ought to be called only from Input __construct context.
+	 * This method is ought to be called only from Input __construct context.
 	 *
-	 * @return integer Incremental input name index.
+	 * @return integer Incremental input index based on the number of previous occurences of Input with the same name within the Form.
 	 */
 	public function registerInput (form\Input $input) {
-		// @todo Does the Input belong to this Form?
+		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+		
+		if ($caller['function'] !== '__construct' || $caller['class'] !== 'ay\thorax\form\Input') {
+			throw new \InvalidArgumentException('Input must be initiated under the Form that you are trying to associate the Input with.');
+		}
+		
+		unset($caller);
 		
 		$input_name = $input->getAttribute('name');
 		
@@ -132,7 +135,7 @@ class Form {
 		} else {
 			foreach ($this->input_index[$input_name] as $i) {
 				if ($input === $i) {
-					throw new \ErrorException('Input is already registered.');
+					throw new \Exception('Input is already registered.');
 				}
 			}
 		}
@@ -151,7 +154,7 @@ class Form {
 		
 		foreach ($this->rules as $r) {
 			if ($r === $rule) {
-				throw new \ErrorException('Rule is already registered.');
+				throw new \Exception('Rule is already registered.');
 			}
 		}
 		

@@ -6,18 +6,15 @@ class Label {
 		$form,
 		$template;
 	
-	/**
-	 * @param closure $template
-	 */
-	public function __construct (Form $form, $template = null) {
+	public function __construct (Form $form, \Closure $template = null) {
 		$this->form = $form;
 		
 		if ($template === null) {
-			$template = 'ay\thorax\label_default_template';
+			$template = 'ay\thorax\default_label_template';
 		}
 		
 		if (!is_callable($template)) {
-			throw new \ErrorException('Invalid template format.');
+			throw new \InvalidArgumentException('Invalid template.');
 		}
 		
 		$this->template = $template;
@@ -34,7 +31,7 @@ class Label {
 	}
 }
 
-function label_default_template (form\Input $input, Form $form) {
+function default_label_template (form\Input $input, Form $form) {
 	$inbox = $input->getInbox();
 	
 	$errors = [];

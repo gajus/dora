@@ -12,17 +12,16 @@ class Input {
 		$is_stringified = false; // boolean Has the input been casted to string?
 	
 	/**
-	 * @param array $properties Used to pass options to the <select> input.
+	 * @param array $attributes Attributes are accessible to the Label template via getAttribute.
+	 * @param array $properties Used to pass options to the <select> input. Properties are accessible to the Label template via getProperty.
 	 */
 	public function __construct (\ay\thorax\Form $form, $name, array $attributes = null, array $properties = null) {
 		$this->attributes['name'] = $name;
-		
 		$this->form = $form;
-		
 		$this->index = $this->form->registerInput($this);
 		
 		// Generate persistent Input UID.
-		$caller = debug_backtrace(null, 1)[0];
+		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 		
 		$this->uid = crc32($caller['file'] . '_' . $caller['line'] . '_' . $this->attributes['name'] . '_' . $this->index);
 		
@@ -30,45 +29,43 @@ class Input {
 		
 		if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
 			$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
-			
-			//unset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()]);
 		}
 		
 		$this->properties = $properties === null ? [] : $properties;
 		
-		if ($attributes === null) {
-			return;
-		}
-		
-		foreach ($attributes as $k => $v) {
-			$this->setAttribute($k, $v);
+		if ($attributes) {
+			foreach ($attributes as $k => $v) {
+				$this->setAttribute($k, $v);
+			}
 		}
 	}
 	
+	public function getForm () {
+		return $this->input;
+	}
+	
+	// ?
 	public function sendError ($message) {
-		$this->pushInbox( new \ay\thorax\input\Error($this, $message));
+		$this->addToInbox( new \ay\thorax\input\Error($this, $message));
 	}
 
 	/**
-	 * Inbox is used to convey meta data (e.g. Error object). If Input has not been
-	 * displayed at the time of pushing a new value, then the value will be kept in
-	 * the session until the next time the page is loaded.
+	 * Inbox is a persistent layer used to convey meta data (e.g. Error object).
+	 * If Input has been stringifid before the value is set, then Inbox data
+	 * will be conveyd in the session until the next request.
 	 *
-	 * @param object $value
+	 * @param object $value Must be a serializable object.
 	 */
-	public function pushInbox ($value) {
+	public function addToInbox (object $value) {
 		$this->inbox[] = $value;
 	}
 	
-	public function __destruct () {
+	/*public function __destruct () {
 		if ($this->form->isSubmitted()) {
 			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()] = $this->inbox;
 		}
-	}
+	}*/
 	
-	/**
-	 * @return array
-	 */
 	public function getInbox () {
 		return $this->inbox;
 	}
@@ -83,15 +80,17 @@ class Input {
 		}
 		
 		if (!isset($this->properties[$name])) {
-			throw new \ErrorException('Unknown property "' . $name . '".');
+			throw new \Exception('Unknown property "' . $name . '".');
 		}
 		
 		return $this->properties[$name];
 	}
 	
 	/**
-	 * @return string Human-friedly input name. Label is either derived
-	 * from the Input name or defined at the time of creating the Input.
+	 * Label is either derived from the Input name or
+	 * defined as an option at the time of creating the Input.
+	 *
+	 * @return string Human-friedly input name.
 	 */
 	private function getLabel () {
 		if (isset($this->properties['label'])) {
@@ -113,6 +112,9 @@ class Input {
 		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
 	}
 	
+	/**
+	 * @return mixed If no value is matched, will return null or (if input name implies that expected value is an array) an empty array.
+	 */
 	public function getValue () {
 		$name_path = $this->getNamePath();
 		$form_data = $this->form->getData();
@@ -125,31 +127,38 @@ class Input {
 		}
 		
 		if ($name_path != array_filter($name_path)) {
-			throw new \ErrorException('Unsupported multidimensional input format.');
+			throw new \Exception('Unsupported multidimensional input (' . $this->attributes['name'] . '). More than one unknown dimension (e.g. foo[][bar] or foo[bar][][]).');
 		}
 		
 		foreach ($name_path as $fp) {
-			if (isset($form_data[$fp])) {
-				$form_data = $form_data[$fp];
-			} else {
+			if (!isset($form_data[$fp])) {
 				$form_data = null;
 				
-				break;
+				break;	
 			}
+			
+			$form_data = $form_data[$fp];
 		}
 		
+		// If input type cannot handle multiple values, then use the incremented input index to get the input value.
 		if ($array && !isset($this->attributes['multiple']) && isset($form_data[$this->index])) {
 			$form_data = $form_data[$this->index];
+		} else if ($form_data === null && isset($this->attributes['value'])) {
+			$form_data = $this->attributes['value'];
 		}
 		
-		if ($form_data === null && isset($this->attributes['value'])) {
-			$form_data = $this->attributes['value'];
+		if (!$array && is_array($form_data)) {
+			throw new \Exception('Input value cannot be an array.');
+		} else if (!$form_data && $array) {
+			$form_data = [];
 		}
 		
 		return $form_data;
 	}
 	
 	/**
+	 * Parse input[name] into an array reprensentation.
+	 *
 	 * @return array [name="a[b][c][]"] is represented ['a', 'b', 'c'].
 	 */
 	private function getNamePath () {
@@ -175,37 +184,33 @@ class Input {
 	 */
 	public function setAttribute ($name, $value) {
 		if ($this->is_stringified) {
-			throw new \ErrorException('Too late to set attribute value.');
+			throw new \LogicException('Too late to set attribute value.');
 		}
 	
 		if ($name === 'name') {
-			throw new \ErrorException('Name cannot be overwritten.');
+			throw new \InvalidArgumentException('Name cannot be overwritten.');
 		} else if (is_int($name)) {
-			throw new \ErrorException('Missing parameter value.');
+			throw new \InvalidArgumentException('Missing parameter value.');
 		}
 		
 		$this->attributes[$name] = $value;
 	}
 	
 	/**
-	 * @return string Attribute value. In case of undefined [id], will generate a random ID.
+	 * @return null|string Attribute value. In case of undefined [id], will generate a random ID.
 	 */
 	public function getAttribute ($name) {
 		if ($name === 'id' && !isset($this->attributes['id'])) {
 			if ($this->is_stringified) {
-				throw new \ErrorException('Too late to generate random [id].');
+				throw new \LogicException('Too late to generate random [id].');
 			}
 			
-			$this->attributes['id'] = 'thorax-input-id-' . mt_rand(100000,999999);
+			$this->attributes['id'] = 'thorax-input-id-' . mt_rand(100000, 999999);
 		} else if ($name === 'value') {
 			return $this->getValue();
 		}
 		
-		if (!isset($this->attributes[$name])) {
-			return null;
-		}
-		
-		return $this->attributes[$name];
+		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
 	}
 	
 	/**
@@ -224,7 +229,7 @@ class Input {
 			case 'checkbox':
 			case 'radio':
 				if (!isset($this->attributes['value'])) {
-					throw new \ErrorException('input[type="radio"] value attribute is required.');
+					throw new \Exception('input[type="radio"] value attribute is required.');
 				}
 				
 				$value = $this->getValue();
@@ -278,9 +283,9 @@ class Input {
 		
 		$this->is_stringified = true;
 		
-		// Default input type is "text". If "options" parameter is passed,
-		// input is assumed to be <select>.
-		if (array_key_exists('options', $this->properties)) {
+		// Default input type is "text". If "options" property is passed,
+		// then input is assumed to be <select>.
+		if (isset($this->properties['options'])) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
 				throw new \ErrorException('Unsupported parameter "options" in [input="' . $this->attributes['type'] . '"] context.');
 			}
