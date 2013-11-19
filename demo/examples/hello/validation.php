@@ -17,7 +17,7 @@ $rule->add('/^last_([a-z]+)$/');
 // Default Thorax label template will add "thorax-rule-{name}" class
 // for every rule to the matched elements (look at the HTML output).
 ?>
-<form action="#example-hello__validation" method="post">
+<form action="" method="post">
 	<?=$label->input('first_name')?>
 	<?=$label->input('last_name')?>
 	

@@ -50,7 +50,7 @@ function label_default_template (form\Input $input, Form $form) {
 	$rules = array_map(function ($e) { return 'thorax-rule-' . $e->getName(); }, $input->getRules());
 	
 	ob_start();?>
-	<div class="thorax-row <?=implode(' ', $rules)?>">
+	<div class="thorax-input <?=implode(' ', $rules)?>">
 		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 		<?php if ($errors):?>

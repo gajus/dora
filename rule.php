@@ -57,6 +57,14 @@ class Rule {
 		return $this->rule->getName();
 	}
 	
+	public function getPattern () {
+		return $this->pattern_index;
+	}
+	
+	public function getFunction () {
+		return $this->rule->getFunction();
+	}
+	
 	public function isInputMember (form\Input $input) {
 		$input_name = $input->getAttribute('name');
 		

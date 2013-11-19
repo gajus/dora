@@ -9,7 +9,7 @@ echo $default_label->input('foo');
 $custom_label = $form->addLabel(function (\ay\thorax\form\Input $input) {
 	ob_start();
 	?>
-	<div class="thorax-row custom">
+	<div class="thorax-input custom">
 		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 	</div>

@@ -44,6 +44,10 @@ class Input {
 			$this->setAttribute($k, $v);
 		}
 	}
+	
+	public function sendError ($message) {
+		$this->pushInbox( new \ay\thorax\input\Error($this, $message));
+	}
 
 	/**
 	 * Inbox is used to convey meta data (e.g. Error object). If Input has not been
@@ -73,7 +77,7 @@ class Input {
 		return $this->uid;
 	}
 	
-	public function getProperty($name) {
+	public function getProperty ($name) {
 		if ($name === 'label') {
 			return $this->getLabel();
 		}
@@ -109,7 +113,7 @@ class Input {
 		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
 	}
 	
-	private function getValue () {
+	public function getValue () {
 		$name_path = $this->getNamePath();
 		$form_data = $this->form->getData();
 		$array = false;
@@ -240,6 +244,10 @@ class Input {
 		
 		ksort($attributes); // To make the unit testing simpler.
 		
+		#if (strpos(strrev($attributes['name']), '][') === 0) {
+		#	$attributes['name'] = substr_replace($attributes['name'], '[' . $this->index . ']', -2);
+		#}
+		
 		foreach ($attributes as $k => $v) {
 			$attributes_string .= ' ' . $k . '="' . $v . '"';
 		}
@@ -263,7 +271,7 @@ class Input {
 		return $rules;
 	}
 	
-	public function __toString () {
+	public function stringify () {
 		if ($this->is_stringified) {
 			throw new \ErrorException('Input has already been stringified.');
 		}
@@ -327,12 +335,15 @@ class Input {
 				break;
 		}
 		
-		// Since there may be more than one form on the same page,
-		// "thorax[uid]" is used to catch specific form submit event.
+		// In case of multiple forms on the page, thorax[uid] is used to catch specific form submit event.
 		if ($this->attributes['type'] === 'submit') {
-			$input = '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">' . $input;
+			//$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">';
 		}
 				
 		return $input;
+	}
+	
+	public function __toString () {
+		return $this->stringify();
 	}
 }

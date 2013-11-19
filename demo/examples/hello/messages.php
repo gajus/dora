@@ -4,12 +4,12 @@ $form = new \ay\thorax\Form();
 $label = new \ay\thorax\Label($form, function ($input) {
 	
 	// Retrieve all entries for "tag-list". Inbox is input specific.
-	#$tags = $input->getInbox('tag-list');
+	// $tags = $input->getInbox('tag-list');
 	
 	ob_start();
 	?>
-	<div class="thorax-row">
-		<label for="<?=$input->getAttribute('id')?>"><?=$input->getLabel()?></label>
+	<div class="thorax-input">
+		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 		<?php /*if ($tags):?>
 		<ul class="demo-tags">

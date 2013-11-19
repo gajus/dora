@@ -184,41 +184,41 @@ p {
 .example .tab.demo .thorax-message.success {
   background: #00BA84;
 }
-.example .tab.demo .thorax-row {
+.example .tab.demo .thorax-input {
   background: #FAFAFA;
   background: #fff;
   padding: 20px;
 }
-.example .tab.demo .thorax-row label {
+.example .tab.demo .thorax-input label {
   font-weight: 500;
   display: block;
   margin: 0 0 10px 0;
 }
-.example .tab.demo .thorax-row .thorax-error {
+.example .tab.demo .thorax-input .thorax-error {
   width: 300px;
 }
-.example .tab.demo .thorax-row .thorax-error li {
+.example .tab.demo .thorax-input .thorax-error li {
   background: #C0392B;
   color: #fff;
   padding: 10px;
   display: block;
   margin: 10px 0 0 0;
 }
-.example .tab.demo .thorax-row .demo-tags {
+.example .tab.demo .thorax-input .demo-tags {
   margin: 10px 0 0 0;
   overflow: hidden;
 }
-.example .tab.demo .thorax-row .demo-tags li {
+.example .tab.demo .thorax-input .demo-tags li {
   background: #666;
   color: #fff;
   float: left;
   padding: 10px;
   margin: 0 10px 0 0;
 }
-.example .tab.demo .thorax-row.custom {
+.example .tab.demo .thorax-input.custom {
   margin: 20px 0 0 0;
 }
-.example .tab.demo .thorax-row.custom label {
+.example .tab.demo .thorax-input.custom label {
   color: #C0392B;
 }
 .example .tab.markup {

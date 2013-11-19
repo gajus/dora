@@ -1,7 +1,7 @@
 <?php
 $form = new \ay\thorax\Form(['foo' => 'Default foo value']);
 ?>
-<form action="#example-hello__submit" method="post">
+<form action="" method="post">
 	<?=$form->input('foo')?>
 	<?=$form->input('bar', ['value' => mt_rand(1000,9999)])?>
 	

@@ -14,13 +14,17 @@ class Template {
 		$this->label = $label;
 	}
 	
-	/*public function getInput () {
+	public function getInput () {
 		return $this->input;
-	}*/
+	}
 	
-	public function __toString () {
+	public function stringify () {
 		$template = $this->label->getTemplate();
 		
 		return $template($this->input, $this->form);
+	}
+	
+	public function __toString () {
+		return $this->stringify();
 	}
 }

@@ -8,7 +8,7 @@ class Error {
 
 	public function __construct (\ay\thorax\form\Input $input, $message) {
 		$this->input = $input;
-		$this->message = $message;
+		$this->message = str_replace(['{thorax.label}'], [$input->getProperty('label')], $message);
 	}
 	
 	public function getInput () {

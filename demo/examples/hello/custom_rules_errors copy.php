@@ -3,18 +3,23 @@ $form = new \ay\thorax\Form();
 
 $label = $form->addLabel();
 
-$form->addRule('is_eq_a', ['foo']);
+$rule = $form->addRule('test');
+
+$rule->add(['foo'])
 ?>
 <form action="" method="post">
 	<?=$label->input('foo')?>
+	<?=$label->input('bar')?>
 	
 	<?=$form->input('action[submit]', ['type' => 'submit', 'value' => 'Submit'])?>
+	
+	<script>
+	<?=$form->exportRules()?>
+	</script>
 </form>
 <?php
-if ($form->isSubmitted()) {
-	$form->getInputIndex()['foo'][0]->pushInbox( new \ay\thorax\input\Error($form->getInputIndex()['foo'][0], 'best'));
-	
-	$form->getErrors(true);
-	
+#ay(  );
+
+/*if ($form->isSubmitted()) {
 	header('Location: ' . $_SERVER['REQUEST_URI']);
-}
+}*/

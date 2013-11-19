@@ -8,7 +8,7 @@ class Rule {
 	
 	public function __construct ($name, $body) {
 		$this->name = $name;
-		$this->body = $body;		
+		$this->body = $body;
 	}
 	
 	public function getName () {
@@ -45,10 +45,16 @@ class Rule {
 			return false;
 		}
 		
-		$response['message'] = str_replace(['{thorax.label}'], [$input->getProperty('label')], $response['message']);
-		
-		#ay($this, $input, $response);
-		
 		return new \ay\thorax\input\Error($input, $response['message']);
+	}
+	
+	public function getFunction () {
+		$v8 = new \V8Js();
+		
+		$v8->parameters = ['value' => null];
+		
+		$response = $v8->executeString($this->body, null, \V8Js::FLAG_FORCE_ARRAY);
+		
+		return str_replace("\n", '', $response);
 	}
 }

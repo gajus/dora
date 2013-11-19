@@ -1,5 +1,6 @@
 <?php
-// First Form parameter is used to populate Form data.
+// First Form parameter is used to populate default Form data.
+// Second Form parameter identifies input source. Defaults $_POST.
 $form = new \ay\thorax\Form([
 	'foo' => 'Heeeere\'s...Johnny!',
 	'bar' => 'Yada, yada, yada.',
@@ -9,8 +10,8 @@ $form = new \ay\thorax\Form([
 // First Input parameter is input name. Other parameters are optional.
 echo $form->input('foo');
 
-// Second Input parameter defines input attributes.
+// Second parameter defines input attributes.
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 
-// Third input parameter defines input properties.
-echo $form->input('baz', ['type' => 'select'], ['options' => ['Knock, knock...', 'Come in.']]);
+// Third parameter defines input properties.
+echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);

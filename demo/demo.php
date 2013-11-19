@@ -37,15 +37,16 @@ function ay () {
 	exit;
 }
 
-//Function to seperate multiple tags one line
-function fix_newlines_for_clean_html($fixthistext)
-{
+// The code below is missing authorship.
+// It is used only for the demo.
+
+// Function to seperate multiple tags one line
+function fix_newlines_for_clean_html ($fixthistext) {
 	$fixthistext_array = explode("\n", $fixthistext);
-	foreach ($fixthistext_array as $unfixedtextkey => $unfixedtextvalue)
-	{
+	
+	foreach ($fixthistext_array as $unfixedtextkey => $unfixedtextvalue) {
 		//Makes sure empty lines are ignores
-		if (!preg_match("/^(\s)*$/", $unfixedtextvalue))
-		{
+		if (!preg_match("/^(\s)*$/", $unfixedtextvalue)) {
 			$fixedtextvalue = preg_replace("/>(\s|\t)*</U", ">\n<", $unfixedtextvalue);
 			$fixedtext_array[$unfixedtextkey] = $fixedtextvalue;
 		}
@@ -53,8 +54,7 @@ function fix_newlines_for_clean_html($fixthistext)
 	return implode("\n", $fixedtext_array);
 }
 
-function clean_html_code($uncleanhtml)
-{
+function clean_html_code ($uncleanhtml) {
 	//Set wanted indentation
 	$indent = "    ";
 
@@ -124,4 +124,3 @@ function clean_html_code($uncleanhtml)
 	//Return single string seperated by newline
 	return implode("\n", $cleanhtml_array);	
 }
-?>

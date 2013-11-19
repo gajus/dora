@@ -85,6 +85,21 @@ class Form {
 		return $errors;
 	}
 	
+	public function exportRules () {
+		$rules = [];
+		
+		foreach ($this->rules as $rule) {
+			$r = '(function () { var rule = ' . $rule->getFunction() . ', pattern = ' . json_encode($rule->getPattern()) . ';}())';
+			
+			
+			
+			$rules[] = $r;
+			#ay( $rule->getFunction() );
+		}
+		
+		return implode("\n", $rules);
+	}
+	
 	public function getInputIndex () {
 		return $this->input_index;
 	}
