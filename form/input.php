@@ -40,14 +40,20 @@ class Input {
 		}
 	}
 	
+	/*public function __destruct () {
+		if ($this->form->isSubmitted()) {
+			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()] = $this->inbox;
+		}
+	}*/
+	
 	public function getForm () {
 		return $this->input;
 	}
 	
 	// ?
-	public function sendError ($message) {
+	/*public function sendError ($message) {
 		$this->addToInbox( new \ay\thorax\input\Error($this, $message));
-	}
+	}*/
 
 	/**
 	 * Inbox is a persistent layer used to convey meta data (e.g. Error object).
@@ -59,12 +65,6 @@ class Input {
 	public function addToInbox (object $value) {
 		$this->inbox[] = $value;
 	}
-	
-	/*public function __destruct () {
-		if ($this->form->isSubmitted()) {
-			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()] = $this->inbox;
-		}
-	}*/
 	
 	public function getInbox () {
 		return $this->inbox;
@@ -197,7 +197,10 @@ class Input {
 	}
 	
 	/**
-	 * @return null|string Attribute value. In case of undefined [id], will generate a random ID.
+	 * If [id] is undefined at the time of request, Thorax will use input UID.
+	 * Do not rely on the UID for selecting the element in the frontend code. 
+	 *
+	 * @return null|string Attribute value.
 	 */
 	public function getAttribute ($name) {
 		if ($name === 'id' && !isset($this->attributes['id'])) {
@@ -205,7 +208,7 @@ class Input {
 				throw new \LogicException('Too late to generate random [id].');
 			}
 			
-			$this->attributes['id'] = 'thorax-input-id-' . mt_rand(100000, 999999);
+			$this->attributes['id'] = 'thorax-input-' . $this->getUid();
 		} else if ($name === 'value') {
 			return $this->getValue();
 		}
@@ -261,8 +264,7 @@ class Input {
 	}
 	
 	/**
-	 * Find Rules that are assigned to the Form
-	 * and match this Input pattern.
+	 * Retrieve Rules assigned to the Form that match this Input pattern.
 	 */
 	public function getRules () {
 		$rules = [];
@@ -342,7 +344,7 @@ class Input {
 		
 		// In case of multiple forms on the page, thorax[uid] is used to catch specific form submit event.
 		if ($this->attributes['type'] === 'submit') {
-			//$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">';
+			$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">';
 		}
 				
 		return $input;

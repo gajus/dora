@@ -1,9 +1,11 @@
 <?php
 $form = new \ay\thorax\Form();
 
-if (isset($_POST['action']['submit'])) {
-	ay('test');
-}
+$rule = $form->addRule('is_eq_a', 'first_name');
+
+ay($rule->getName(), $rule->getFunction());
+
+exit;
 
 $label = $form->addLabel();
 ?>

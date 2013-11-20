@@ -1,11 +1,13 @@
-var	rule = function (value) {
-	var response = {
+var	rule = function (userInput) {
+	var response;
+	
+	response = {
 		passed: false,
-		message: '{thorax.label} must be eq to "a".',
-		value: value
+		errorMessage: '{thorax.label} must be eq to "a".',
+		userInput: userInput
 	};
 	
-	if (value === 'a') {
+	if (userInput === 'a') {
 		response.passed = true;
 	}
 	
@@ -15,5 +17,5 @@ var	rule = function (value) {
 if (PHP) {
 	rule(PHP.parameters.value);
 } else {
-	return rule;
+	rule;
 }

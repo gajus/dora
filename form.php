@@ -22,12 +22,11 @@ class Form {
 		
 		unset($caller);
 		
-		// Locate input source
 		if ($input === null) {
 			$input = $_POST;
 		}
 		
-		// Capture submit event
+		// Capture submit event only when the form UID is present.
 		if (isset($input['thorax']['uid']) && $input['thorax']['uid'] == $this->getUid()) {
 			unset($input['thorax']);
 			
@@ -35,6 +34,8 @@ class Form {
 			
 			$this->data = $input;
 			$this->is_submitted = true;
+		
+		// Loaded page has meta-data about the previous request.
 		} else if (isset($_SESSION['thorax']['flash']['form'][$this->getUid()])) {
 			$this->data = $_SESSION['thorax']['flash']['form'][$this->getUid()];
 			
@@ -44,11 +45,11 @@ class Form {
 		}
 	}
 	
-	/*public function __destruct () {
-		if ($this->isSubmitted()) {
+	public function __destruct () {
+		/*if ($this->isSubmitted()) {
 			unset($_SESSION['thorax']['flash']['inbox'][$this->getUid()]);
-		}
-	}*/
+		}*/
+	}
 	
 	public function input ($name, array $attributes = null, array $properties = null) {
 		return new form\Input($this, $name, $attributes, $properties);
@@ -58,8 +59,8 @@ class Form {
 		return new Label($this, $template);
 	}
 	
-	public function addRule ($path, array $add = []) {
-		return new Rule($this, $path, $add);
+	public function addRule ($rule_name, $input_selector) {
+		return new Rule($this, $rule_name, $input_selector);
 	}
 	
 	public function getRules () {
@@ -69,10 +70,10 @@ class Form {
 	/**
 	 * @param boolean $stream
 	 */
-	public function getErrors ($stream = false) {
+	/*public function getErrors ($stream = false) {
 		$errors = [];
 		
-		foreach ($this->rules as $rule) {
+		foreach ($this->getRules() as $rule) {
 			$errors = array_merge($errors, $rule->getErrors());
 		}
 		
@@ -96,7 +97,7 @@ class Form {
 		}
 		
 		return implode("\n", $rules);
-	}
+	}*/
 	
 	public function getInputIndex () {
 		return $this->input_index;

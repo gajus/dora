@@ -7,20 +7,20 @@ class Rule {
 		$rule,
 		$pattern_index = [];
 
-	public function __construct (Form $form, $path, array $add = []) {
+	public function __construct (Form $form, $rule_name, $input_selector) {
 		$this->form = $form;
 		$this->form->registerRule($this);
 		
-		$this->loadRule($path);
+		$this->loadRule($rule_name);
 		
-		$this->add($add);
+		$this->addSelector($input_selector);
 	}
 	
-	private function loadRule ($rule_file) {
-		if (strpos($rule_file, '/') !== 0) {
-			$path = __DIR__ . '/rules/library/' . $rule_file;
+	private function loadRule ($rule_name) {
+		if (strpos($rule_name, '/') !== 0) {
+			$path = __DIR__ . '/rules/library/' . $rule_name;
 		} else {
-			$path = $rule_file;
+			$path = $rule_name;
 		}
 		
 		if (strpos(strrev($path), 'sj.') === false && file_exists($path . '.js')) {
@@ -28,7 +28,7 @@ class Rule {
 		}
 		
 		if (!file_exists($path)) {
-			throw new \ErrorException('Rule "' . $rule_file . '" not found.');
+			throw new \Exception('Rule "' . $rule_name . '" not found.');
 		}
 	
 		$filename = pathinfo($path)['filename'];
@@ -37,28 +37,26 @@ class Rule {
 	}
 	
 	/**
-	 * @param string $input_name Name begining with a "/" (backslash) will be interpreted as a regular-expression.
+	 * @param string|array $input_selector Match input using [name]. Selector begining with a "/" (backslash) will be interpreted as a regular-expression.
 	 */
-	public function add ($input_name) {
-		if (is_array($input_name)) {
-			foreach ($input_name as $in) {
-				$this->add($in);
+	public function addSelector ($input_selector) {
+		if (is_array($input_selector)) {
+			foreach ($input_selector as $is) {
+				$this->addSelector($is);
 			}
 			
 			return;
 		}
 	
-		$this->pattern_index[] = $input_name;
-		
-		$this->pattern_index = array_unique($this->pattern_index);
+		$this->selector_index[] = $input_selector;
 	}
 	
 	public function getName () {
 		return $this->rule->getName();
 	}
 	
-	public function getPattern () {
-		return $this->pattern_index;
+	public function getSelector () {
+		return $this->selector_index;
 	}
 	
 	public function getFunction () {
@@ -68,8 +66,8 @@ class Rule {
 	public function isInputMember (form\Input $input) {
 		$input_name = $input->getAttribute('name');
 		
-		foreach ($this->pattern_index as $pattern) {
-			if (strpos($pattern, '/') === 0 && preg_match($pattern, $input_name) || $pattern === $input_name) {
+		foreach ($this->selector_index as $selector) {
+			if ($selector === $input_name || strpos($pattern, '/') === 0 && preg_match($selector, $input_name)) {
 				return true;
 			}
 		}
