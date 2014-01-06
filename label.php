@@ -42,12 +42,9 @@ function default_label_template (form\Input $input, Form $form) {
 				$errors[] = $i->getMessage();
 			}
 		}
-	}
-	
-	$rules = array_map(function ($e) { return 'thorax-rule-' . $e->getName(); }, $input->getRules());
-	
+	}	
 	ob_start();?>
-	<div class="thorax-input <?=implode(' ', $rules)?>">
+	<div class="thorax-input">
 		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 		<?php if ($errors):?>

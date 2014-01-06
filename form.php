@@ -59,45 +59,32 @@ class Form {
 		return new Label($this, $template);
 	}
 	
-	public function addRule ($rule_name, $input_selector) {
-		return new Rule($this, $rule_name, $input_selector);
+	public function addRule (array $input_selector, $rule) {
+		return new Rule($this, $input_selector, $rule);
 	}
 	
 	public function getRules () {
 		return $this->rules;
 	}
 	
-	/**
-	 * @param boolean $stream
-	 */
-	/*public function getErrors ($stream = false) {
+	public function isError () {
 		$errors = [];
-		
+	
 		foreach ($this->getRules() as $rule) {
-			$errors = array_merge($errors, $rule->getErrors());
-		}
-		
-		if ($stream && $errors) {
-			foreach ($errors as $error) {
-				$error->getInput()->pushInbox($error);
+			foreach ($rule->getInputIndex() as $input) {
+				// Unless input rule implies array, this refers to the first occurence of the input.
+				
+				$rule_class = $rule->getRule();
+				$rule_instance = new $rule_class($input[0]);
+				
+				if (!$rule_instance->isValid()) {
+					$errors[] = $rule_instance->getMessage();
+				}
 			}
 		}
 		
 		return $errors;
 	}
-	
-	public function exportRules () {
-		$rules = [];
-		
-		foreach ($this->rules as $rule) {
-			$r = '(function () { var rule = ' . $rule->getFunction() . ', pattern = ' . json_encode($rule->getPattern()) . ';}())';
-			
-			$rules[] = $r;
-			#ay( $rule->getFunction() );
-		}
-		
-		return implode("\n", $rules);
-	}*/
 	
 	public function getInputIndex () {
 		return $this->input_index;
@@ -147,11 +134,16 @@ class Form {
 	}
 	
 	/**
-	 * While not enforced (debug_backtrace is expensive), this method
-	 * is ought to be called only from Rule __construct context.
+	 * This method is ought to be called only from Rule __construct context.
 	 */
 	public function registerRule (Rule $rule) {
-		// @todo Does the Rule belong to this Form?
+		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+		
+		if ($caller['function'] !== '__construct' || $caller['class'] !== 'ay\thorax\Rule') {
+			throw new \InvalidArgumentException('Rule must be initiated under the Form that you are trying to associate the Rule with.');
+		}
+		
+		unset($caller);
 		
 		foreach ($this->rules as $r) {
 			if ($r === $rule) {

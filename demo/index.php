@@ -14,7 +14,7 @@ $index = [];
 $example = function ($name, $example_label, $display = ['code', 'demo', 'markup']) use (&$index) {
 	$index[str_replace('/', '__', $name)] = $example_label;
 	
-	ob_start();					
+	ob_start();
 	require __DIR__ . '/examples/' . $name . '.php';
 	$output = ob_get_clean();
 

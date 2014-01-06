@@ -1,11 +1,7 @@
 <?php
 $form = new \ay\thorax\Form();
 
-$rule = $form->addRule('is_eq_a', 'first_name');
-
-ay($rule->getName(), $rule->getFunction());
-
-exit;
+$rule = $form->addRule(['first_name'], 'ay\thorax\rule\Is_Eq_A');
 
 $label = $form->addLabel();
 ?>
@@ -13,3 +9,7 @@ $label = $form->addLabel();
 	<?=$label->input('first_name', null, ['label' => 'Custom Label'])?>
 	<?=$form->input('action[submit]', ['type' => 'submit', 'value' => 'Submit'])?>
 </form>
+<?php
+if ($form->isSubmitted()) {
+	ay( $form->isError() );
+}

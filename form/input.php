@@ -62,9 +62,11 @@ class Input {
 	 *
 	 * @param object $value Must be a serializable object.
 	 */
-	public function addToInbox (object $value) {
+	/*public function addToInbox (object $value) {
 		$this->inbox[] = $value;
 	}
+	
+	*/
 	
 	public function getInbox () {
 		return $this->inbox;
@@ -261,21 +263,6 @@ class Input {
 		}
 		
 		return trim($attributes_string);
-	}
-	
-	/**
-	 * Retrieve Rules assigned to the Form that match this Input pattern.
-	 */
-	public function getRules () {
-		$rules = [];
-	
-		foreach ($this->form->getRules() as $rule) {
-			if ($rule->isInputMember($this)) {
-				$rules[] = $rule;
-			}
-		}
-	
-		return $rules;
 	}
 	
 	public function stringify () {

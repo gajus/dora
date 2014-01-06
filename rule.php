@@ -5,35 +5,24 @@ class Rule {
 	private
 		$form,
 		$rule,
-		$pattern_index = [];
-
-	public function __construct (Form $form, $rule_name, $input_selector) {
+		$selector_index = [];
+		
+	/**
+	 * @param Closure $callback First parameter will be the input value or null if it is not set. Callback must return true if the rule passed.
+	 * @param boolean $inverse_boolean If set to true, will require $callback to return false if the rule passed.
+	 * @param string $scope 'single' will apply to a single input from the same index group, 'multiple' – applies to all inputs, 'group' – rule is applied on a group.
+	 */
+	public function __construct (Form $form, array $input_selector, $rule, $scope = 'single') {
 		$this->form = $form;
 		$this->form->registerRule($this);
 		
-		$this->loadRule($rule_name);
-		
 		$this->addSelector($input_selector);
-	}
-	
-	private function loadRule ($rule_name) {
-		if (strpos($rule_name, '/') !== 0) {
-			$path = __DIR__ . '/rules/library/' . $rule_name;
-		} else {
-			$path = $rule_name;
+		
+		if (!class_exists($rule) || !is_subclass_of($rule, 'ay\thorax\User_Rule')) {
+			throw new \InvalidArgumentException('Rule must be name of a class extending ay\thorax\User_Rule.');
 		}
 		
-		if (strpos(strrev($path), 'sj.') === false && file_exists($path . '.js')) {
-			$path .= '.js';
-		}
-		
-		if (!file_exists($path)) {
-			throw new \Exception('Rule "' . $rule_name . '" not found.');
-		}
-	
-		$filename = pathinfo($path)['filename'];
-			
-		$this->rule = new rules\Rule($filename, file_get_contents($path));
+		$this->rule = $rule;
 	}
 	
 	/**
@@ -51,34 +40,10 @@ class Rule {
 		$this->selector_index[] = $input_selector;
 	}
 	
-	public function getName () {
-		return $this->rule->getName();
-	}
-	
-	public function getSelector () {
-		return $this->selector_index;
-	}
-	
-	public function getFunction () {
-		return $this->rule->getFunction();
-	}
-	
-	public function isInputMember (form\Input $input) {
-		$input_name = $input->getAttribute('name');
-		
-		foreach ($this->selector_index as $selector) {
-			if ($selector === $input_name || strpos($pattern, '/') === 0 && preg_match($selector, $input_name)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	public function getInputIndex () {
 		$index = $this->form->getInputIndex();
 		
-		return _array_intersect_ukey($index, array_flip($this->pattern_index), function ($a, $b) {
+		return _array_intersect_ukey($index, array_flip($this->selector_index), function ($a, $b) {
 			if (strpos($b, '/') === 0) {
 				return preg_match($b, $a) > 0 ? 0 : -1;
 			}
@@ -87,20 +52,8 @@ class Rule {
 		});
 	}
 	
-	public function getErrors () {
-		$subject = $this->getInputIndex();
-		
-		$errors = [];
-		
-		foreach ($subject as $inputs) {
-			foreach ($inputs as $input) {
-				if ($error = $this->rule->getError($input)) {
-					$errors[] = $error;
-				}
-			}
-		}
-		
-		return $errors;
+	public function getRule () {
+		return $this->rule;
 	}
 }
 
