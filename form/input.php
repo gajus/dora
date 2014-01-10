@@ -3,17 +3,57 @@ namespace ay\thorax\form;
 
 class Input {
 	private
+		/**
+		 * Quasi-persistent unique indentifier. This UID does not change unless
+		 * the underlying code has changed, i.e. UID is derived using the hash
+		 * of the instance attributes, index and the caller file/line.
+		 *
+		 * @param string
+		 */
 		$uid,
+		/**
+		 * Instance of the Form that created the Input.
+		 *
+		 * @param Form
+		 */
 		$form,
+		/**
+		 * Incremental index assigned based on the previous occurence of
+		 * input with the same name within the initiating form instance.
+		 *
+		 * @param integer
+		 */
 		$index,
-		$inbox = [],
-		$attributes = ['type' => null],
-		$properties,
-		$is_stringified = false; // boolean Has the input been casted to string?
+		//$inbox = [],
+		/**
+		 * HTML attributes.
+		 * Attributes are accessible to the Label template via getAttribute.
+		 * 
+		 * @param array
+		 */
+		$attributes = [],
+		/**
+		 * Input properties specific to the input type, e.g. 'options' property is
+		 * used together with the <select> input.
+		 * Properties are accessible to the Label template via getProperty.
+		 *
+		 * @param array
+		 */
+		$properties = [],
+		/**
+		 * Value is used to determine whether input has been casted to string.
+		 * After input is casted to string, some operations are no longer possible, e.g.
+		 * generating a new random ID.
+		 * 
+		 * @param boolean
+		 */
+		$is_stringified = false;
 	
 	/**
-	 * @param array $attributes Attributes are accessible to the Label template via getAttribute.
-	 * @param array $properties Used to pass options to the <select> input. Properties are accessible to the Label template via getProperty.
+	 * @param \ay\Thorax\Form $form Instance of the Form that created the Input.
+	 * @param string $name Input name.
+	 * @param array $attributes HTML attributes.
+	 * @param array $properties Input type specific properties.
 	 */
 	public function __construct (\ay\thorax\Form $form, $name, array $attributes = null, array $properties = null) {
 		$this->attributes['name'] = $name;
@@ -27,9 +67,9 @@ class Input {
 		
 		unset($caller);
 		
-		if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
-			$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
-		}
+		#if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
+		#	$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
+		#}
 		
 		$this->properties = $properties === null ? [] : $properties;
 		
@@ -68,35 +108,42 @@ class Input {
 	
 	*/
 	
-	public function getInbox () {
-		return $this->inbox;
-	}
+	#public function getInbox () {
+	#	return $this->inbox;
+	#}
 	
+	/**
+	 * @return string
+	 */
 	public function getUid () {
 		return $this->uid;
 	}
 	
+	/**
+	 * @param string $name Name of the property.
+	 * @return mixed
+	 */
 	public function getProperty ($name) {
-		if ($name === 'label') {
-			return $this->getLabel();
+		if ($name === 'name') {
+			return $this->getName();
 		}
 		
 		if (!isset($this->properties[$name])) {
-			throw new \Exception('Unknown property "' . $name . '".');
+			throw new \Exception('Requested for undefined property "' . $name . '".');
 		}
 		
 		return $this->properties[$name];
 	}
 	
 	/**
-	 * Label is either derived from the Input name or
+	 * Input name is either derived from the Input attribute name or
 	 * defined as an option at the time of creating the Input.
 	 *
 	 * @return string Human-friedly input name.
 	 */
-	private function getLabel () {
-		if (isset($this->properties['label'])) {
-			return $this->properties['label'];
+	private function getName () {
+		if (isset($this->properties['name'])) {
+			return $this->properties['name'];
 		}
 		
 		$name_path = $this->getNamePath();
@@ -111,7 +158,9 @@ class Input {
 			$name_path = $temp_name_path;
 		}
 		
-		return implode(array_map('ucfirst', array_filter($name_path)), ' ');
+		$this->properties['name'] = implode(array_map('ucfirst', array_filter($name_path)), ' ');
+
+		return $this->properties['name'];
 	}
 	
 	/**
@@ -119,43 +168,50 @@ class Input {
 	 */
 	public function getValue () {
 		$name_path = $this->getNamePath();
-		$form_data = $this->form->getData();
-		$array = false;
+		$input_value = $this->form->getData();
 		
-		if (strpos(strrev($this->attributes['name']), '][') === 0) { // Is this an array? e.g. foo[]
+		// Indicates whether input name attribute implies that expected value is an array, e.g. foo[].
+		$is_array = false;
+		// Indicate whether input value is found within the form input.
+		$is_found = true;
+		
+		if (strpos(strrev($this->attributes['name']), '][') === 0) {
 			array_pop($name_path);
 			
-			$array = true;
+			$is_array = true;
 		}
-		
+
 		if ($name_path != array_filter($name_path)) {
 			throw new \Exception('Unsupported multidimensional input (' . $this->attributes['name'] . '). More than one unknown dimension (e.g. foo[][bar] or foo[bar][][]).');
 		}
 		
-		foreach ($name_path as $fp) {
-			if (!isset($form_data[$fp])) {
-				$form_data = null;
+		foreach ($name_path as $np) {
+			if (!isset($input_value[$np])) {
+				$is_found = false;
+				$input_value = null;
 				
-				break;	
+				break;
 			}
 			
-			$form_data = $form_data[$fp];
+			$input_value = $input_value[$np];
 		}
 		
-		// If input type cannot handle multiple values, then use the incremented input index to get the input value.
-		if ($array && !isset($this->attributes['multiple']) && isset($form_data[$this->index])) {
-			$form_data = $form_data[$this->index];
-		} else if ($form_data === null && isset($this->attributes['value'])) {
-			$form_data = $this->attributes['value'];
+		// If input type cannot handle multiple values, then use input index to get the input value.
+		// @todo See if multiple attribute requires that name has [] array declaration.
+		if ($is_array && !isset($this->attributes['multiple']) && isset($input_value[$this->index])) {
+			$input_value = $input_value[$this->index];
+		} else if (!$is_found && isset($this->attributes['value'])) {
+			// @todo This should be used only when value is not in "is_submitted" state.
+			$input_value = $this->attributes['value'];
 		}
 		
-		if (!$array && is_array($form_data)) {
+		if (!$is_array && is_array($input_value)) {
 			throw new \Exception('Input value cannot be an array.');
 		} else if (!$form_data && $array) {
-			$form_data = [];
+			$input_value = [];
 		}
 		
-		return $form_data;
+		return $input_value;
 	}
 	
 	/**
@@ -267,16 +323,15 @@ class Input {
 	
 	public function stringify () {
 		if ($this->is_stringified) {
-			throw new \ErrorException('Input has already been stringified.');
+			throw new \Exception('Input has already been stringified.');
 		}
 		
 		$this->is_stringified = true;
 		
-		// Default input type is "text". If "options" property is passed,
-		// then input is assumed to be <select>.
+		// Default input type is "text". If "options" property is present, then input is assumed to be <select>.
 		if (isset($this->properties['options'])) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
-				throw new \ErrorException('Unsupported parameter "options" in [input="' . $this->attributes['type'] . '"] context.');
+				throw new \Exception('Unsupported property "options" in [input="' . $this->attributes['type'] . '"] context.');
 			}
 			
 			$this->attributes['type'] = 'select';
@@ -299,6 +354,7 @@ class Input {
 				foreach ($this->properties['options'] as $v => $l) {
 					$selected = '';
 					
+					// @todo Check if input has "multiple" attribute.
 					if ((is_array($value) && in_array($v, $value) || $value == $v)) {
 						$selected = ' selected="selected"';
 					}
@@ -309,23 +365,20 @@ class Input {
 				$input = '<select ' . $attributes_string . '>' . $options_string . '</select>';
 				break;
 			
-			case 'textarea':
-				if (is_array($value)) {
-					$value = isset($value[$this->index]) ? $value[$this->index] : '';
-				}
-			
-				$input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
-				break;
-		
 			case 'password':
 				$input = '<input ' . $attributes_string . '>';
 				break;
+
 			default:
 				if (is_array($value)) {
 					$value = isset($value[$this->index]) ? $value[$this->index] : '';
 				}
-			
-				$input = '<input ' . $attributes_string . ' value="' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '">';
+
+				if ($this->attributes['type'] === 'textarea') {
+					$input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
+				} else {
+					$input = '<input ' . $attributes_string . ' value="' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '">';
+				}
 				break;
 		}
 		

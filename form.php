@@ -3,19 +3,38 @@ namespace ay\thorax;
 
 class Form {
 	private
+		/**
+		 * Quasi-persistent unique indentifier. This UID does not change unless
+		 * the underlying code has changed, i.e. UID is derived using the hash
+		 * of the caller file/line.
+		 * 
+		 * @param string
+		 */
 		$uid,
+		/**
+		 * Input assigned to the form. This data is used together with input_index
+		 * to determine the representable input value.
+		 *
+		 * @param array
+		 */
 		$data = [],
+		/**
+		 * Index of all inputs generated using this form instance.
+		 * ['input_name' => [instance1, instance2, ..], ..]
+		 *
+		 * @param array
+		 */
 		$input_index = [],
-		$is_submitted = false,
-		$labels = [],
-		$rules = [];
+		/**
+		 * @param boolean
+		 */
+		$is_submitted = false;
 		
 	/**
 	 * @param array $default_data Data used to prefill the form.
 	 * @param array $input Input data will overwrite $default_data. Defaults to $_POST.
 	 */
 	public function __construct (array $default_data = null, array $input = null) {
-		// Generate persistent Form UID.
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 		
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
@@ -58,16 +77,8 @@ class Form {
 	public function addLabel ($template = null) {
 		return new Label($this, $template);
 	}
-	
-	public function addRule (array $input_selector, $rule) {
-		return new Rule($this, $input_selector, $rule);
-	}
-	
-	public function getRules () {
-		return $this->rules;
-	}
-	
-	public function isError () {
+		
+	/*public function isError () {
 		$errors = [];
 	
 		foreach ($this->getRules() as $rule) {
@@ -84,7 +95,7 @@ class Form {
 		}
 		
 		return $errors;
-	}
+	}*/
 	
 	public function getInputIndex () {
 		return $this->input_index;
