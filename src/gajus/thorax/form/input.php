@@ -24,7 +24,6 @@ class Input {
 		 * @param integer
 		 */
 		$index,
-		//$inbox = [],
 		/**
 		 * HTML attributes.
 		 * Attributes are accessible to the Label template via getAttribute.
@@ -67,16 +66,11 @@ class Input {
 		
 		unset($caller);
 		
-		#if (isset($_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()])) {
-		#	$this->inbox = $_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()];
-		#}
-		
 		$this->properties = $properties === null ? [] : $properties;
 
 		if (!isset($this->properties['name'])) {
+			// Input name is either derived from the Input attribute name.
 			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
-
-
 		}
 		
 		if ($attributes) {
@@ -85,38 +79,6 @@ class Input {
 			}
 		}
 	}
-	
-	/*public function __destruct () {
-		if ($this->form->isSubmitted()) {
-			$_SESSION['thorax']['flash']['inbox'][$this->form->getUid()][$this->getUid()] = $this->inbox;
-		}
-	}*/
-	
-	public function getForm () {
-		return $this->input;
-	}
-	
-	// ?
-	/*public function sendError ($message) {
-		$this->addToInbox( new \gajus\thorax\input\Error($this, $message));
-	}*/
-
-	/**
-	 * Inbox is a persistent layer used to convey meta data (e.g. Error object).
-	 * If Input has been stringifid before the value is set, then Inbox data
-	 * will be conveyd in the session until the next request.
-	 *
-	 * @param object $value Must be a serializable object.
-	 */
-	/*public function addToInbox (object $value) {
-		$this->inbox[] = $value;
-	}
-	
-	*/
-	
-	#public function getInbox () {
-	#	return $this->inbox;
-	#}
 	
 	/**
 	 * @return string
@@ -136,22 +98,6 @@ class Input {
 		
 		return $this->properties[$name];
 	}
-	
-	/**
-	 * Input name is either derived from the Input attribute name or
-	 * defined as an option at the time of creating the Input.
-	 *
-	 * @return string Human-friedly input name.
-	 */
-	/*private function getName () {
-		if (isset($this->properties['name'])) {
-			return $this->properties['name'];
-		}
-
-		$this->properties['name'] = $this->form->getTranslator()->getInputName($this);
-		
-		return $this->properties['name'];
-	}*/
 	
 	/**
 	 * @return mixed If no value is matched, will return null or (if input name implies that expected value is an array) an empty array.

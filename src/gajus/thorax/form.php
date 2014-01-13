@@ -68,12 +68,6 @@ class Form {
 		return $this->translator;
 	}
 	
-	public function __destruct () {
-		/*if ($this->isSubmitted()) {
-			unset($_SESSION['thorax']['flash']['inbox'][$this->getUid()]);
-		}*/
-	}
-	
 	public function input ($name, array $attributes = null, array $properties = null) {
 		return new form\Input($this, $name, $attributes, $properties);
 	}
@@ -82,25 +76,6 @@ class Form {
 		return new Label($this, $template);
 	}
 		
-	/*public function isError () {
-		$errors = [];
-	
-		foreach ($this->getRules() as $rule) {
-			foreach ($rule->getInputIndex() as $input) {
-				// Unless input rule implies array, this refers to the first occurence of the input.
-				
-				$rule_class = $rule->getRule();
-				$rule_instance = new $rule_class($input[0]);
-				
-				if (!$rule_instance->isValid()) {
-					$errors[] = $rule_instance->getMessage();
-				}
-			}
-		}
-		
-		return $errors;
-	}*/
-	
 	public function getInputIndex () {
 		return $this->input_index;
 	}
