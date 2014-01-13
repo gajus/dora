@@ -1,1 +1,0 @@
-<?=$form->input('password', ['type' => 'password'])?>

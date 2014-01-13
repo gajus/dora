@@ -1,1 +1,0 @@
-<?=$form->input('textarea', ['type' => 'textarea', 'rows' => 3])?>

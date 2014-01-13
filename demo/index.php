@@ -1,13 +1,11 @@
 <?php
-set_include_path(__DIR__ . '/../../../../vendor');
+set_include_path(__DIR__ . '/../src');
 
 spl_autoload_register();
 
 session_start();
 
 ob_start();
-
-require __DIR__ . '/demo.php';
 
 $index = [];
 
@@ -27,7 +25,7 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 			</div>
 		
 			<div class="body">
-				<pre><code class="language-php"><?=htmlspecialchars(file_get_contents(__DIR__ . '/examples/' . $name . '.php'))?></code></pre>
+				<pre><code class="language-php"><?=str_replace("\t", '    ', htmlspecialchars(file_get_contents(__DIR__ . '/examples/' . $name . '.php')))?></code></pre>
 			</div>
 		</div>
 		<?php endif;?>
@@ -48,7 +46,7 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 			<div class="description"></div>
 		
 			<div class="body">
-				<pre><code class="language-markup"><?=htmlspecialchars(clean_html_code($output))?></code></pre>
+				<pre><code class="language-markup"><?=htmlspecialchars($output)?></code></pre>
 			</div>
 		</div>
 		<?php endif;?>
@@ -61,41 +59,40 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 <head>
 	<script src="static/js/jquery-1.10.2.min.js"></script>
 	<script src="static/js/frontend.js"></script>
+	<script src="static/js/highlight/highlight.pack.js"></script>
 	
-	<link href="static/js/prism/prism.css" rel="stylesheet">
+	<script>
+	hljs.initHighlightingOnLoad();
+	</script>
+
+	<link href="static/js/highlight/styles/default.css" rel="stylesheet">
 	<link href="static/css/frontend.css" rel="stylesheet">
 </head>
 <body>
 	<div id="examples">
-		
+		<?=$example('form_input', 'Form & input')?>
+		<?=$example('input_name', 'Input name')?>
+		<?=$example('attributes', 'Attributes')?>
+		<?=$example('value_resolution', 'Value Resolution')?>
+		<?=$example('templates', 'Templates')?>
+		<?=$example('submit', 'Submit')?>
 		<?php /*
-		<?=$example('hello/form_input', 'Form & input')?>
-		<?=$example('hello/form_input_2', 'Form & input #2')?>
-		<?=$example('hello/attributes', 'Manipulating attributes')?>
-		<?=$example('hello/dynamic_attributes', 'Dynamic attributes')?>
-		<?=$example('hello/arrays', 'Arrays')?>
-		<?=$example('hello/templates', 'Templates')?>
-		<?=$example('hello/templates_2', 'Templates #2')?>
-		<?=$example('hello/submit', 'Submit')?>
-		<?=$example('hello/validation', 'Validation')?>*/?>
-		<?=$example('hello/validation_2', 'Validation #2')?>
-		<?php /*<?=$example('hello/messages', 'Messages')?>
-		<?=$example('hello/custom_rules_errors', 'Custom Rules & Errors')?>
-		<?=$example('hello/javascript', 'JavaScript')?>*/?>
 		
+		<?=$example('messages', 'Messages')?>*/?>
 	</div>
-	
-	<div id="thorax">
+
+	<div id="sidebar">
 		<h1>Thorax</h1>
-		
-		<ul class="index">
+		<h2>Input validation – <br><a href="https://github.com/gajus/thorax" target="_blank">https://github.com/gajus/thorax</a></h2>
+
+		<iframe src="http://ghbtns.com/github-btn.html?user=gajus&repo=thorax&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+		<ol class="nav">
 			<?php foreach ($index as $id => $name):?>
-			<li><a href="#example-<?=$id?>"><?=$name?></a></li>
+			<li><?=$name?></li>
 			<?php endforeach;?>
-		</ul>
+		</ol>
 	</div>
-	
-	<script src="static/js/prism/prism.js"></script>
 </body>
 </html>
 <?php

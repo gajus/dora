@@ -1,1 +1,0 @@
-<?=$form->input('checkbox', ['type' => 'checkbox', 'value' => 'foo'])?>

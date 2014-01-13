@@ -1,0 +1,9 @@
+0.0.1 / 2014-01-13
+
+* Added Translator. Translator is responsible for Input name.
+
+0.0.0 / 2014-01-12
+
+* Starting change log.
+* Added composer.json.
+* Changed namespace from ay\ to gajus\ to match the Github repository.

@@ -11,11 +11,15 @@ h1,
 h2,
 h3 { font-weight: normal; margin: 0; }
 
+/*h1,
+h2,
+h3 { font-weight: normal; margin: 0; }
+
 h1 {
 	font-size: 30px; line-height: 60px; letter-spacing: 1px;
 }
 
-h2 { font-size: 20px; line-height: 20px; margin: 40px; background: #F4D03F; padding: 20px; text-transform: uppercase; width: 1060px; }
+h2 { font-size: 20px; line-height: 20px; margin: 40px; background: #F4D03F; padding: 20px; text-transform: uppercase; width: 1060px; }*/
 
 p {
 	margin: 10px 0;
@@ -31,28 +35,47 @@ p {
 	}
 }
 
-#thorax {
-	height: 60px; position: fixed; z-index: 9; width: 450px; top: 0; right: 0; background: #F4D03F;
+#sidebar {
+	background: #343131; color: #fff; overflow: hidden; width: 300px; position: fixed; left: 0; top: 0; bottom: 0;
 	
-	h1 { padding: 0 20px; }
-	
-	.github {
-		display: block; background: #F5F5F5 url('../images/GitHub-Mark-32px.png') no-repeat 20px 50%; line-height: 60px; padding: 0 20px 0 72px; color: #000; text-decoration: none; cursor: pointer;
-		
-		&:hover { background-color: #F4D03F; }
+	iframe { margin: 0 20px; }
+
+	.nav {
+		display: block; margin: 40px 0; padding: 0; background: #E3E3E3; color: #808080; border-right: 1px solid #C9C9C9;
+
+		li {
+			padding: 10px; cursor: pointer;
+
+			&:hover { background: #D6D6D6; }
+
+			&.active { background: #fff; color: #000; font-weight: 500; }
+		}
 	}
-	
-	.index {
-		display: block; background: #fff; padding: 10px 20px 20px 20px; font: normal 14px/20px Georgia, 'Times New Roman', sans-serif;
-		
-		li { margin: 10px 0 0 0; list-style: inside decimal; }
-		
-		a { color: #C0392B; }
+
+	h1 { font-size: 30px; line-height: 30px; margin: 20px; }
+	h2 { font-size: 18px; line-height: 20px; margin: 20px; }
+
+	a { color: #F4D03F; }
+}
+
+#header {
+	background: #fff; margin: 0 0 0 300px; overflow: hidden;
+
+	> .aux {
+		overflow: hidden; width: 1100px; background: #eee; margin: 40px;
+	}
+
+	.text {
+		margin: 20px;
+
+		p { margin: 10px 0 0 0; }
+
+		> :first-child { margin: 0; }
 	}
 }
 
 #examples {
-	width: 1100px; margin: 0 40px 40px 40px; overflow: hidden;
+	width: 1100px; margin: 0 40px 40px 340px; padding: 0 40px 0 0; overflow: hidden;
 }
 
 .example {
