@@ -261,9 +261,9 @@ class Input {
 				break;
 
 			default:
-				if (is_array($value)) {
-					$value = isset($value[$this->index]) ? $value[$this->index] : '';
-				}
+				#if (is_array($value)) {
+				#	$value = isset($value[$this->index]) ? $value[$this->index] : '';
+				#}
 
 				if ($this->attributes['type'] === 'textarea') {
 					$input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
