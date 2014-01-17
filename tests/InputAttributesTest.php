@@ -38,46 +38,52 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testSetNameAttribute () {
-		return $this->markTestSkipped('setAttribute is private method');
-
+	/*public function testSetNameAttribute () {
 		$input = new \gajus\dora\Input('test');
 
 		$input->setAttribute('name', 'test');
-	}
+	}*/
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testSetAttributeNameNotString () {
-		return $this->markTestSkipped('setAttribute is private method');
-
+	/*public function testSetAttributeNameNotString () {
 		$input = new \gajus\dora\Input('test');
 
 		$input->setAttribute(['?'], 'test');
+	}*/
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	/*public function testSetAttributeValueNotString () {
+		$input = new \gajus\dora\Input('test');
+
+		$input->setAttribute('test', ['?']);
+	}*/
+
+	/**
+	 * @expectedException LogicException
+	 */
+	/*public function testSetAttributeValueAfterStringification () {
+		$input = new \gajus\dora\Input('test');
+
+		(string) $input;
+
+		$input->setAttribute('test', 'test');
+	}*/
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetNameAttribute () {
+		$input = new \gajus\dora\Input('test', ['name' => 'test']);
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetAttributeValueNotString () {
-		return $this->markTestSkipped('setAttribute is private method');
-
-		$input = new \gajus\dora\Input('test');
-
-		$input->setAttribute('test', ['?']);
-	}
-
-	/**
-	 * @expectedException LogicException
-	 */
-	public function testSetAttributeValueAfterStringification () {
-		return $this->markTestSkipped('setAttribute is private method');
-
-		$input = new \gajus\dora\Input('test');
-
-		(string) $input;
-
-		$input->setAttribute('test', 'test');
+		$input = new \gajus\dora\Input('test', ['test' => ['?']]);
 	}
 }

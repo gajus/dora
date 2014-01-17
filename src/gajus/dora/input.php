@@ -155,9 +155,11 @@ class Input {
 		#	throw new \LogicException('Too late to set attribute value.');
 		#}
 		
-		if (!is_string($name)) {
-			throw new \InvalidArgumentException('Attribute name is not a string.');
-		} else if (!is_string($value)) {
+		// Not possible when setAttribute is private.
+		#if (!is_string($name)) {
+		#	throw new \InvalidArgumentException('Attribute name is not a string.');
+		#} else
+		if (!is_string($value)) {
 			throw new \InvalidArgumentException('Attribute value is not a string.');
 		} else if ($name === 'name') {
 			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
