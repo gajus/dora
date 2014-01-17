@@ -186,6 +186,7 @@ class Input {
 				break;
 			
 			case 'textarea':
+			case 'select':
 				unset($attributes['type']);
 				break;
 		}

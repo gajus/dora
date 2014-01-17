@@ -67,7 +67,7 @@ class Form {
 		}
 	}
 
-	public function input ($name, array $attributes = [], array $properties = []) {
+	public function input ($name, array $attributes = null, array $properties = []) {
 		$input = new Input($name, $attributes, $properties);
 
 		if (isset($properties['value'])) {

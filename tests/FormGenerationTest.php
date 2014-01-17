@@ -41,4 +41,12 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertSame(['baz' => 'quux'], $data);
 	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testFormInputCannotSetValueProperty () {
+		$form = new \gajus\dora\Form();
+		$form->input('test', null, ['value' => 'test']);
+	}
 }

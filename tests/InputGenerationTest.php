@@ -18,7 +18,7 @@ class InputGenerationTest extends PHPUnit_Framework_TestCase {
 	public function testTypeSelect ($attributes, $properties) {
 		$input = new \gajus\dora\Input('test', $attributes, $properties);
 
-		$this->assertSame('<select name="test" type="select"></select>', $input->toString());
+		$this->assertSame('<select name="test"></select>', $input->toString());
 	}
 
 	public function testTypeSelectProvider () {
