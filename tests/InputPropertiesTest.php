@@ -1,9 +1,23 @@
 <?php
 class InputPropertyTest extends PHPUnit_Framework_TestCase {
-	public function testSetInputProperty () {
-		$input = new \gajus\dora\Input('test', null, ['foo' => 'bar']);
+	public function testSetInputPropertyName () {
+		$input = new \gajus\dora\Input('test', null, ['name' => 'bar']);
 
-		$this->assertSame('bar', $input->getProperty('foo'));
+		$this->assertSame('bar', $input->getProperty('name'));
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetInputPropertyUnknown () {
+		new \gajus\dora\Input('test', null, ['foo' => 'bar']);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetTextInputPropertyUnsupported () {
+		new \gajus\dora\Input('test', ['type' => 'text'], ['options' => ['a', 'b']]);
 	}
 
 	/**

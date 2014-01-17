@@ -57,7 +57,15 @@ class Input {
 			}
 		}
 
-		$this->properties = $properties;
+		foreach ($properties as $k => $v) {
+			$this->setProperty($k, $v);
+		}
+
+		if (!isset($this->attributes['type']) && isset($this->properties['options'])) {
+			$this->attributes['type'] = 'select';
+		} else if (!isset($this->attributes['type'])) {
+			$this->attributes['type'] = 'text';
+		}
 
 		if (!isset($this->properties['value'])) {
 			$this->properties['value'] = null;
@@ -65,6 +73,14 @@ class Input {
 
 		if (!isset($this->properties['name'])) {
 			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
+		}
+
+		if (isset($this->attributes['type']) && in_array($this->attributes['type'], ['radio', 'checkbox']) && !isset($this->attributes['value'])) {
+			throw new \BadMethodCallException('[type="radio|checkbox"] input requires "value" attribute.');
+		}
+
+		if (isset($this->properties['options']) && $this->attributes['type'] !== 'select') {
+			throw new \InvalidArgumentException('[input="' . $this->attributes['type'] . '"] does not support "options" property.');
 		}
 	}
 
@@ -80,6 +96,10 @@ class Input {
 	public function setProperty ($name, $value) {
 		if (!is_string($name)) {
 			throw new \InvalidArgumentException('Property name is not a string.');
+		}
+
+		if (!in_array($name, ['name', 'value', 'options'])) {
+			throw new \InvalidArgumentException('Unknown property "' . $name . '".');
 		}
 
 		$this->properties[$name] = $value;
@@ -130,10 +150,10 @@ class Input {
 	 * @param string $name
 	 * @param string $value
 	 */
-	public function setAttribute ($name, $value) {
-		if ($this->is_stringified) {
-			throw new \LogicException('Too late to set attribute value.');
-		}
+	private function setAttribute ($name, $value) {
+		#if ($this->is_stringified) {
+		#	throw new \LogicException('Too late to set attribute value.');
+		#}
 		
 		if (!is_string($name)) {
 			throw new \InvalidArgumentException('Attribute name is not a string.');
@@ -178,10 +198,6 @@ class Input {
 		switch ($this->attributes['type']) {
 			case 'checkbox':
 			case 'radio':
-				if (!isset($this->attributes['value'])) {
-					throw new \BadMethodCallException('input[type="radio|checkbox"] value attribute is required.');
-				}
-				
 				$value = $this->getValue();
 				
 				if ($this->attributes['value'] == $value || is_array($value) && in_array($this->attributes['value'], $value)) {
@@ -217,17 +233,6 @@ class Input {
 		}
 		
 		$this->is_stringified = true;
-		
-		// Default input type is "text". If "options" property is present, then input is assumed to be <select>.
-		if (isset($this->properties['options'])) {
-			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
-				throw new \InvalidArgumentException('Unsupported property "options" in [input="' . $this->attributes['type'] . '"] context.');
-			}
-			
-			$this->attributes['type'] = 'select';
-		} else if (!isset($this->attributes['type'])) {
-			$this->attributes['type'] = 'text';
-		}
 		
 		$value = $this->getValue();
 		

@@ -39,6 +39,8 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetNameAttribute () {
+		return $this->markTestSkipped('setAttribute is private method');
+
 		$input = new \gajus\dora\Input('test');
 
 		$input->setAttribute('name', 'test');
@@ -48,6 +50,8 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetAttributeNameNotString () {
+		return $this->markTestSkipped('setAttribute is private method');
+
 		$input = new \gajus\dora\Input('test');
 
 		$input->setAttribute(['?'], 'test');
@@ -57,6 +61,8 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetAttributeValueNotString () {
+		return $this->markTestSkipped('setAttribute is private method');
+
 		$input = new \gajus\dora\Input('test');
 
 		$input->setAttribute('test', ['?']);
@@ -66,6 +72,8 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException LogicException
 	 */
 	public function testSetAttributeValueAfterStringification () {
+		return $this->markTestSkipped('setAttribute is private method');
+
 		$input = new \gajus\dora\Input('test');
 
 		(string) $input;
