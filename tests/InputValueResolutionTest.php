@@ -26,10 +26,10 @@ class InputValueResolutionTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider valueNumericArrayProvider
 	 * @dataProvider valueAssociativeArrayProvider
 	 */
-	public function testValue ($name, $value) {
+	public function testValue ($name, $expected) {
 		$input = $this->form->input($name);
 
-		$this->assertSame($input->getValue(), $value);
+		$this->assertSame($expected, $input->getValue());
 	}
 
 	public function valueNumericArrayProvider () {
@@ -68,8 +68,8 @@ class InputValueResolutionTest extends PHPUnit_Framework_TestCase {
 		$input2 = $this->form->input('bar[]');
 		$input3 = $this->form->input('bar[]');
 
-		$this->assertSame($input1->getValue(), 5);
-		$this->assertSame($input2->getValue(), 10);
+		$this->assertSame(5, $input1->getValue());
+		$this->assertSame(10, $input2->getValue());
 		
 		$this->assertNull($input3->getValue());
 	}

@@ -1,9 +1,11 @@
 <?php
-class FormGeneration extends PHPUnit_Framework_TestCase {
+class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	public function testCreateInput () {
 		$form = new \gajus\dora\Form();
 
-		$this->assertInstanceOf($form->input('name'), 'gajus\dora\input');
+		$input = $form->input('name');
+
+		$this->assertInstanceOf('gajus\dora\input', $input);
 	}
 
 	public function testDefaultData () {
@@ -11,7 +13,7 @@ class FormGeneration extends PHPUnit_Framework_TestCase {
 
 		$data = $form->getData();
 
-		$this->assertSame($data, ['foo' => 'bar']);
+		$this->assertSame(['foo' => 'bar'], $data);
 	}
 
 	public function testInputData () {
@@ -19,7 +21,7 @@ class FormGeneration extends PHPUnit_Framework_TestCase {
 
 		$data = $form->getData();
 
-		$this->assertSame($data, ['foo' => 'bar']);
+		$this->assertSame(['foo' => 'bar'], $data);
 	}
 
 	public function testDefaultInputData () {
@@ -29,14 +31,14 @@ class FormGeneration extends PHPUnit_Framework_TestCase {
 
 		$data = $form->getData();
 
-		$this->assertSame($data, ['foo' => 'bar']);
+		$this->assertSame(['foo' => 'bar'], $data);
 	}
 
 	public function testInputDataOverwritesDefaultData () {
-		$form => new \gajus\dora\Form(['foo' => 'bar', 'baz' => 'qux'], ['baz' => 'quux']);
+		$form = new \gajus\dora\Form(['foo' => 'bar', 'baz' => 'qux'], ['baz' => 'quux']);
 
 		$data = $form->getData();
 
-		$this->assertSame($data, ['baz' => 'quux']);
+		$this->assertSame(['baz' => 'quux'], $data);
 	}
 }

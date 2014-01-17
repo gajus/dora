@@ -36,8 +36,8 @@ class Form {
 	 * @param array $input Input data will overwrite $default_data. Defaults to $_POST.
 	 */
 	public function __construct (array $default_data = null, array $input = null) {
-		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-		
+		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
 
 		unset($caller);
@@ -46,11 +46,15 @@ class Form {
 			$input = $_POST;
 		}
 
-		$this->is_submitted = isset($input['dora']['uid']) && $input['dora']['uid'] == $this->getUid();
+
+		$this->is_submitted = !!$input;
+		#$this->is_submitted = isset($input['dora']['uid']) && $input['dora']['uid'] == $this->getUid();
 		
 		unset($input['dora']);
 
-		if ($this->is_submitted) {			
+		#var_dump($default_data, $input);
+
+		if ($this->is_submitted) {
 			$_SESSION['dora']['flash']['form'][$this->getUid()] = $input;
 			
 			$this->data = $input;		
