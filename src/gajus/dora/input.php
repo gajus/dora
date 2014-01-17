@@ -74,7 +74,7 @@ class Input {
 	 */
 	public function getProperty ($name) {
 		if (!isset($this->properties[$name])) {
-			throw new \Exception('Requested for undefined property "' . $name . '".');
+			throw new \InvalidArgumentException('Requested for undefined property "' . $name . '".');
 		}
 		
 		return $this->properties[$name];
