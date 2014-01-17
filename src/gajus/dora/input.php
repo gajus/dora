@@ -1,7 +1,8 @@
 <?php
-namespace gajus\thorax\form;
+namespace gajus\dora;
 
 class Input {
+
 	private
 		/**
 		 * Quasi-persistent unique indentifier. This UID does not change unless
@@ -10,20 +11,14 @@ class Input {
 		 *
 		 * @param string
 		 */
-		$uid,
-		/**
-		 * Instance of the Form that created the Input.
-		 *
-		 * @param Form
-		 */
-		$form,
+		#$uid,
 		/**
 		 * Incremental index assigned based on the previous occurence of
 		 * input with the same name within the initiating form instance.
 		 *
 		 * @param integer
 		 */
-		$index,
+		#$index,
 		/**
 		 * HTML attributes.
 		 * Attributes are accessible to the Label template via getAttribute.
@@ -49,42 +44,28 @@ class Input {
 		$is_stringified = false;
 	
 	/**
-	 * @param \gajus\Thorax\Form $form Instance of the Form that created the Input.
 	 * @param string $name Input name.
 	 * @param array $attributes HTML attributes.
-	 * @param array $properties Input type specific properties.
+	 * @param array $properties
 	 */
-	public function __construct (\gajus\thorax\Form $form, $name, array $attributes = null, array $properties = null) {
+	public function __construct ($name, array $attributes = null, array $properties = []) {
 		$this->attributes['name'] = $name;
-		$this->form = $form;
-		$this->index = $this->form->registerInput($this);
-		
-		// Generate persistent Input UID.
-		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
-		
-		$this->uid = crc32($caller['file'] . '_' . $caller['line'] . '_' . $this->attributes['name'] . '_' . $this->index);
-		
-		unset($caller);
-		
-		$this->properties = $properties === null ? [] : $properties;
 
-		if (!isset($this->properties['name'])) {
-			// Input name is either derived from the Input attribute name.
-			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
-		}
-		
 		if ($attributes) {
 			foreach ($attributes as $k => $v) {
 				$this->setAttribute($k, $v);
 			}
 		}
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getUid () {
-		return $this->uid;
+
+		$this->properties = $properties;
+
+		if (!isset($this->properties['value'])) {
+			$this->properties['value'] = null;
+		}
+
+		if (!isset($this->properties['name'])) {
+			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
+		}
 	}
 	
 	/**
@@ -98,56 +79,21 @@ class Input {
 		
 		return $this->properties[$name];
 	}
+
+	/**
+	 * @param string $name Name of the property.
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public function setProperty ($name, $value) {
+		$this->properties[$name] = $value;
+	}
 	
 	/**
 	 * @return mixed If no value is matched, will return null or (if input name implies that expected value is an array) an empty array.
 	 */
 	public function getValue () {
-		$name_path = $this->getNamePath();
-		$input_value = $this->form->getData();
-		
-		// Indicates whether input name attribute implies that expected value is an array, e.g. foo[].
-		$is_array = false;
-		// Indicate whether input value is found within the form input.
-		$is_found = true;
-		
-		if (strpos(strrev($this->attributes['name']), '][') === 0) {
-			array_pop($name_path);
-			
-			$is_array = true;
-		}
-
-		if ($name_path != array_filter($name_path)) {
-			throw new \Exception('Unsupported multidimensional input (' . $this->attributes['name'] . '). More than one unknown dimension (e.g. foo[][bar] or foo[bar][][]).');
-		}
-		
-		foreach ($name_path as $np) {
-			if (!isset($input_value[$np])) {
-				$is_found = false;
-				$input_value = null;
-				
-				break;
-			}
-			
-			$input_value = $input_value[$np];
-		}
-		
-		// If input type cannot handle multiple values, then use input index to get the input value.
-		// @todo See if multiple attribute requires that name has [] array declaration.
-		if ($is_array && !isset($this->attributes['multiple']) && isset($input_value[$this->index])) {
-			$input_value = $input_value[$this->index];
-		} else if (!$is_found && isset($this->attributes['value'])) {
-			// @todo This should be used only when value is not in "is_submitted" state.
-			$input_value = $this->attributes['value'];
-		}
-		
-		if (!$is_array && is_array($input_value)) {
-			throw new \Exception('Input value cannot be an array.');
-		} else if (!$input_value && $is_array) {
-			$input_value = [];
-		}
-		
-		return $input_value;
+		return $this->properties['value'];
 	}
 	
 	/**
@@ -155,7 +101,7 @@ class Input {
 	 *
 	 * @return array [name="a[b][c][]"] is represented ['a', 'b', 'c'].
 	 */
-	private function getNamePath () {
+	public function getNamePath () {
 		if (strpos($this->attributes['name'], '[') === false) {
 			return [$this->attributes['name']];
 		}
@@ -182,7 +128,9 @@ class Input {
 		}
 	
 		if ($name === 'name') {
-			throw new \InvalidArgumentException('Name cannot be overwritten.');
+			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
+		#} else if ($name === 'multiple') {
+		#	throw new \InvalidArgumentException('"multiple" attribute cannot be overwritten post construction.');
 		} else if (is_int($name)) {
 			throw new \InvalidArgumentException('Missing parameter value.');
 		}
@@ -257,9 +205,9 @@ class Input {
 		return trim($attributes_string);
 	}
 	
-	public function stringify () {
+	public function toString () {
 		if ($this->is_stringified) {
-			throw new \Exception('Input has already been stringified.');
+			throw new \RuntimeException('Input has already been stringified.');
 		}
 		
 		$this->is_stringified = true;
@@ -267,7 +215,7 @@ class Input {
 		// Default input type is "text". If "options" property is present, then input is assumed to be <select>.
 		if (isset($this->properties['options'])) {
 			if (isset($this->attributes['type']) && $this->attributes['type'] !== 'select') {
-				throw new \Exception('Unsupported property "options" in [input="' . $this->attributes['type'] . '"] context.');
+				throw new \InvalidArgumentException('Unsupported property "options" in [input="' . $this->attributes['type'] . '"] context.');
 			}
 			
 			$this->attributes['type'] = 'select';
@@ -290,8 +238,7 @@ class Input {
 				foreach ($this->properties['options'] as $v => $l) {
 					$selected = '';
 					
-					// @todo Check if input has "multiple" attribute.
-					if ((is_array($value) && in_array($v, $value) || $value == $v)) {
+					if ((is_array($value) && in_array($v, $value) || !is_null($value) && $value == $v)) {
 						$selected = ' selected="selected"';
 					}
 				
@@ -319,14 +266,14 @@ class Input {
 		}
 		
 		// In case of multiple forms on the page, thorax[uid] is used to catch specific form submit event.
-		if ($this->attributes['type'] === 'submit') {
-			$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form->getUid() . '">';
-		}
+		#if ($this->attributes['type'] === 'submit') {
+		#	$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form_uid . '">';
+		#}
 				
 		return $input;
 	}
 	
 	public function __toString () {
-		return $this->stringify();
+		return $this->toString();
 	}
 }

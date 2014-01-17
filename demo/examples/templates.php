@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\thorax\Form();
+$form = new \gajus\dora\Form();
 
 // Label = Template
 
@@ -9,11 +9,11 @@ $label = $form->addLabel();
 echo $label->input('foo');
 echo $label->input('bar');
 
-// To define custom template, you need a function/closure that accepts \gajus\thorax\form\Input instance.
-$template = function (\gajus\thorax\form\Input $input) {
+// To define custom template, you need a function/closure that accepts \gajus\dora\form\Input instance.
+$template = function (\gajus\dora\form\Input $input) {
 	ob_start();
 	?>
-	<div class="thorax-input custom">
+	<div class="dora-input custom">
 		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 	</div>

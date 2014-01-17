@@ -1,7 +1,7 @@
 <?php
 // First Form parameter is used to populate default Form data.
 // Second Form parameter identifies input source (default: $_POST).
-$form = new \gajus\thorax\Form([
+$form = new \gajus\dora\Form([
 	'foo' => 'Heeeere\'s...Johnny!',
 	'bar' => 'Yada, yada, yada.',
 	'baz' => 0,
@@ -16,3 +16,6 @@ echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 
 // Third parameter defines input properties.
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+
+
+#$input = new \gajus\dora\Input('test')

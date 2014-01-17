@@ -70,22 +70,24 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 </head>
 <body>
 	<div id="examples">
+		<?=$example('theoretical', 'Theoretical')?>
+		<?php /*
 		<?=$example('form_input', 'Form & input')?>
 		<?=$example('input_name', 'Input name')?>
 		<?=$example('attributes', 'Attributes')?>
 		<?=$example('value_resolution', 'Value Resolution')?>
 		<?=$example('templates', 'Templates')?>
 		<?=$example('submit', 'Submit')?>
-		<?php /*
+		
 		
 		<?=$example('messages', 'Messages')?>*/?>
 	</div>
 
 	<div id="sidebar">
-		<h1>Thorax</h1>
-		<h2>Input validation – <br><a href="https://github.com/gajus/thorax" target="_blank">https://github.com/gajus/thorax</a></h2>
+		<h1>Dora</h1>
+		<h2>Input validation – <br><a href="https://github.com/gajus/dora" target="_blank">https://github.com/gajus/dora</a></h2>
 
-		<iframe src="http://ghbtns.com/github-btn.html?user=gajus&repo=thorax&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+		<iframe src="http://ghbtns.com/github-btn.html?user=gajus&repo=dora&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
 
 		<ol class="nav">
 			<?php foreach ($index as $id => $name):?>

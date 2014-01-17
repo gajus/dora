@@ -1,12 +1,10 @@
-# Thorax
+# Dora
 
 Input generation/handling library.
 
-Thorax has evolved from a [single function](https://gist.github.com/gajus/8392582). However, functional implementation encouraged bad practise, such as relying on the state of `$GLOBALS`. Thorax embodies the simplicity of the original implementation with a light touch of OO to properly handle environment variables.
+Dora has evolved from a [single function](https://gist.github.com/gajus/8392582). Generating input does not require much more than a single function. However, procedural implementation encouraged bad practises, e.g. relying on the state of `$GLOBALS`. Dora embodies the simplicity of the original implementation with a light touch of OO to properly handle environment variables.
 
-## Using Thorax
-
-Using Thorax is as simple as:
+## Using Dora
 
 ```php
 <?php
@@ -26,4 +24,4 @@ The above will produce:
 
 ## Documentation & Examples
 
-[Interactive documentation](https://dev.anuary.com/2f46cbc3-5bba-590c-bb08-66aca81710a1/demo/) covers all of the Thorax functionality.
+[Interactive documentation](https://dev.anuary.com/2f46cbc3-5bba-590c-bb08-66aca81710a1/demo/) covers all of the Dora functionality.

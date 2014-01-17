@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\thorax\Form();
+$form = new \gajus\dora\Form();
 
 $input = $form->input('foo', ['value' => 'bar']);
 
@@ -21,7 +21,7 @@ try {
 	$input->setAttribute('value', 'qux');
 } catch (\Exception $e) {
 	?>
-	<div class="thorax-message"><?=$e->getMessage()?></div>
+	<div class="dora-message"><?=$e->getMessage()?></div>
 	<?php
 }
 
@@ -43,6 +43,6 @@ try {
 	$bar->getAttribute('id');
 } catch (\Exception $e) {
 	?>
-	<div class="thorax-message"><?=$e->getMessage()?></div>
+	<div class="dora-message"><?=$e->getMessage()?></div>
 	<?php
 }

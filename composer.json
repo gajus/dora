@@ -1,8 +1,8 @@
 {
-	"name": "gajus/thorax",
+	"name": "gajus/dora",
 	"description": "Form/input generation library.",
 	"keywords": ["input", "form", "generation"],
-	"homepage": "https://github.com/gajus/thorax",
+	"homepage": "https://github.com/gajus/dora",
 	"type": "library",
 	"license": "BSD-3-Clause",
 	"authors": [

@@ -1,14 +1,14 @@
 <?php
-$form = new \ay\thorax\Form();
+$form = new \ay\dora\Form();
 
-$label = new \ay\thorax\Label($form, function ($input) {
+$label = new \ay\dora\Label($form, function ($input) {
 	
 	// Retrieve all entries for "tag-list". Inbox is input specific.
 	// $tags = $input->getInbox('tag-list');
 	
 	ob_start();
 	?>
-	<div class="thorax-input">
+	<div class="dora-input">
 		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
 		<?=$input?>
 		<?php /*if ($tags):?>

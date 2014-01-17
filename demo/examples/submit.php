@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\thorax\Form(['foo' => 'Default "foo" value']);
+$form = new \gajus\dora\Form(['foo' => 'Default "foo" value']);
 
 if ($form->isSubmitted()) {
 	header('Location: ' . $_SERVER['REQUEST_URI']);
@@ -11,7 +11,7 @@ if ($form->isSubmitted()) {
 	<?=$form->input('foo')?>
 	<?=$form->input('bar', ['value' => mt_rand(1000,9999)])?>
 	
-	<div class="thorax-buttons">
+	<div class="dora-buttons">
 		<?=$form->input('action[submit]', ['type' => 'submit', 'value' => 'Submit'])?>
 	</div>
 </form>
