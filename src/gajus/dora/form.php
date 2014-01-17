@@ -137,9 +137,9 @@ class Form {
 	#
 	#}
 	
-	#public function getData () {
-	#	return $this->data;
-	#}
+	public function getData () {
+		return $this->data;
+	}
 	
 	/**
 	 * @return string
