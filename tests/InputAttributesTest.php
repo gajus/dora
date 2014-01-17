@@ -61,4 +61,15 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 
 		$input->setAttribute('test', ['?']);
 	}
+
+	/**
+	 * @expectedException LogicException
+	 */
+	public function testSetAttributeValueAfterStringification () {
+		$input = new \gajus\dora\Input('test');
+
+		(string) $input;
+
+		$input->setAttribute('test', 'test');
+	}
 }

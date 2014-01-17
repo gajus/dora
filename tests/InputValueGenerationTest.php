@@ -53,4 +53,28 @@ class InputValueGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertSame('<select multiple="multiple" name="test[]"><option value="0">a</option><option value="1" selected="selected">b</option><option value="2" selected="selected">c</option></select>', $input->toString());
 	}
+
+	public function testTypeCheckboxWithValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'checkbox', 'value' => '1'], ['value' => 1]);
+
+		$this->assertSame('<input checked="checked" name="test" type="checkbox">', $input->toString());
+	}
+
+	public function testTypeCheckboxWithDifferentValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'checkbox', 'value' => '1'], ['value' => 2]);
+
+		$this->assertSame('<input name="test" type="checkbox">', $input->toString());
+	}
+
+	public function testTypeRadioWithValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'radio', 'value' => '1'], ['value' => 1]);
+
+		$this->assertSame('<input checked="checked" name="test" type="radio">', $input->toString());
+	}
+
+	public function testTypeRadioWithDifferentValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'radio', 'value' => '1'], ['value' => 2]);
+
+		$this->assertSame('<input name="test" type="radio">', $input->toString());
+	}
 }

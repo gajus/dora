@@ -78,6 +78,10 @@ class Input {
 	 * @return mixed
 	 */
 	public function setProperty ($name, $value) {
+		if (!is_string($name)) {
+			throw new \InvalidArgumentException('Property name is not a string.');
+		}
+
 		$this->properties[$name] = $value;
 	}
 
@@ -138,7 +142,7 @@ class Input {
 		} else if ($name === 'name') {
 			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
 		}
-		
+
 		$this->attributes[$name] = $value;
 	}
 	
@@ -175,7 +179,7 @@ class Input {
 			case 'checkbox':
 			case 'radio':
 				if (!isset($this->attributes['value'])) {
-					throw new \Exception('input[type="radio"] value attribute is required.');
+					throw new \BadMethodCallException('input[type="radio|checkbox"] value attribute is required.');
 				}
 				
 				$value = $this->getValue();
@@ -250,6 +254,8 @@ class Input {
 				$input = '<select ' . $attributes_string . '>' . $options_string . '</select>';
 				break;
 			
+			case 'checkbox':
+			case 'radio':
 			case 'password':
 				$input = '<input ' . $attributes_string . '>';
 				break;

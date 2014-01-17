@@ -9,6 +9,15 @@ class InputPropertyTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
+	public function testSetPropertyNameNotString () {
+		$input = new \gajus\dora\Input('test');
+
+		$input->setProperty(['?'], 'test');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
 	public function testGetUndefinedProperty () {
 		$input = new \gajus\dora\Input('test');
 

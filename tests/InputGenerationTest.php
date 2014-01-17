@@ -34,10 +34,34 @@ class InputGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame('<input name="test" type="password">', $input->toString());
 	}
 
-	public function testCustomAttributeValue () {
-		$input = new \gajus\dora\Input('test', ['data-test' => 'foo']);
+	public function testTypeCheckboxWithValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'checkbox', 'value' => '1']);
 
-		$this->assertSame('foo', $input->getAttribute('data-test'));
+		$this->assertSame('<input name="test" type="checkbox">', $input->toString());
+	}
+
+	/**
+	 * @expectedException BadMethodCallException
+	 */
+	public function testTypeCheckboxWithoutValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'checkbox']);
+
+		$input->toString();
+	}
+
+	public function testTypeRadioWithValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'radio', 'value' => '1']);
+
+		$this->assertSame('<input name="test" type="radio">', $input->toString());
+	}
+
+	/**
+	 * @expectedException BadMethodCallException
+	 */
+	public function testTypeRadioWithoutValue () {
+		$input = new \gajus\dora\Input('test', ['type' => 'radio']);
+
+		$input->toString();
 	}
 
 	public function testCustomAttributeOutput () {
