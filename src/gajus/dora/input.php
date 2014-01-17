@@ -67,7 +67,20 @@ class Input {
 			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
 		}
 	}
+
+	public function getUid () {
+		return mt_rand(0, 9999);
+	}
 	
+	/**
+	 * @param string $name Name of the property.
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public function setProperty ($name, $value) {
+		$this->properties[$name] = $value;
+	}
+
 	/**
 	 * @param string $name Name of the property.
 	 * @return mixed
@@ -78,15 +91,6 @@ class Input {
 		}
 		
 		return $this->properties[$name];
-	}
-
-	/**
-	 * @param string $name Name of the property.
-	 * @param mixed $value
-	 * @return mixed
-	 */
-	public function setProperty ($name, $value) {
-		$this->properties[$name] = $value;
 	}
 	
 	/**
@@ -119,28 +123,27 @@ class Input {
 	 * There is no value escaping either. It is assumed that pre-caution
 	 * steps (e.g. FILTER_SANITIZE_SPECIAL_CHARS) are already taken.
 	 *
-	 * $name cannot be an integer (relavent when constructor attributes array
-	 * contains only value). Do not assume that ['checked'] is checked="checked".
+	 * @param string $name
+	 * @param string $value
 	 */
 	public function setAttribute ($name, $value) {
 		if ($this->is_stringified) {
 			throw new \LogicException('Too late to set attribute value.');
 		}
-	
-		if ($name === 'name') {
+		
+		if (!is_string($name)) {
+			throw new \InvalidArgumentException('Attribute name is not a string.');
+		} else if (!is_string($value)) {
+			throw new \InvalidArgumentException('Attribute value is not a string.');
+		} else if ($name === 'name') {
 			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
-		#} else if ($name === 'multiple') {
-		#	throw new \InvalidArgumentException('"multiple" attribute cannot be overwritten post construction.');
-		} else if (is_int($name)) {
-			throw new \InvalidArgumentException('Missing parameter value.');
 		}
 		
 		$this->attributes[$name] = $value;
 	}
 	
 	/**
-	 * If [id] is undefined at the time of request, Thorax will use input UID.
-	 * Do not rely on the UID for selecting the element in the frontend code. 
+	 * If [id] is undefined at the time of request, Dora will use instance UID.
 	 *
 	 * @return null|string Attribute value.
 	 */
@@ -150,9 +153,7 @@ class Input {
 				throw new \LogicException('Too late to generate random [id].');
 			}
 			
-			$this->attributes['id'] = 'thorax-input-' . $this->getUid();
-		} else if ($name === 'value') {
-			return $this->getValue();
+			$this->attributes['id'] = 'dora-input-' . $this->getUid();
 		}
 		
 		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
@@ -266,9 +267,9 @@ class Input {
 				break;
 		}
 		
-		// In case of multiple forms on the page, thorax[uid] is used to catch specific form submit event.
+		// In case of multiple forms on the page, dora[uid] is used to catch specific form submit event.
 		#if ($this->attributes['type'] === 'submit') {
-		#	$input = $input . '<input type="hidden" name="thorax[uid]" value="' . $this->form_uid . '">';
+		#	$input = $input . '<input type="hidden" name="dora[uid]" value="' . $this->form_uid . '">';
 		#}
 				
 		return $input;
