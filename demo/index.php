@@ -16,6 +16,12 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 	require __DIR__ . '/examples/' . $name . '.php';
 	$output = ob_get_clean();
 
+	$tidy = new \Tidy;
+	$tidy->parseString($output, ['show-body-only' => true, 'indent' => true, 'wrap' => false], 'utf8');
+	$tidy->cleanRepair();
+
+	$output = (string) $tidy;
+
 	?>
 	<div class="example" id="example-<?=str_replace('/', '__', $name)?>">
 		<?php if (in_array('code', $display)):?>

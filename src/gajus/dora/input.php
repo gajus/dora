@@ -13,13 +13,6 @@ class Input {
 		 */
 		#$uid,
 		/**
-		 * Incremental index assigned based on the previous occurence of
-		 * input with the same name within the initiating form instance.
-		 *
-		 * @param integer
-		 */
-		#$index,
-		/**
 		 * HTML attributes.
 		 * Attributes are accessible to the Label template via getAttribute.
 		 * 
@@ -98,7 +91,7 @@ class Input {
 			throw new \InvalidArgumentException('Property name is not a string.');
 		}
 
-		if (!in_array($name, ['name', 'value', 'options'])) {
+		if (!in_array($name, ['name', 'value', 'options', 'uid'])) {
 			throw new \InvalidArgumentException('Unknown property "' . $name . '".');
 		}
 
@@ -179,7 +172,7 @@ class Input {
 				throw new \LogicException('Too late to generate random [id].');
 			}
 			
-			$this->attributes['id'] = 'dora-input-' . $this->getUid();
+			$this->attributes['id'] = isset($this->properties['uid']) ? 'dora-input-' . $this->properties['uid'] : 'dora-input-' . $this->getUid();
 		}
 		
 		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;

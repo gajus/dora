@@ -20,13 +20,16 @@ class Form {
 		 */
 		$data = [],
 		/**
-		 * Index of all inputs generated using this form instance.
+		 * Index of all inputs generated using this form instance. Incremental input
+		 * index is used to determine input value in case of a numeric array input.
+		 *
 		 * ['input_name' => [instance1, instance2, ..], ..]
 		 *
 		 * @param array
 		 */
 		$input_index = [],
 		/**
+		 * @see \gajus\dora\Form::isSubmitted()
 		 * @param boolean
 		 */
 		$is_submitted = false;
@@ -46,13 +49,10 @@ class Form {
 			$input = $_POST;
 		}
 
-
 		$this->is_submitted = !!$input;
 		#$this->is_submitted = isset($input['dora']['uid']) && $input['dora']['uid'] == $this->getUid();
 		
 		unset($input['dora']);
-
-		#var_dump($default_data, $input);
 
 		if ($this->is_submitted) {
 			$_SESSION['dora']['flash']['form'][$this->getUid()] = $input;
@@ -67,22 +67,42 @@ class Form {
 		}
 	}
 
+	public function getData () {
+		return $this->data;
+	}
+
+	/**
+	 * Used to create input that is associated with the Form instance data.
+	 * 
+	 * @param string $name
+	 * @param array $attributes
+	 * @param array $properties
+	 * @return \gajus\dora\Input
+	 */
 	public function input ($name, array $attributes = null, array $properties = []) {
-		$input = new Input($name, $attributes, $properties);
-
-		if (isset($properties['value'])) {
-			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
-		}
-
+		// Incremental input index is based on input name.
 		if (!isset($this->input_index[$name])) {
 			$this->input_index[$name] = [];
 		}
 
 		$index = count($this->input_index[$name]);
 
-		$this->input_index[$name][] = $input;
+		if (isset($properties['value'])) {
+			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
+		}
 
-		// Resolve input value
+		if (isset($properties['uid'])) {
+			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "uid" property.');
+		}
+
+		$properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);
+		
+		$input = new Input($name, $attributes, $properties);
+
+		#$this->input_index[$name][] = $input;
+		$this->input_index[$name][] = null;
+
+		// Input name path (e.g. foo[bar]) is used to resolve input value from the Form instance data.
 		$path = $input->getNamePath();
 
 		$value = $this->data;
@@ -124,26 +144,6 @@ class Form {
 
 		return $input;
 	}
-
-	#public function addLabel ($template = null) {
-	#	return new Label($this, $template);
-	#}
-		
-	#public function getInputIndex () {
-	#	return $this->input_index;
-	#}
-	
-	#public function isSubmitted () {
-	#	return $this->is_submitted;
-	#}
-
-	#public function getInputData ($name, $index = 0) {
-	#
-	#}
-	
-	public function getData () {
-		return $this->data;
-	}
 	
 	/**
 	 * @return string
@@ -151,27 +151,4 @@ class Form {
 	public function getUid () {
 		return $this->uid;
 	}
-	
-	/**
-	 * This method is ought to be called only from Input __construct context.
-	 *
-	 * @return integer Incremental input index based on the number of previous occurences of Input with the same name within the Form.
-	 */
-	#public function registerInput (form\Input $input) {	
-	#	$input_name = $input->getAttribute('name');
-	#	
-	#	if (!isset($this->input_index[$input_name])) {
-	#		$this->input_index[$input_name] = [];
-	#	} else {
-	#		foreach ($this->input_index[$input_name] as $i) {
-	#			if ($input === $i) {
-	#				throw new \Exception('Input is already registered.');
-	#			}
-	#		}
-	#	}
-	#	
-	#	$this->input_index[$input_name][] = $input;
-	#	
-	#	return count($this->input_index[$input_name]) - 1;
-	#}
 }
