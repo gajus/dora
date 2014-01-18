@@ -1,28 +1,33 @@
 <?php
+namespace demo;
+
 $form = new \gajus\dora\Form();
 
-// Label = Template
+// Using default template (dress):
 
-// You can use default label.
-$label = $form->addLabel();
+$dress = new \gajus\dora\Dress($form);
 
-echo $label->input('foo');
-echo $label->input('bar');
+echo $dress->input('foo');
+echo $dress->input('bar');
 
-// To define custom template, you need a function/closure that accepts \gajus\dora\form\Input instance.
-$template = function (\gajus\dora\form\Input $input) {
-	ob_start();
-	?>
-	<div class="dora-input custom">
-		<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('label')?></label>
-		<?=$input?>
-	</div>
-	<?php
-	return ob_get_clean();
-};
+// Define custom template:
 
-// Then add/refer to that function/closure when adding a new Label instance.
-$custom_label = $form->addLabel($template);
+class MyDress extends \gajus\dora\dress\Manikin {
+	public function toString () {
+		$input = $this->getInput();
 
-echo $custom_label->input('baz', null, ['label' => 'Baz Custom Label']);
-echo $custom_label->input('qux', null, ['label' => 'Qux Custom Label']);
+		ob_start();
+		?>
+		<div class="dora-input custom">
+			<label for="<?=$input->getAttribute('id')?>"><?=$input->getProperty('name')?></label>
+			<?=$input?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+}
+
+$my_dress = new \gajus\dora\Dress($form, 'demo\MyDress');
+
+echo $my_dress->input('baz', null, ['name' => 'Baz Custom Name']);
+echo $my_dress->input('qux', null, ['name' => 'Qux Custom Name']);

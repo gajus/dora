@@ -1,19 +1,19 @@
 <?php
 $form = new \gajus\dora\Form();
 
-// "input" method returns instance of \gajus\dora\Form\Input.
+// "input" method returns instance of gajus\dora\form\Input.
 // Use "name" property to give Input a human-readable name.
-$foo = $form->input('foo', null, ['name' => 'Foo Label Property']);
+$input = $form->input('foo', null, ['name' => 'Foo Label Property']);
 ?>
-<div class="dora-row">
-	<label><?=$foo->getProperty('name')?></label>
-	<?=$foo?>
+<div class="dora-input">
+	<label><?=$input->getProperty('name')?></label>
+	<?=$input?>
 </div>
 <?php
-// If Input instance hasn't got "name" property, Thorax will derive name from the input name attribute.
+// When "name" property is not provided, Dora will derive name from the input "name" attribute.
 $input = $form->input('bar[baz_qux][]');
 ?>
-<div class="dora-row">
+<div class="dora-input">
 	<label><?=$input->getProperty('name')?></label>
 	<?=$input?>
 </div>

@@ -75,17 +75,14 @@ $example = function ($name, $example_label, $display = ['code', 'demo', 'markup'
 	<link href="static/css/frontend.css" rel="stylesheet">
 </head>
 <body>
-	<div id="examples">
-		<?=$example('theoretical', 'Theoretical')?>
-		<?php /*
+	<div id="examples">		
 		<?=$example('form_input', 'Form & input')?>
 		<?=$example('input_name', 'Input name')?>
 		<?=$example('attributes', 'Attributes')?>
 		<?=$example('value_resolution', 'Value Resolution')?>
 		<?=$example('templates', 'Templates')?>
 		<?=$example('submit', 'Submit')?>
-		
-		
+		<?php /*
 		<?=$example('messages', 'Messages')?>*/?>
 	</div>
 
