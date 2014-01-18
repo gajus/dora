@@ -36,6 +36,16 @@ class DressGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($input->getAttribute('id'), $dressed_input->toString());
 	}
 
+	public function testCastDressedInputToString () {
+		$dress = new \gajus\dora\Dress($this->form, 'gajus\dora\dress\Test');
+
+		$dressed_input = $dress->input('test');
+
+		$input = $dressed_input->getInput();
+
+		$this->assertSame($input->getAttribute('id'), (string) $dressed_input);
+	}
+
 	public function testGetFormInstanceFromDressedInputInstance () {
 		$dress = new \gajus\dora\Dress($this->form);
 
