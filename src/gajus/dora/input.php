@@ -152,7 +152,7 @@ class Input {
 		#if (!is_string($name)) {
 		#	throw new \InvalidArgumentException('Attribute name is not a string.');
 		#} else
-		if (!is_string($value)) {
+		if (!is_string($value) && !is_int($value)) {
 			throw new \InvalidArgumentException('Attribute value is not a string.');
 		} else if ($name === 'name') {
 			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
