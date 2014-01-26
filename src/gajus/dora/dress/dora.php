@@ -7,11 +7,19 @@ class Dora extends Manikin {
 		$input_id = $input->getAttribute('id');
 		$input_string = $input->toString();
 		$errors = [];
+		$description = $input->getProperty('description');		
 
 		ob_start();?>
 		<div class="dora-input">
 			<label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
-			<?=$input_string?>
+			<div class="input">
+				<?=$input_string?>
+			</div>
+			<?php if ($description):?>
+			<div class="description">
+				<p><?=$description?></p>
+			</div>
+			<?php endif;?>
 			<?php if ($errors):?>
 			<ul class="dora-error">
 				<li><?=implode('</li><li>', $errors)?></li>
