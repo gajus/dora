@@ -87,14 +87,6 @@ class Input {
 	 * @return mixed
 	 */
 	public function setProperty ($name, $value) {
-		if (!is_string($name)) {
-			throw new \InvalidArgumentException('Property name is not a string.');
-		}
-
-		if (!in_array($name, ['name', 'value', 'options', 'uid'])) {
-			throw new \InvalidArgumentException('Unknown property "' . $name . '".');
-		}
-
 		$this->properties[$name] = $value;
 	}
 
@@ -103,11 +95,7 @@ class Input {
 	 * @return mixed
 	 */
 	public function getProperty ($name) {
-		if (!isset($this->properties[$name])) {
-			throw new \InvalidArgumentException('Requested for undefined property "' . $name . '".');
-		}
-		
-		return $this->properties[$name];
+		return isset($this->properties[$name]) ? $this->properties[$name] : null;
 	}
 	
 	/**
