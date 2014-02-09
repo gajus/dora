@@ -19,7 +19,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Gajus\\": "src/"
+			"gajus\\dora\\": "src/"
 		}
 	}
 }
