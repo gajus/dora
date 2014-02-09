@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../src/gajus/dora/form.php';
-require __DIR__ . '/../src/gajus/dora/input.php';
-require __DIR__ . '/../src/gajus/dora/dress.php';
-require __DIR__ . '/../src/gajus/dora/dress/manikin.php';
-require __DIR__ . '/../src/gajus/dora/dress/test.php';
-require __DIR__ . '/../src/gajus/dora/dress/dora.php';
+require __DIR__ . '/../src/Form.php';
+require __DIR__ . '/../src/Input.php';
+require __DIR__ . '/../src/Dress.php';
+require __DIR__ . '/../src/dress/Manikin.php';
+require __DIR__ . '/../src/dress/Test.php';
+require __DIR__ . '/../src/dress/Dora.php';
