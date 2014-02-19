@@ -1,7 +1,7 @@
 <?php
 class InputPropertyTest extends PHPUnit_Framework_TestCase {
 	public function testSetInputPropertyName () {
-		$input = new \gajus\dora\Input('test', null, ['name' => 'bar']);
+		$input = new \Gajus\Dora\Input('test', null, ['name' => 'bar']);
 
 		$this->assertSame('bar', $input->getProperty('name'));
 	}
@@ -10,6 +10,6 @@ class InputPropertyTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetTextInputPropertyUnsupported () {
-		new \gajus\dora\Input('test', ['type' => 'text'], ['options' => ['a', 'b']]);
+		new \Gajus\Dora\Input('test', ['type' => 'text'], ['options' => ['a', 'b']]);
 	}
 }

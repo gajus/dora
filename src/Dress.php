@@ -1,17 +1,17 @@
 <?php
-namespace gajus\dora;
+namespace Gajus\Dora;
 
 class Dress {
 	private
 		$form,
 		$dress;
 
-	public function __construct (Form $form, $dress = 'gajus\dora\dress\Dora') {
+	public function __construct (Form $form, $dress = 'Gajus\Dora\Dress\Dora') {
 		$this->form = $form;
 		$this->dress = $dress;
 
-		if (!is_subclass_of($dress, 'gajus\dora\dress\Manikin')) {
-			throw new \InvalidArgumentException('Dress class must extend gajus\dora\dress\Manikin.');
+		if (!is_subclass_of($dress, 'Gajus\Dora\Dress\Manikin')) {
+			throw new \InvalidArgumentException('Dress class must extend Gajus\Dora\Dress\Manikin.');
 		}
 	}
 

@@ -5,7 +5,7 @@ class InputValueResolutionTest extends PHPUnit_Framework_TestCase {
 		$form;
 
 	public function setUp () {
-		$this->form = new \gajus\dora\Form([
+		$this->form = new \Gajus\Dora\Form([
 			'bar' => [5, 10],
 			'baz' => [
 				null,

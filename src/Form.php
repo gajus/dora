@@ -1,8 +1,7 @@
 <?php
-namespace gajus\dora;
+namespace Gajus\Dora;
 
 class Form {
-
 	private
 		/**
 		 * Quasi-persistent unique indentifier. This UID does not change unless

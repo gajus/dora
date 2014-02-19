@@ -1,5 +1,5 @@
 <?php
-namespace gajus\dora\dress;
+namespace Gajus\Dora\Dress;
 
 class Dora extends Manikin {
 	public function toString () {

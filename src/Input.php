@@ -1,8 +1,7 @@
 <?php
-namespace gajus\dora;
+namespace Gajus\Dora;
 
 class Input {
-
 	private
 		/**
 		 * Quasi-persistent unique indentifier. This UID does not change unless

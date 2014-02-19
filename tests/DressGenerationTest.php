@@ -4,30 +4,30 @@ class DressGenerationTest extends PHPUnit_Framework_TestCase {
 		$form;
 
 	public function setUp () {
-		$this->form = new \gajus\dora\Form();
+		$this->form = new \Gajus\Dora\Form();
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testCreateDressThatDoesNotExtendManikin () {
-		new \gajus\dora\Dress($this->form, 'stdClass');
+		new \Gajus\Dora\Dress($this->form, 'stdClass');
 	}
 
 	public function testCreateInputUsingDefaultDress () {
-		$dress = new \gajus\dora\Dress($this->form);
+		$dress = new \Gajus\Dora\Dress($this->form);
 
-		$this->assertInstanceOf('gajus\dora\dress\Dora', $dress->input('test'));
+		$this->assertInstanceOf('Gajus\Dora\Dress\Dora', $dress->input('test'));
 	}
 
 	public function testCreateInputUsingTestDress () {
-		$dress = new \gajus\dora\Dress($this->form, 'gajus\dora\dress\Test');
+		$dress = new \Gajus\Dora\Dress($this->form, 'Gajus\Dora\Dress\Test');
 
-		$this->assertInstanceOf('gajus\dora\dress\Test', $dress->input('test'));
+		$this->assertInstanceOf('Gajus\Dora\Dress\Test', $dress->input('test'));
 	}
 
 	public function testCovertDressedInputToString () {
-		$dress = new \gajus\dora\Dress($this->form, 'gajus\dora\dress\Test');
+		$dress = new \Gajus\Dora\Dress($this->form, 'Gajus\Dora\Dress\Test');
 
 		$dressed_input = $dress->input('test');
 
@@ -37,7 +37,7 @@ class DressGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCastDressedInputToString () {
-		$dress = new \gajus\dora\Dress($this->form, 'gajus\dora\dress\Test');
+		$dress = new \Gajus\Dora\Dress($this->form, 'Gajus\Dora\Dress\Test');
 
 		$dressed_input = $dress->input('test');
 
@@ -47,7 +47,7 @@ class DressGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetFormInstanceFromDressedInputInstance () {
-		$dress = new \gajus\dora\Dress($this->form);
+		$dress = new \Gajus\Dora\Dress($this->form);
 
 		$dressed_input = $dress->input('test');
 
@@ -55,10 +55,10 @@ class DressGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetInputInstanceFromDressedInputInstance () {
-		$dress = new \gajus\dora\Dress($this->form);
+		$dress = new \Gajus\Dora\Dress($this->form);
 
 		$dressed_input = $dress->input('test');
 
-		$this->assertInstanceOf('gajus\dora\Input', $dressed_input->getInput());
+		$this->assertInstanceOf('Gajus\Dora\Input', $dressed_input->getInput());
 	}
 }

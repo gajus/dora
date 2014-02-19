@@ -1,19 +1,19 @@
 <?php
 class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	public function testGetUndefinedAttribute () {
-		$input = new \gajus\dora\Input('test');
+		$input = new \Gajus\Dora\Input('test');
 
 		$this->assertNull($input->getAttribute('data-foo'));
 	}
 
 	public function testGetUndefinedIdAttribute () {
-		$input = new \gajus\dora\Input('test');
+		$input = new \Gajus\Dora\Input('test');
 
 		$this->assertNotNull($input->getAttribute('id'));
 	}
 
 	public function testGetDefinedIdAttribute () {
-		$input = new \gajus\dora\Input('test', ['id' => 'test']);
+		$input = new \Gajus\Dora\Input('test', ['id' => 'test']);
 
 		$this->assertSame('test', $input->getAttribute('id'));
 	}
@@ -22,7 +22,7 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException LogicException
 	 */
 	public function testGetUndefinedIdAttributeAfterStringification () {
-		$input = new \gajus\dora\Input('test');
+		$input = new \Gajus\Dora\Input('test');
 
 		(string) $input;
 
@@ -30,7 +30,7 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testSetInputAttribute () {
-		$input = new \gajus\dora\Input('test', ['data-foo' => 'bar']);
+		$input = new \Gajus\Dora\Input('test', ['data-foo' => 'bar']);
 
 		$this->assertSame('bar', $input->getAttribute('data-foo'));
 	}
@@ -77,13 +77,13 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetNameAttribute () {
-		$input = new \gajus\dora\Input('test', ['name' => 'test']);
+		$input = new \Gajus\Dora\Input('test', ['name' => 'test']);
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetAttributeValueNotString () {
-		$input = new \gajus\dora\Input('test', ['test' => ['?']]);
+		$input = new \Gajus\Dora\Input('test', ['test' => ['?']]);
 	}
 }

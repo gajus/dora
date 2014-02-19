@@ -1,7 +1,7 @@
 <?php
 class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	public function testCreateInput () {
-		$form = new \gajus\dora\Form();
+		$form = new \Gajus\Dora\Form();
 
 		$input = $form->input('name');
 
@@ -9,7 +9,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testDefaultData () {
-		$form = new \gajus\dora\Form(['foo' => 'bar']);
+		$form = new \Gajus\Dora\Form(['foo' => 'bar']);
 
 		$data = $form->getData();
 
@@ -17,7 +17,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testInputData () {
-		$form = new \gajus\dora\Form(null, ['foo' => 'bar']);
+		$form = new \Gajus\Dora\Form(null, ['foo' => 'bar']);
 
 		$data = $form->getData();
 
@@ -27,7 +27,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	public function testDefaultInputData () {
 		$_POST = ['foo' => 'bar'];
 
-		$form = new \gajus\dora\Form();
+		$form = new \Gajus\Dora\Form();
 
 		$data = $form->getData();
 
@@ -35,7 +35,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testInputDataOverwritesDefaultData () {
-		$form = new \gajus\dora\Form(['foo' => 'bar', 'baz' => 'qux'], ['baz' => 'quux']);
+		$form = new \Gajus\Dora\Form(['foo' => 'bar', 'baz' => 'qux'], ['baz' => 'quux']);
 
 		$data = $form->getData();
 
@@ -46,7 +46,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testFormInputCannotSetValueProperty () {
-		$form = new \gajus\dora\Form();
+		$form = new \Gajus\Dora\Form();
 
 		$form->input('test', null, ['value' => 'test']);
 	}

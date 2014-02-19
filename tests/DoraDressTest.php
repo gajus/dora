@@ -4,8 +4,8 @@ class DoraDressTest extends PHPUnit_Framework_TestCase {
 		$form;
 
 	public function setUp () {
-		$this->form = new \gajus\dora\Form();
-		$this->dress = new \gajus\dora\Dress($this->form);
+		$this->form = new \Gajus\Dora\Form();
+		$this->dress = new \Gajus\Dora\Dress($this->form);
 	}
 
 	public function testSimpleOutput () {

@@ -1,5 +1,5 @@
 <?php
-namespace gajus\dora\dress;
+namespace Gajus\Dora\Dress;
 
 /**
  * This dress is used for unit testing.

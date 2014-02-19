@@ -1,13 +1,12 @@
 <?php
-namespace gajus\dora\dress;
+namespace Gajus\Dora\Dress;
 
 abstract class Manikin {
-
 	private
 		$input,
 		$form;
 	
-	final public function __construct (\gajus\dora\Input $input, \gajus\dora\Form $form) {
+	final public function __construct (\Gajus\Dora\Input $input, \Gajus\Dora\Form $form) {
 		$this->input = $input;
 		$this->form = $form;
 	}
