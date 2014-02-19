@@ -13,7 +13,7 @@ Dora does not in any way interfere with form styling. However, Dora comes with a
 
 ```php
 <?php
-$form = new \gajus\dora\Form(['foo' => 1]);
+$form = new \Gajus\Dora\Form(['foo' => 1]);
 
 echo $form->input('foo', ['data-custom-attribute' => 'test'], ['options' => ['Knock, knock...', 'Come in.']]);
 ```
