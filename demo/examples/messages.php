@@ -1,7 +1,7 @@
 <?php
-$form = new \ay\dora\Form();
+$form = new \Gajus\Dora\Form();
 
-$label = new \ay\dora\Label($form, function ($input) {
+$label = new \Gajus\Dora\Label($form, function ($input) {
 	
 	// Retrieve all entries for "tag-list". Inbox is input specific.
 	// $tags = $input->getInbox('tag-list');

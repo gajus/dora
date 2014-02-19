@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\dora\Form([
+$form = new \Gajus\Dora\Form([
 	'mu' => ['lt' => ['id' => ['im' => ['en' => ['si' => ['on' => ['al' => 'Multidimensional Data']]]]]]],
 	'array' => ['', 'second'],
 	'checkbox_multiple' => ['c', 'd'],

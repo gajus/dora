@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\dora\Form(['foo' => 'Default "foo" value']);
+$form = new \Gajus\Dora\Form(['foo' => 'Default "foo" value']);
 
 // Example temporarily removed
 

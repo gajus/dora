@@ -2,7 +2,7 @@
 // \gajus\dora\Form(array $default_data = [][, array $input = $_POST])
 
 // $default_data is used to populate form when $input is empty.
-$form = new \gajus\dora\Form([
+$form = new \Gajus\Dora\Form([
 	'foo' => 'Heeeere\'s...Johnny!',
 	'bar' => 'Yada, yada, yada.',
 	'baz' => 0,

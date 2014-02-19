@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\dora\Form();
+$form = new \Gajus\Dora\Form();
 
 // "input" method returns instance of gajus\dora\form\Input.
 // Use "name" property to give Input a human-readable name.

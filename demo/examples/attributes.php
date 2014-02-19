@@ -1,5 +1,5 @@
 <?php
-$form = new \gajus\dora\Form();
+$form = new \Gajus\Dora\Form();
 
 $input = $form->input('foo', ['value' => 'bar']);
 

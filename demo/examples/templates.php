@@ -1,18 +1,18 @@
 <?php
 namespace demo;
 
-$form = new \gajus\dora\Form();
+$form = new \Gajus\Dora\Form();
 
 // Using default template (dress):
 
-$dress = new \gajus\dora\Dress($form);
+$dress = new \Gajus\Dora\Dress($form);
 
 echo $dress->input('foo');
 echo $dress->input('bar');
 
 // Define custom template:
 
-class MyDress extends \gajus\dora\dress\Manikin {
+class MyDress extends \Gajus\Dora\Dress\Manikin {
 	public function toString () {
 		$input = $this->getInput();
 
@@ -27,7 +27,7 @@ class MyDress extends \gajus\dora\dress\Manikin {
 	}
 }
 
-$my_dress = new \gajus\dora\Dress($form, 'demo\MyDress');
+$my_dress = new \Gajus\Dora\Dress($form, 'demo\MyDress');
 
 echo $my_dress->input('baz', null, ['name' => 'Baz Custom Name']);
 echo $my_dress->input('qux', null, ['name' => 'Qux Custom Name']);
