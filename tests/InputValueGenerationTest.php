@@ -55,26 +55,26 @@ class InputValueGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testTypeCheckboxWithValue () {
-		$input = new \Gajus\Dora\Input('test', ['type' => 'checkbox', 'value' => '1'], ['value' => 1]);
+		$input = new \Gajus\Dora\Input('test', ['type' => 'checkbox', 'value' => '2'], ['value' => 2]);
 
-		$this->assertSame('<input checked="checked" name="test" type="checkbox">', $input->toString());
+		$this->assertSame('<input checked="checked" name="test" type="checkbox" value="2">', $input->toString());
 	}
 
 	public function testTypeCheckboxWithDifferentValue () {
-		$input = new \Gajus\Dora\Input('test', ['type' => 'checkbox', 'value' => '1'], ['value' => 2]);
+		$input = new \Gajus\Dora\Input('test', ['type' => 'checkbox', 'value' => '2'], ['value' => 3]);
 
-		$this->assertSame('<input name="test" type="checkbox">', $input->toString());
+		$this->assertSame('<input name="test" type="checkbox" value="2">', $input->toString());
 	}
 
 	public function testTypeRadioWithValue () {
-		$input = new \Gajus\Dora\Input('test', ['type' => 'radio', 'value' => '1'], ['value' => 1]);
+		$input = new \Gajus\Dora\Input('test', ['type' => 'radio', 'value' => '2'], ['value' => 2]);
 
-		$this->assertSame('<input checked="checked" name="test" type="radio">', $input->toString());
+		$this->assertSame('<input checked="checked" name="test" type="radio" value="2">', $input->toString());
 	}
 
 	public function testTypeRadioWithDifferentValue () {
-		$input = new \Gajus\Dora\Input('test', ['type' => 'radio', 'value' => '1'], ['value' => 2]);
+		$input = new \Gajus\Dora\Input('test', ['type' => 'radio', 'value' => '2'], ['value' => 3]);
 
-		$this->assertSame('<input name="test" type="radio">', $input->toString());
+		$this->assertSame('<input name="test" type="radio" value="2">', $input->toString());
 	}
 }

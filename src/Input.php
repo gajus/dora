@@ -77,7 +77,7 @@ class Input {
 		}
 
 		if (isset($this->attributes['type']) && in_array($this->attributes['type'], ['radio', 'checkbox']) && !isset($this->attributes['value'])) {
-			throw new \BadMethodCallException('[type="radio|checkbox"] input requires "value" attribute.');
+			$this->attributes['value'] = 1;
 		}
 
 		if (isset($this->properties['options']) && $this->attributes['type'] !== 'select') {
@@ -202,8 +202,10 @@ class Input {
 				unset($attributes['type']);
 				break;
 		}
-		
-		unset($attributes['value']);
+
+		if (!in_array($this->attributes['type'], ['checkbox', 'radio'])) {
+			unset($attributes['value']);
+		}
 		
 		ksort($attributes); // To make the unit testing simpler.
 		
