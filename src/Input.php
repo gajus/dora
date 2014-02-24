@@ -68,7 +68,12 @@ class Input {
 		}
 
 		if (!isset($this->properties['name'])) {
-			$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
+			$name_path = $this->getNamePath();
+			
+			$this->properties['name'] = ucwords(implode(' ', explode('_', $name_path[count($name_path) - 1])));
+			#$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
+			#bump();
+			#bump($this->properties['name']);
 		}
 
 		if (isset($this->attributes['type']) && in_array($this->attributes['type'], ['radio', 'checkbox']) && !isset($this->attributes['value'])) {
