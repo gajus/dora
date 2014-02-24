@@ -11,10 +11,13 @@ class Dora extends Manikin {
 		$input_id = $input->getAttribute('id');
 		$input_string = $input->toString();
 		$errors = [];
-		$description = $input->getProperty('description');		
+		$description = $input->getProperty('description');
+
+		$class = $input->getProperty('class');
+		$class = $class ? ' ' . $class : '';
 
 		ob_start();?>
-		<div class="dora-input">
+		<div class="dora-input<?=$class?>">
 			<label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
 			<div class="input">
 				<?=$input_string?>
