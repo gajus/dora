@@ -1,3 +1,7 @@
+TODO
+
+* Add ability to add data to form instance post constructor.
+
 0.0.3 / 2014-02-17
 
 * Fixed PSR-4 autload support.
