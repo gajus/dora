@@ -37,7 +37,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 				]
 			]
 		];
-		
+
 		$form = new \Gajus\Dora\Form();
 
 		$this->assertTrue($form->isSubmitted());
@@ -46,25 +46,22 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertSame($_SESSION['gajus']['dora']['flash'], $data);
 	}
-
-	public function testDefaultInputData () {
-		$_POST = ['foo' => 'bar'];
-
-		$form = new \Gajus\Dora\Form();
-
-		$data = $form->getData();
-
-		$this->assertSame(['foo' => 'bar'], $data);
-	}
-
+	
 	public function testInputDataOverwritesDefaultData () {
-		$_POST = ['baz' => 'quux'];
+		$_SESSION['gajus']['dora']['flash'] = [
+			'foo' => 'bar',
+			'gajus' => [
+				'dora' => [
+					'uid' => (string) crc32(__FILE__ . '_' . (__LINE__ + 5))
+				]
+			]
+		];
 
 		$form = new \Gajus\Dora\Form(['foo' => 'bar', 'baz' => 'qux']);
 
 		$data = $form->getData();
 
-		$this->assertSame(['baz' => 'quux'], $data);
+		$this->assertSame($_SESSION['gajus']['dora']['flash'], $data);
 	}
 
 	/**
