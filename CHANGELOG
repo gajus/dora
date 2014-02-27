@@ -2,6 +2,12 @@ TODO
 
 * Add ability to add data to form instance post constructor.
 
+0.0.4 / 2014-02-27
+
+* It is now always assumed that $_POST variable is form input.
+* Added Psr\Log\LoggerInterface.
+* Handling a copy of the user input is now handed to ./agent.php script. This script is included using composer's file loader. It will be executed regardless of whether an instance of a form is constructed.
+
 0.0.3 / 2014-02-17
 
 * Fixed PSR-4 autload support.

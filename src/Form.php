@@ -8,6 +8,10 @@ namespace Gajus\Dora;
 class Form {
 	private
 		/**
+		 * @var Psr\Log\LoggerInterface
+		 */
+		$logger,
+		/**
 		 * Quasi-persistent unique indentifier. This UID does not change unless
 		 * the underlying code has changed, i.e. UID is derived using the hash
 		 * of the caller file/line.
@@ -30,44 +34,72 @@ class Form {
 		 *
 		 * @param array
 		 */
-		$input_index = [],
-		/**
-		 * @see \gajus\dora\Form::isSubmitted()
-		 * @param boolean
-		 */
-		$is_submitted = false;
+		$input_index = [];
 		
 	/**
 	 * @param array $default_data Data used if $input does not contain instance UID.
-	 * @param array $input Input data will overwrite $default_data. Defaults to $_POST.
 	 */
-	public function __construct (array $default_data = null, array $input = null) {
+	public function __construct (array $default_data = [], \Psr\Log\LoggerInterface $logger = null) {
+		$this->logger = $logger;
+
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
 		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
 
 		unset($caller);
 
-		if ($input === null) {
-			$input = $_POST;
+		if ($this->logger) {
+			$this->logger->debug('Generated form.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
-		$this->is_submitted = !!$input;
-		#$this->is_submitted = isset($input['dora']['uid']) && $input['dora']['uid'] == $this->getUid();
-		
-		unset($input['dora']);
-
-		if ($this->is_submitted) {
+		if ($SERVER['REQUEST_METHOD'] === 'POST') {
 			$_SESSION['gajus']['dora']['flash']['form'][$this->getUid()] = $input;
 			
-			$this->data = $input;		
+			$this->data = $input;
+		} else {
+			$this->data = $default_data;
+		}
+
+		/*if (isset($_SESSION['gajus']['dora']['flash'])) {
+			$method = __METHOD__;
+
+			register_shutdown_function(function () use ($method) {
+				if ($this->logger) {
+					$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
+				}
+			});
+		} else if ($SERVER['REQUEST_METHOD'] === 'POST') {
+			// Make a copy of the POST data when the first Form instance is instantiated.
+			$_SESSION['gajus']['dora']['flash'] = $_POST;
+
+			if ($this->logger) {
+				$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
+			}
+		}*/
+
+		/*if ($SERVER['REQUEST_METHOD'] === 'POST') {
+			$_SESSION['gajus']['dora']['flash']['form'][$this->getUid()] = $input;
+			
+			$this->data = $input;
+
+			if ($this->logger) {
+				$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
+			}
 		} else if (isset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()])) {
 			$this->data = $_SESSION['gajus']['dora']['flash']['form'][$this->getUid()];
 			
 			unset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()]);
+
+			if ($this->logger) {
+				$this->logger->debug('Form is not submitted. Form session copy is present. Populating form using session data.', ['method' => __METHOD__, 'uid' => $this->uid]);
+			}
 		} else if ($default_data !== null) {
 			$this->data = $default_data;
-		}
+
+			if ($this->logger) {
+				$this->logger->debug('Form is not submitted. There is no session data associated with the form.', ['method' => __METHOD__, 'uid' => $this->uid]);
+			}
+		}*/
 	}
 
 	public function getData () {
