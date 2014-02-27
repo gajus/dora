@@ -58,13 +58,13 @@ class Form {
 		unset($input['dora']);
 
 		if ($this->is_submitted) {
-			$_SESSION['dora']['flash']['form'][$this->getUid()] = $input;
+			$_SESSION['gajus']['dora']['flash']['form'][$this->getUid()] = $input;
 			
 			$this->data = $input;		
-		} else if (isset($_SESSION['dora']['flash']['form'][$this->getUid()])) {
-			$this->data = $_SESSION['dora']['flash']['form'][$this->getUid()];
+		} else if (isset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()])) {
+			$this->data = $_SESSION['gajus']['dora']['flash']['form'][$this->getUid()];
 			
-			unset($_SESSION['dora']['flash']['form'][$this->getUid()]);
+			unset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()]);
 		} else if ($default_data !== null) {
 			$this->data = $default_data;
 		}
