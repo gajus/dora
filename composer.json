@@ -21,6 +21,6 @@
 		"psr-4": {
 			"Gajus\\Dora\\": "src/"
 		},
-		"files": ["agent.php"]
+		"files": ["src/inc/agent.php"]
 	}
 }
