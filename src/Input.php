@@ -271,10 +271,15 @@ class Input {
 				break;
 		}
 		
-		// In case of multiple forms on the page, dora[uid] is used to catch specific form submit event.
+		
 		#if ($this->attributes['type'] === 'submit') {
 		#	$input = $input . '<input type="hidden" name="dora[uid]" value="' . $this->form_uid . '">';
 		#}
+
+		// In case of multiple forms on the page, dora[uid] is used to catch a specific form submit event.
+		if (isset($this->properties['form_uid'])) {
+			$input = $input . '<input type="hidden" name="gajus[dora][uid]" value="' . $this->properties['form_uid'] . '">';
+		}
 				
 		return $input;
 	}

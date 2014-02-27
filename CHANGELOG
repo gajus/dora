@@ -7,6 +7,7 @@ TODO
 * It is now always assumed that $_POST variable is form input.
 * Added Psr\Log\LoggerInterface.
 * Handling a copy of the user input is now handed to ./agent.php script. This script is included using composer's file loader. It will be executed regardless of whether an instance of a form is constructed.
+* gajus[dora][uid] parameter is now appended to every input when it is generad using an instance of Form. UID is used to catch submit event of a particular form. UID is used to populate only the submitted form.
 
 0.0.3 / 2014-02-17
 

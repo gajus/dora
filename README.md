@@ -30,3 +30,7 @@ The above will produce:
 ## Documentation & Examples
 
 [Interactive documentation](https://dev.anuary.com/3d48b41b-9949-56cd-b062-40b729e53521/demo/) covers all of the Dora functionality.
+
+## Note
+
+Dora assumes that application is designed using [Post/Redirect/Get](http://en.wikipedia.org/wiki/Post/Redirect/Get) pattern. Dora will not populate form upon POST request because it is assumed that POST request will result in a redirect. However, Dora will copy POST data and store it in a temporary session. This is achieved using `./src/inc/agent.php` script. If you are using composer, then this script is automatically included in every request.

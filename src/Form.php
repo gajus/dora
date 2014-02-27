@@ -16,14 +16,14 @@ class Form {
 		 * the underlying code has changed, i.e. UID is derived using the hash
 		 * of the caller file/line.
 		 * 
-		 * @param string
+		 * @var string
 		 */
 		$uid,
 		/**
 		 * Input assigned to the form. This data is used together with input_index
 		 * to determine the representable input value.
 		 *
-		 * @param array
+		 * @var array
 		 */
 		$data = [],
 		/**
@@ -32,32 +32,58 @@ class Form {
 		 *
 		 * ['input_name' => [instance1, instance2, ..], ..]
 		 *
-		 * @param array
+		 * @var array
 		 */
-		$input_index = [];
+		$input_index = [],
+		/**
+		 * Indicates whether this particular form has been submitted.
+		 * 
+		 * @var boolean
+		 */
+		$is_submitted = false;
 		
 	/**
 	 * @param array $default_data Data used if $input does not contain instance UID.
 	 */
-	public function __construct (array $default_data = [], \Psr\Log\LoggerInterface $logger = null) {
+	public function __construct (array $default_data = null, \Psr\Log\LoggerInterface $logger = null) {
+		if ($logger === null) {
+			$logger = new \Psr\Log\NullLogger();
+		}
+
 		$this->logger = $logger;
 
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
-		$this->uid = crc32($caller['file'] . '_' . $caller['line']);
+		$this->uid = (string) crc32($caller['file'] . '_' . $caller['line']);
 
 		unset($caller);
 
-		if ($this->logger) {
-			$this->logger->debug('Generated form.', ['method' => __METHOD__, 'uid' => $this->uid]);
+		$this->logger->debug('Generated form.', ['method' => __METHOD__, 'uid' => $this->uid]);
+		
+		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+			// $_POST data is captured using agent.php.
+			// It is stored in the $_SESSION['gajus']['dora']['flash'].
+			// It is available until the next GET request that is not a redirect.
+			$data = [];
+		} else if (isset($_SESSION['gajus']['dora']['flash'])) {
+			$data = $_SESSION['gajus']['dora']['flash'];
+
+			$this->logger->debug('Form is using $_SESSION data.', ['method' => __METHOD__, 'uid' => $this->uid]);
+		} else {
+			$this->data = (array) $default_data;
+
+			$this->logger->debug('Form is using $default_data data.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
-		if ($SERVER['REQUEST_METHOD'] === 'POST') {
-			$_SESSION['gajus']['dora']['flash']['form'][$this->getUid()] = $input;
-			
-			$this->data = $input;
+		#die(var_dump($data, $data['gajus']['dora']['uid']));
+
+		if (isset($data['gajus']['dora']['uid']) && $data['gajus']['dora']['uid'] === $this->uid) {
+			$this->logger->debug('Form is submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
+
+			$this->is_submitted = true;
+			$this->data = $data;
 		} else {
-			$this->data = $default_data;
+			$this->logger->debug('Form is not submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
 		/*if (isset($_SESSION['gajus']['dora']['flash'])) {
@@ -106,6 +132,10 @@ class Form {
 		return $this->data;
 	}
 
+	public function isSubmitted () {
+		return $this->is_submitted;
+	}
+
 	/**
 	 * Used to create input that is associated with the Form instance data.
 	 * 
@@ -126,10 +156,15 @@ class Form {
 			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
 		}
 
+		if (isset($properties['form_uid'])) {
+			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "form_uid" property.');
+		}
+
 		if (isset($properties['uid'])) {
 			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "uid" property.');
 		}
 
+		$properties['form_uid'] = $this->uid;
 		$properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);
 		
 		$input = new Input($name, $attributes, $properties);

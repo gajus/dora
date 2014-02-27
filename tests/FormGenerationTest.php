@@ -16,12 +16,35 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame(['foo' => 'bar'], $data);
 	}
 
-	public function testInputData () {
-		$form = new \Gajus\Dora\Form(null, ['foo' => 'bar']);
+	public function testInputDataPostDirect () {
+		$_POST = ['foo' => 'bar'];
+
+		$form = new \Gajus\Dora\Form();
+
+		$this->assertFalse($form->isSubmitted());
 
 		$data = $form->getData();
 
-		$this->assertSame(['foo' => 'bar'], $data);
+		$this->assertSame([], $data);
+	}
+
+	public function testInputDataPostSession () {
+		$_SESSION['gajus']['dora']['flash'] = [
+			'foo' => 'bar',
+			'gajus' => [
+				'dora' => [
+					'uid' => (string) crc32(__FILE__ . '_' . (__LINE__ + 5))
+				]
+			]
+		];
+		
+		$form = new \Gajus\Dora\Form();
+
+		$this->assertTrue($form->isSubmitted());
+
+		$data = $form->getData();
+
+		$this->assertSame($_SESSION['gajus']['dora']['flash'], $data);
 	}
 
 	public function testDefaultInputData () {
@@ -35,7 +58,9 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testInputDataOverwritesDefaultData () {
-		$form = new \Gajus\Dora\Form(['foo' => 'bar', 'baz' => 'qux'], ['baz' => 'quux']);
+		$_POST = ['baz' => 'quux'];
+
+		$form = new \Gajus\Dora\Form(['foo' => 'bar', 'baz' => 'qux']);
 
 		$data = $form->getData();
 

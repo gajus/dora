@@ -20,11 +20,15 @@ class Former {
      * @param LoggerInterface $logger
      */
     public function __construct (\Psr\Log\LoggerInterface $logger = null) {
+        if ($logger === null) {
+            $logger = new \Psr\Log\NullLogger();
+        }
+        
         $this->logger = $logger;
     }
 
-    public function form (array $default_data = null, array $input = null) {
-		$form = new Form($default_data, $input, $this->logger);
+    public function form (array $default_data = null) {
+		$form = new Form($default_data, $this->logger);
 
 		return new Dress($form);
 	}
