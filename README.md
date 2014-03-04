@@ -31,6 +31,17 @@ The above will produce:
 
 [Interactive documentation](https://dev.anuary.com/3d48b41b-9949-56cd-b062-40b729e53521/demo/) covers all of the Dora functionality.
 
+## The purpose of the UID
+
+If input is genered using an instance of `Form`, then each input is generated together with a hidden input `gajus[dora][uid]`, e.g. rendering text input will generate:
+
+```html
+<input id="dora-input-130102852" name="user[first_name]" type="text" value="test">
+<input type="hidden" name="gajus[dora][uid]" value="2953768934">
+```
+
+The purpose of the UID value is to identify the form that was submitted.
+
 ## Note
 
 Dora assumes that application is designed using [Post/Redirect/Get](http://en.wikipedia.org/wiki/Post/Redirect/Get) pattern. Dora will not populate form upon POST request because it is assumed that POST request will result in a redirect. However, Dora will copy POST data and store it in a temporary session. This is achieved using `./src/inc/agent.php` script. If you are using composer, then this script is automatically included in every request.
