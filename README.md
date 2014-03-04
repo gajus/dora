@@ -40,7 +40,7 @@ If input is genered using an instance of `Form`, then each input is generated to
 <input type="hidden" name="gajus[dora][uid]" value="2953768934">
 ```
 
-The purpose of the UID value is to identify the form that was submitted.
+The purpose of the UID value is to identify the form that was submitted. You can use `isSubmitted` method to capture specific form. Furthermore, UID is used to carry the flash data from page to page and to populate only the physical form that was submitted, as opposed to all the instances of inputs re-appearing with the same input name as the data in the flash container.
 
 ## Note
 
