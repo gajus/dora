@@ -236,17 +236,36 @@ class Input {
 				if (!isset($this->properties['options'])) {
 					$this->properties['options'] = [];
 				}
-				
+
 				$options_string	= '';
-				
+
+				$placeholder = null;
+				$has_selected_option = false;
+
+				if (isset($this->properties['options'][0])) {
+					$placeholder = $this->properties['options'][0];
+
+					unset($this->properties['options'][0]);
+				}
+
 				foreach ($this->properties['options'] as $v => $l) {
 					$selected = '';
-					
+
 					if ((is_array($value) && in_array($v, $value) || !is_null($value) && $value == $v)) {
 						$selected = ' selected="selected"';
+
+						$has_selected_option = true;
 					}
 				
 					$options_string	.= '<option value="' . $v . '"' . $selected . '>' . $l . '</option>';
+				}
+
+				if ($placeholder) {
+					if ($has_selected_option) {
+						$options_string	= '<option disabled="disabled">' . $placeholder . '</option>' . $options_string;
+					} else {
+						$options_string	= '<option selected="selected" disabled="disabled">' . $placeholder . '</option>' . $options_string;
+					}
 				}
 			
 				$input = '<select ' . $attributes_string . '>' . $options_string . '</select>';

@@ -2,6 +2,10 @@ TODO
 
 * Add ability to add data to form instance post constructor.
 
+0.0.5 / 2014-03-08
+
+* <select> input will generate <option> without "value" attribute when option value is "0".
+
 0.0.4 / 2014-02-27
 
 * It is now always assumed that $_POST variable is form input.
