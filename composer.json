@@ -12,7 +12,8 @@
 		}
 	],
 	"require": {
-		"php": ">=5.5"
+		"php": ">=5.5",
+		"psr/log": "1.0.0"
 	},
 	"require-dev": {
 	    "satooshi/php-coveralls": "dev-master"
