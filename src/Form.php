@@ -85,47 +85,6 @@ class Form {
 		} else {
 			$this->logger->debug('Form is not submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
-
-		/*if (isset($_SESSION['gajus']['dora']['flash'])) {
-			$method = __METHOD__;
-
-			register_shutdown_function(function () use ($method) {
-				if ($this->logger) {
-					$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
-				}
-			});
-		} else if ($SERVER['REQUEST_METHOD'] === 'POST') {
-			// Make a copy of the POST data when the first Form instance is instantiated.
-			$_SESSION['gajus']['dora']['flash'] = $_POST;
-
-			if ($this->logger) {
-				$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
-			}
-		}*/
-
-		/*if ($SERVER['REQUEST_METHOD'] === 'POST') {
-			$_SESSION['gajus']['dora']['flash']['form'][$this->getUid()] = $input;
-			
-			$this->data = $input;
-
-			if ($this->logger) {
-				$this->logger->debug('Form is submitted. Saving form data to session.', ['method' => __METHOD__, 'uid' => $this->uid]);
-			}
-		} else if (isset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()])) {
-			$this->data = $_SESSION['gajus']['dora']['flash']['form'][$this->getUid()];
-			
-			unset($_SESSION['gajus']['dora']['flash']['form'][$this->getUid()]);
-
-			if ($this->logger) {
-				$this->logger->debug('Form is not submitted. Form session copy is present. Populating form using session data.', ['method' => __METHOD__, 'uid' => $this->uid]);
-			}
-		} else if ($default_data !== null) {
-			$this->data = $default_data;
-
-			if ($this->logger) {
-				$this->logger->debug('Form is not submitted. There is no session data associated with the form.', ['method' => __METHOD__, 'uid' => $this->uid]);
-			}
-		}*/
 	}
 
 	public function getData () {
