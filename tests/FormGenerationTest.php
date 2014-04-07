@@ -44,7 +44,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$data = $form->getData();
 
-		$this->assertSame($_SESSION['gajus']['dora']['flash'], $data);
+		$this->assertSame(['foo' => 'bar'], $data);
 	}
 	
 	public function testInputDataOverwritesDefaultData () {
@@ -61,7 +61,7 @@ class FormGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$data = $form->getData();
 
-		$this->assertSame($_SESSION['gajus']['dora']['flash'], $data);
+		$this->assertSame(['foo' => 'bar'], $data);
 	}
 
 	/**

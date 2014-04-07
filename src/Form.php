@@ -69,6 +69,8 @@ class Form {
 			$data = $_SESSION['gajus']['dora']['flash'];
 
 			$this->logger->debug('Form is using $_SESSION data.', ['method' => __METHOD__, 'uid' => $this->uid]);
+		} else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['gajus']['dora']['uid']) && $_GET['gajus']['dora']['uid'] === $this->uid) {
+			$data = $_GET;
 		} else {
 			$this->data = (array) $default_data;
 

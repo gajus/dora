@@ -11,8 +11,8 @@ register_shutdown_function(function () {
     // Make a copy of the input submitted using Dora form.
     if (isset($_POST['gajus']['dora']['uid'])) {
         $_SESSION['gajus']['dora']['flash'] = $_POST;
-    } else if (isset($_GET['gajus']['dora']['uid'])) {
-        $_SESSION['gajus']['dora']['flash'] = $_GET;
+    #} else if (isset($_GET['gajus']['dora']['uid'])) {
+    #    $_SESSION['gajus']['dora']['flash'] = $_GET;
 	// Delete copy on the first page that does not issue a redirect.
 	} else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
 		unset($_SESSION['gajus']['dora']['flash']);
