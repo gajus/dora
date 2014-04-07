@@ -6,6 +6,7 @@ namespace Gajus\Dora;
  * 
  * @link https://github.com/gajus/dora for the canonical source repository
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
+ * @deprecated This will be removed. It breaks the UID.
  */
 class Former {
 	private

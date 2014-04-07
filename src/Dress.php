@@ -22,4 +22,8 @@ class Dress {
 	public function input ($name, array $attributes = null, array $properties = []) {
 		return new $this->dress($this->form->input($name, $attributes, $properties), $this->form);
 	}
+
+	public function getForm () {
+		return $this->form;
+	}
 }

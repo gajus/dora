@@ -75,8 +75,6 @@ class Form {
 			$this->logger->debug('Form is using $default_data data.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
-		#die(var_dump($data, $data['gajus']['dora']['uid']));
-
 		if (isset($data['gajus']['dora']['uid']) && $data['gajus']['dora']['uid'] === $this->uid) {
 			$this->logger->debug('Form is submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 
@@ -85,6 +83,8 @@ class Form {
 		} else {
 			$this->logger->debug('Form is not submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
+
+		unset($this->data['gajus']);
 	}
 
 	public function getData () {
