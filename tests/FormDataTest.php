@@ -1,6 +1,6 @@
 <?php
 class FormDataTest extends PHPUnit_Framework_TestCase {
-    public function testIsSubmitted () {
+    /*public function testIsSubmitted () {
         $_SESSION['gajus']['dora']['flash'] = [
             'foo' => 'bar',
             'gajus' => [
@@ -15,5 +15,5 @@ class FormDataTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($form->isSubmitted());
 
         $this->assertSame(['foo' => 'bar'], $form->getData());
-    }
+    }*/
 }

@@ -10,11 +10,11 @@ register_shutdown_function(function () {
 
     // Make a copy of the input submitted using Dora form.
     if (isset($_POST['gajus']['dora']['uid'])) {
-        $_SESSION['gajus']['dora']['flash'] = $_POST;
-    #} else if (isset($_GET['gajus']['dora']['uid'])) {
-    #    $_SESSION['gajus']['dora']['flash'] = $_GET;
-	// Delete copy on the first page that does not issue a redirect.
-	} else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
-		unset($_SESSION['gajus']['dora']['flash']);
+        // It might be that $_POST have been modified during the execution of the script.
+        parse_str(file_get_contents('php://input'), $input);
+
+        $_SESSION['gajus']['dora']['form'][$_POST['gajus']['dora']['uid']] = $input;
+    } else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
+		unset($_SESSION['gajus']['dora']['form']);
 	}
 });

@@ -1,6 +1,6 @@
 <?php
 class FormSubmitTest extends PHPUnit_Framework_TestCase {
-	public function testIsNotSubmitted () {
+	/*public function testIsNotSubmitted () {
 		$form = new \Gajus\Dora\Form();
 
 		$this->assertFalse($form->isSubmitted());
@@ -34,5 +34,5 @@ class FormSubmitTest extends PHPUnit_Framework_TestCase {
         $form = new \Gajus\Dora\Form();
 
         $this->assertTrue($form->isSubmitted());
-    }
+    }*/
 }

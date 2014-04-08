@@ -34,18 +34,18 @@ class Form {
 		 *
 		 * @var array
 		 */
-		$input_index = [],
+		$input_index = [];
 		/**
 		 * Indicates whether this particular form has been submitted.
 		 * 
 		 * @var boolean
 		 */
-		$is_submitted = false;
+		#$is_submitted = false;
 		
 	/**
-	 * @param array $default_data Data used if $input does not contain instance UID.
+	 * @param array $data
 	 */
-	public function __construct (array $default_data = null, \Psr\Log\LoggerInterface $logger = null) {
+	public function __construct (array $data = null, \Psr\Log\LoggerInterface $logger = null) {
 		if ($logger === null) {
 			$logger = new \Psr\Log\NullLogger();
 		}
@@ -58,44 +58,69 @@ class Form {
 
 		unset($caller);
 
-		$this->logger->debug('Generated form.', ['method' => __METHOD__, 'uid' => $this->uid]);
+		if (isset($_SESSION['gajus']['dora']['form'][$this->uid])) {
+			$this->data = $_SESSION['gajus']['dora']['form'][$this->uid];
+		} else {
+			$this->data = $data;
+		}
+
+		unset($this->data['gajus']);
+
 		
+
+
+
+
+
+
+
+
+
+		/*
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 			// $_POST data is captured using agent.php.
 			// It is stored in the $_SESSION['gajus']['dora']['flash'].
 			// It is available until the next GET request that is not a redirect.
-			$data = [];
+			$this->data = [];
+
+
+
+
+
+
+
+
+
 		} else if (isset($_SESSION['gajus']['dora']['flash'])) {
-			$data = $_SESSION['gajus']['dora']['flash'];
+			$this->data = $_SESSION['gajus']['dora']['flash'];
 
 			$this->logger->debug('Form is using $_SESSION data.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		} else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['gajus']['dora']['uid']) && $_GET['gajus']['dora']['uid'] === $this->uid) {
-			$data = $_GET;
+			$this->data = $_GET;
 		} else {
 			$this->data = (array) $default_data;
 
 			$this->logger->debug('Form is using $default_data data.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
-		if (isset($data['gajus']['dora']['uid']) && $data['gajus']['dora']['uid'] === $this->uid) {
+		if (isset($this->data['gajus']['dora']['uid']) && $this->data['gajus']['dora']['uid'] === $this->uid) {
 			$this->logger->debug('Form is submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 
 			$this->is_submitted = true;
-			$this->data = $data;
 		} else {
 			$this->logger->debug('Form is not submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
 		}
 
-		unset($this->data['gajus']);
+		*/
 	}
 
-	public function getData () {
+	/*public function getData () {
 		return $this->data;
 	}
 
 	public function isSubmitted () {
 		return $this->is_submitted;
-	}
+	}*/
 
 	/**
 	 * Used to create input that is associated with the Form instance data.
