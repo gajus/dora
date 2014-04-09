@@ -1,7 +1,4 @@
 <?php
-/**
- * @codeCoverageIgnoreStart
- */
 if (php_sapi_name() === 'cli') {
     return;
 }
@@ -21,6 +18,3 @@ register_shutdown_function(function () {
 		unset($_SESSION['gajus']['dora']['flash']);
 	}
 });
-/**
- * @codeCoverageIgnoreEnd
- */
