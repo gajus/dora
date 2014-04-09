@@ -34,18 +34,22 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		 *
 		 * @var array
 		 */
-		$input_index = [];
+		$input_index = [],
 		/**
 		 * Indicates whether this particular form has been submitted.
 		 * 
 		 * @var boolean
 		 */
 		#$is_submitted = false;
+		/**
+		 * @var string
+		 */
+		$template;
 		
 	/**
 	 * @param array $data Data used to populate Input generated using an instance of this Form.
 	 */
-	public function __construct (array $data = null) {
+	public function __construct (array $data = null, $template = 'Gajus\Dora\Template\Default') {
 		$this->logger = new \Psr\Log\NullLogger();
 
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
@@ -68,14 +72,6 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 			// It is stored in the $_SESSION['gajus']['dora']['flash'].
 			// It is available until the next GET request that is not a redirect.
 			$this->data = [];
-
-
-
-
-
-
-
-
 
 		} else if (isset($_SESSION['gajus']['dora']['flash'])) {
 			$this->data = $_SESSION['gajus']['dora']['flash'];
@@ -126,7 +122,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 	 * @param array $properties
 	 * @return \gajus\dora\Input
 	 */
-	public function input ($name, array $attributes = null, array $properties = []) {
+	public function input ($name, array $attributes = null, array $properties = [], $template = null) {
 		// Incremental input index is based on input name.
 		if (!isset($this->input_index[$name])) {
 			$this->input_index[$name] = [];

@@ -69,32 +69,16 @@ Input properties are used at the time of generating the input template.
 
 |name|description|
 |---|---|
-|`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. label. If input `name` property is not provided, it will be derived from the input HTML "name" attribute.|
-|`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will automatically assume that input type is "select".|
+|`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. for the label. If input `name` property is not provided, it will be derived from the input "name" attribute.|
+|`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will assume that input type is "select".|
 
 ## Template
 
-Most of the time you do not want naked `<input>`. `Input` can be dressed using templates. Dora comes with a inbuilt template called .. Dora.
+`Input` can be dressed using a template.
 
-The template itself has access to the `Input` instance, including all the properties that were passed at the time of creating the `Input`. Stripped down template logic is looking like this:
-
-```html+php
-<div class="dora-input<?=$input->getProperty('class')?>">
-    <label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
-    <div class="input">
-        <?=$input->toString()?>
-    </div>
-    <?php if ($input->getProperty('name')):?>
-    <div class="description">
-        <p><?=$input->getProperty('name')?></p>
-    </div>
-    <?php endif;?>
-</div>
+```php
+$form = new \Gajus\Dora\Form([]);
 ```
-
-### Writing a Template
-
-Each template must extend `Gajus\Dora\Dress\Manikin`. Refer to the existing templates for examples. 
 
 ## CSRF
 

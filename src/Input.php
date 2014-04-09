@@ -8,14 +8,6 @@ namespace Gajus\Dora;
 class Input {
 	private
 		/**
-		 * Quasi-persistent unique indentifier. This UID does not change unless
-		 * the underlying code has changed, i.e. UID is derived using the hash
-		 * of the instance attributes, index and the caller file/line.
-		 *
-		 * @param string
-		 */
-		#$uid,
-		/**
 		 * HTML attributes.
 		 * Attributes are accessible to the Label template via getAttribute.
 		 * 
@@ -42,7 +34,7 @@ class Input {
 	/**
 	 * @param string $name Input name.
 	 * @param array $attributes HTML attributes.
-	 * @param array $properties
+	 * @param array $properties Input properties, e.g. input name.
 	 */
 	public function __construct ($name, array $attributes = null, array $properties = []) {
 		$this->attributes['name'] = $name;
@@ -71,9 +63,6 @@ class Input {
 			$name_path = $this->getNamePath();
 			
 			$this->properties['name'] = ucwords(implode(' ', explode('_', $name_path[count($name_path) - 1])));
-			#$this->properties['name'] = ucwords(implode(' ', explode('_', implode('_', $this->getNamePath()))));
-			#bump();
-			#bump($this->properties['name']);
 		}
 
 		if (isset($this->attributes['type']) && in_array($this->attributes['type'], ['radio', 'checkbox']) && !isset($this->attributes['value'])) {
@@ -140,10 +129,6 @@ class Input {
 	 * @param string $value
 	 */
 	private function setAttribute ($name, $value) {
-		#if ($this->is_stringified) {
-		#	throw new \LogicException('Too late to set attribute value.');
-		#}
-		
 		// Not possible when setAttribute is private.
 		#if (!is_string($name)) {
 		#	throw new \InvalidArgumentException('Attribute name is not a string.');
@@ -278,10 +263,6 @@ class Input {
 				break;
 
 			default:
-				#if (is_array($value)) {
-				#	$value = isset($value[$this->index]) ? $value[$this->index] : '';
-				#}
-
 				if ($this->attributes['type'] === 'textarea') {
 					$input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
 				} else {
@@ -290,10 +271,6 @@ class Input {
 				break;
 		}
 		
-		
-		#if ($this->attributes['type'] === 'submit') {
-		#	$input = $input . '<input type="hidden" name="dora[uid]" value="' . $this->form_uid . '">';
-		#}
 
 		// In case of multiple forms on the page, dora[uid] is used to catch a specific form submit event.
 		if (isset($this->properties['form_uid'])) {
