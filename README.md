@@ -98,8 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {}
 if (isset($_POST['your']['input'])) {}
 ```
 
-* The above example allows CSRF vulnerability.
-* The above example does not allow to recognise the submitted form.
+The above example allows CSRF vulnerability.
 
 If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-surf"), read:
 
