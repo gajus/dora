@@ -149,7 +149,7 @@ class Traditional extends \Gajus\Dora\Template {
 
 ### Styling
 
-Traditional template does not impose style. The [example of styling the tranditional layout](http://jsfiddle.net/vac2E/1/) is for illustration purposes only.
+Dora or the Traditional template does not impose style. The [example of styling the Tranditional layout](http://jsfiddle.net/vac2E/1/) is for illustration purposes only.
 
 ![Traditional template example](./docs/static/image/traditional-template.png)
 
