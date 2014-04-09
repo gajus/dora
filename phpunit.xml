@@ -21,7 +21,7 @@
         <whitelist>
             <directory>./src/</directory>
             <exclude>
-                <file>inc/agent.php</file>
+                <file>./src/inc/agent.php</file>
             </exclude>
         </whitelist>
     </filter>
