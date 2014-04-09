@@ -30,8 +30,7 @@ The above will produce:
 
 Dora does not provide a method to generate `<form>`. The `Form` method in Dora represnts form as the container of the data. Input generated using an instance of the `Form` will resolve the instance data.
 
-```html+php
-// Populate Form with data.
+```php
 $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
