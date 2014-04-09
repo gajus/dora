@@ -89,6 +89,13 @@ $form = new \Gajus\Dora\Form([], 'Gajus\Dora\Template\Traditional');
 Traditional template consists of label, input and optional description.
 
 ```html+php
+<?php
+namespace Gajus\Dora\Template;
+
+/**
+ * @link https://github.com/gajus/dora for the canonical source repository
+ * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
+ */
 class Traditional extends \Gajus\Dora\Template {
     public function toString () {
         $input = $this->getInput();
