@@ -10,6 +10,9 @@ Input generation library for value resolution, templates, CSRS and protection fr
 Dora does not provide a method to generate `<form>`. `Form` is a data container. `Input` generated using an instance of the `Form` will resolve to the instance data.
 
 ```php
+/**
+ * @param array $data Data used to populate Input generated using an instance of this Form.
+ */
 $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
@@ -35,6 +38,28 @@ The above code will generate the following HTML:
     <option value="1">Come in.</option>
 </select>
 ```
+
+## Input
+
+You have seen how to generate input in the Form section.
+
+```php
+$form = new \Gajus\Dora\Form();
+
+/**
+ * @param string $name Input name.
+ * @param array $attributes HTML attributes.
+ * @param array $properties Input properties, e.g. input name.
+ */
+echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+```
+
+### Input Properties
+
+There are only two reserved properties:
+
+* `name` property is used to give input a name.
+* `options` property is used to define `<select>` input options.
 
 ## CSRF
 

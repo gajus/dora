@@ -43,7 +43,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		#$is_submitted = false;
 		
 	/**
-	 * @param array $data
+	 * @param array $data Data used to populate Input generated using an instance of this Form.
 	 */
 	public function __construct (array $data = null) {
 		$this->logger = new \Psr\Log\NullLogger();
