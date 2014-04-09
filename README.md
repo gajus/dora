@@ -21,20 +21,31 @@ $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
     'baz' => 0,
-    'qux' => ['1', 2 => '3']
+    'qux' => ['1', 2 => '3'],
+    'corge[grault]' = 'garply'
 ], null);
 
 echo $form->input('foo');
-echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
-echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
-echo $form->input('qux[]');
-echo $form->input('qux[]');
 ```
 
 In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!" value:
 
 ```html
 <input name="foo" type="text" value="Heeeere's...Johnny!">
+```
+
+`Input` can resolve value for all types of inputs from variable input depth, including array input:
+
+```php
+echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
+echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+echo $form->input('qux[]');
+echo $form->input('qux[]');
+echo $form->input('qux[]');
+echo $form->input('corge[grault]');
+```
+
+```html
 <textarea class="test" name="bar">Yada, yada, yada.</textarea>
 <select name="baz">
     <option value="0" selected="selected">Knock, knock...</option>
@@ -45,7 +56,7 @@ In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!"
 <input name="qux[]" type="text" value="3">
 ```
 
-Note that `qux[]` is able to inherint an array data because input is declared using array syntax. Input apperance index will be matched against the respective value in the array.
+`qux[]` inherints an array data because input is declared using array syntax. Input apperance index will be matched against the respective value in the array.
 
 ## Input
 
