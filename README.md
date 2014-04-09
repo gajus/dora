@@ -76,28 +76,25 @@ Input properties are used at the time of generating the input template.
 
 Most of the time you do not want naked `<input>`. `Input` can be dressed using templates. Dora comes with a inbuilt template called .. Dora.
 
+The template itself has access to the `Input` instance, including all the properties that were passed at the time of creating the `Input`. Stripped down template logic is looking like this:
+
 ```html+php
-<div class="dora-input<?=$class?>">
+<div class="dora-input<?=$input->getProperty('class')?>">
     <label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
     <div class="input">
-        <?=$input_string?>
+        <?=$input->toString()?>
     </div>
-    <?php if ($description):?>
+    <?php if ($input->getProperty('name')):?>
     <div class="description">
-        <p><?=$description?></p>
+        <p><?=$input->getProperty('name')?></p>
     </div>
-    <?php endif;?>
-    <?php if ($errors):?>
-    <ul class="dora-error">
-        <li><?=implode('</li><li>', $errors)?></li>
-    </ul>
     <?php endif;?>
 </div>
 ```
 
-### Custome Template
+### Writing a Template
 
-Each template need to extend `Gajus\Dora\Dress\Manikin`. Refer to the existing templates for examples. 
+Each template must extend `Gajus\Dora\Dress\Manikin`. Refer to the existing templates for examples. 
 
 ## CSRF
 
