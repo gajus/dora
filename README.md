@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/gajus/dora.png?branch=master)](https://travis-ci.org/gajus/dora)
 [![Coverage Status](https://coveralls.io/repos/gajus/dora/badge.png?branch=master)](https://coveralls.io/r/gajus/dora?branch=master)
 
-Input generation library for value resolution, templates, CSRF and protection from XSS.
+Input generation library for value resolution, value persistence, templates, CSRF and protection from XSS.
 
 ## Form
 
@@ -206,6 +206,10 @@ If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-s
 ## Post/Redirect/Get
 
 Dora assumes that application is designed using [Post/Redirect/Get](http://en.wikipedia.org/wiki/Post/Redirect/Get) pattern. Dora will not populate form upon POST request because it is assumed that POST request will result in a redirect. Dora will copy POST data and store it in a temporary session. This is achieved using [`./src/inc/agent.php`](src/inc/agent.php) script. If you are using [composer](https://getcomposer.org/), then this script is automatically included in every request.
+
+## Value Persistence
+
+Using the Post/Redirect/Get pattern requires special handling of user input. If you want to return user to the form after POST event (e.g. in case of an error), you do not want to make user re-enter all the values all over again. Dora utilises `$_SESSION['gajus']['dora']['flash']` variable to copy `$_POST` data for one Post/Redirect/Get cycle. If you return user to the form after POST, form will be populated with the originally submitted data.
 
 ## Installation
 
