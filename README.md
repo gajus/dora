@@ -50,6 +50,7 @@ Input is a standalone entity defined with three parameters.
  * @param string $name Input name.
  * @param array $attributes HTML attributes.
  * @param array $properties Input properties, e.g. input name.
+ * @param string $template Template class name.
  */
 new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 ```
