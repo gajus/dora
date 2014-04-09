@@ -147,6 +147,8 @@ class Traditional extends \Gajus\Dora\Template {
 }
 ```
 
+Traditional template does not impose style. For your convenience, you can start with the [example of styling the tranditional layout](http://jsfiddle.net/vac2E/1/).
+
 ### Writing a Template
 
 Template class must extend `Gajus\Dora\Template`.
