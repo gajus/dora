@@ -1,7 +1,7 @@
 {
 	"name": "gajus/dora",
-	"description": "Form/input generation library.",
-	"keywords": ["input", "form", "generation"],
+	"description": "Input generation library for value resolution, templates, CSRS and protection from XSS.",
+	"keywords": ["input", "form", "generation", "csrf"],
 	"homepage": "https://github.com/gajus/dora",
 	"type": "library",
 	"license": "BSD-3-Clause",

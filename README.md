@@ -3,16 +3,29 @@
 [![Build Status](https://travis-ci.org/gajus/dora.png?branch=master)](https://travis-ci.org/gajus/dora)
 [![Coverage Status](https://coveralls.io/repos/gajus/dora/badge.png)](https://coveralls.io/r/gajus/dora)
 
-Input generation library for value resolution, templating, CSRS and protection from XSS.
+Input generation library for value resolution, templates, CSRS and protection from XSS.
 
 ### CSRF
 
-Input generated using Dora is accompanied with a hidden input, e.g. generating text input will produce:
+Form generated using Dora can be signed, e.g.
+
+```php
+$form = new \Gajus\Dora\Form();
+?>
+<form>
+    <?=$form->sign()?>
+    <input type="submit">
+</form>
+```
+
+The above will generate two hidden inputs:
 
 ```html
-<input id="dora-input-130102852" name="user[first_name]" type="text" value="test">
 <input type="hidden" name="gajus[dora][uid]" value="2953768934">
+<input type="hidden" name="gajus[dora][csrf]" value="d0be2dc421be4fcd0172e5afceea3970e2f3d940">
 ```
+
+
 
 You can catch form submit with using the `Form` `isSubmitted` method, e.g.
 
