@@ -25,6 +25,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		 * 
 		 * @var string
 		 */
+		$csrf,
 		/**
 		 * Input assigned to the form. This data is used together with input_index
 		 * to determine the representable input value.
@@ -54,7 +55,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		
 	/**
 	 * @param array $data Data used to populate Input generated using an instance of this Form.
-	 * @param string $template Template class name.
+	 * @param null|string $template Template class name.
 	 */
 	public function __construct (array $data = null, $template = 'Gajus\Dora\Template\Traditional') {
 		if (session_status() === \PHP_SESSION_NONE) {
@@ -115,7 +116,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		}
 
 		if ($check_csfr) {
-			$submitted = isset($this->data['gajus']['dora']['csfr']) && $this->data['gajus']['dora']['csfr'] === $this->csfr;
+			$submitted = isset($this->data['gajus']['dora']['csrf']) && $this->data['gajus']['dora']['csrf'] === $this->csrf;
 		}
 
 		return $submitted;

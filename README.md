@@ -12,13 +12,13 @@ Dora does not provide a method to generate `<form>`. `Form` is a data container.
 ```php
 /**
  * @param array $data Data used to populate Input generated using an instance of this Form.
- * @param string $template Template class name.
+ * @param null|string $template Template class name.
  */
 $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
     'baz' => 0,
-    'qux' => ['1', '2']
+    'qux' => ['1', 2 => '3']
 ], null);
 
 echo $form->input('foo');
@@ -38,19 +38,22 @@ In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!"
     <option value="1">Come in.</option>
 </select>
 <input name="qux[]" type="text" value="1">
-<input name="qux[]" type="text" value="2">
+<input name="qux[]" type="text" value="">
+<input name="qux[]" type="text" value="3">
 ```
+
+Note that `qux[]` is able to inherint an array data because input is declared using array syntax. Input apperance index will be matched against the respective value in the array.
 
 ## Input
 
-Input is a standalone entity defined with three parameters.
+Input is a standalone entity defined with four parameters. Only the first parameter is required.
 
 ```php
 /**
  * @param string $name Input name.
  * @param array $attributes HTML attributes.
  * @param array $properties Input properties, e.g. input name.
- * @param string $template Template class name.
+ * @param null|string $template Template class name.
  */
 new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo'], null);
 ```
@@ -69,14 +72,14 @@ HTML attributes that are added to the generated input. All attributes will be ta
 
 Input properties are used at the time of generating the input template.
 
-|name|description|
+|Name|Description|
 |---|---|
 |`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. for the label. If input `name` property is not provided, it will be derived from the input "name" attribute.|
 |`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will assume that input type is "select".|
 
 ## Template
 
-`Input` can be dressed using a `Template`. `Template` is utilsed when input is casted to string. You can set default template for all `Input` generated using an instance of `Form`:
+`Input` can be dressed using a `Template`. `Template` is utilsed when input is casted to a string. You can set default template for all `Input` generated using an instance of `Form`:
 
 ```php
 $form = new \Gajus\Dora\Form([], 'Gajus\Dora\Template\Traditional');

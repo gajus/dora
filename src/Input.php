@@ -39,7 +39,7 @@ class Input {
 	 * @param string $name Input name.
 	 * @param array $attributes HTML attributes.
 	 * @param array $properties Input properties, e.g. input name.
-	 * @param string $template
+	 * @param null|string $template
 	 */
 	public function __construct ($name, array $attributes = null, array $properties = null, $template = null) {
 		if ($properties === null) {
