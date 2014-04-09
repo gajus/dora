@@ -1,4 +1,7 @@
 <?php
+/**
+ * @codeCoverageIgnore
+ */
 if (php_sapi_name() === 'cli') {
     return;
 }
