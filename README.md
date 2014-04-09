@@ -7,7 +7,7 @@ Input generation library for value resolution, templates, CSRS and protection fr
 
 ## Form
 
-Dora does not provide a method to generate `<form>`. `Form` is a data container. `Input` generated using an instance of the `Form` will resolve to the instance data.
+Dora does not provide a method to generate `<form>`. `Form` is a data container. `Input` generated using an instance of the `Form` will inherit `Form` data.
 
 ```php
 /**
@@ -18,17 +18,13 @@ $form = new \Gajus\Dora\Form([
     'bar' => 'Yada, yada, yada.',
     'baz' => 0,
 ]);
-```
 
-In the above example, `Input` with name "foo" generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value, e.g.
-
-```php
 echo $form->input('foo');
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
 ```
 
-The above code will generate the following HTML:
+In the above example, `Input` with name "foo" generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value:
 
 ```html
 <input name="foo" type="text" value="Heeeere's...Johnny!">
@@ -41,7 +37,7 @@ The above code will generate the following HTML:
 
 ## Input
 
-You have seen how to generate input in the Form section. Generating input does require parent `Form`. In essence, you could generate individual input using the Input class itself, e.g.
+Input takes three parameters:
 
 ```php
 /**
@@ -49,33 +45,17 @@ You have seen how to generate input in the Form section. Generating input does r
  * @param array $attributes HTML attributes.
  * @param array $properties Input properties, e.g. input name.
  */
-new \Gajus\Dora\Input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
-```
-
-However, input without `Form` is of little value, because it cannot inherit values, does benefit from the CSRF token or form instance recognition using UIDs.
-
-To generate a complete form, start with instantiating `Form`:
-
-```php
-$form = new \Gajus\Dora\Form();
-```
-
-Sign the form:
-
-```html+php
-<form>
-<?=$form->sign()?>
-</form>
+new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 ```
 
 ### Input Properties
 
-Input properties are used at the time of generating the input template. With exception to 
+Input properties are used at the time of generating the input template.
 
-There are two standardised properties:
-
-* `name` property is used to give input a name.
-* `options` property is used to define `<select>` input options.
+|name|description|
+|---|---|
+|`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. label. If input `name` property is not provided, it will be derived from the input HTML "name" attribute.|
+|`options`|`options` property is not required. This proprety is for `<select>` input type.|
 
 ## CSRF
 
