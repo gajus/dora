@@ -17,12 +17,23 @@ $form = new \Gajus\Dora\Form([
 ]);
 ```
 
-In the above example, input `foo` generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value, e.g.
+In the above example, `Input` with name "foo" generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value, e.g.
 
 ```php
 echo $form->input('foo');
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+```
+
+The above code will generate the following HTML:
+
+```html
+<input name="foo" type="text" value="Heeeere's...Johnny!">
+<textarea class="test" name="bar">Yada, yada, yada.</textarea>
+<select name="baz">
+    <option value="0" selected="selected">Knock, knock...</option>
+    <option value="1">Come in.</option>
+</select>
 ```
 
 ## CSRF
