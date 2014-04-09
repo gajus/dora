@@ -26,7 +26,7 @@ The above will produce:
 </select>
 ```
 
-### Form & input
+### Form
 
 Dora does not provide a method to generate `<form>`. The `Form` method in Dora represnts form as the container of the data. Input generated using an instance of the `Form` will resolve the instance data.
 
@@ -46,3 +46,6 @@ echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
 ```
 
+### Input
+
+Input is any type of HTML input (select, textarea, etc.).

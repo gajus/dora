@@ -5,7 +5,7 @@ namespace Gajus\Dora;
  * @link https://github.com/gajus/dora for the canonical source repository
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
  */
-class Form {
+class Form implements \Psr\Log\LoggerAwareInterface {
 	private
 		/**
 		 * @var Psr\Log\LoggerInterface
@@ -45,12 +45,8 @@ class Form {
 	/**
 	 * @param array $data
 	 */
-	public function __construct (array $data = null, \Psr\Log\LoggerInterface $logger = null) {
-		if ($logger === null) {
-			$logger = new \Psr\Log\NullLogger();
-		}
-
-		$this->logger = $logger;
+	public function __construct (array $data = null) {
+		$this->logger = new \Psr\Log\NullLogger();
 
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
@@ -65,16 +61,6 @@ class Form {
 		}
 
 		unset($this->data['gajus']);
-
-		
-
-
-
-
-
-
-
-
 
 		/*
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -113,6 +99,16 @@ class Form {
 
 		*/
 	}
+
+	/**
+     * Sets a logger instance on the object
+     *
+     * @param LoggerInterface $logger
+     * @return null
+     */
+    public function setLogger(LoggerInterface $logger) {
+    	$this->logger = $logger;
+    }
 
 	/*public function getData () {
 		return $this->data;
