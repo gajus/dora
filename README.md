@@ -37,3 +37,8 @@ if ($form->isSubmitted()) {
     // This will be triggered if CSRF passed.
 }
 ```
+
+If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-surf"), read:
+
+* http://shiflett.org/articles/cross-site-request-forgeries
+* https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29
