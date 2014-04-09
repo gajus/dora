@@ -41,22 +41,38 @@ The above code will generate the following HTML:
 
 ## Input
 
-You have seen how to generate input in the Form section.
+You have seen how to generate input in the Form section. Generating input does require parent `Form`. In essence, you could generate individual input using the Input class itself, e.g.
 
 ```php
-$form = new \Gajus\Dora\Form();
-
 /**
  * @param string $name Input name.
  * @param array $attributes HTML attributes.
  * @param array $properties Input properties, e.g. input name.
  */
-echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+new \Gajus\Dora\Input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+```
+
+However, input without `Form` is of little value, because it cannot inherit values, does benefit from the CSRF token or form instance recognition using UIDs.
+
+To generate a complete form, start with instantiating `Form`:
+
+```php
+$form = new \Gajus\Dora\Form();
+```
+
+Sign the form:
+
+```html+php
+<form>
+<?=$form->sign()?>
+</form>
 ```
 
 ### Input Properties
 
-There are only two reserved properties:
+Input properties are used at the time of generating the input template. With exception to 
+
+There are two standardised properties:
 
 * `name` property is used to give input a name.
 * `options` property is used to define `<select>` input options.
