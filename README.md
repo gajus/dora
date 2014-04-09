@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/gajus/dora.png?branch=master)](https://travis-ci.org/gajus/dora)
 [![Coverage Status](https://coveralls.io/repos/gajus/dora/badge.png)](https://coveralls.io/r/gajus/dora)
 
-Input generation library for value resolution, templates, CSRS and protection from XSS.
+Input generation library for value resolution, templates, CSRF and protection from XSS.
 
 ## Form
 
