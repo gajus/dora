@@ -37,7 +37,7 @@ In the above example, `Input` with name "foo" generated using an instance of the
 
 ## Input
 
-Input takes three parameters:
+Input is a standalone entity defined with three parameters.
 
 ```php
 /**
@@ -47,6 +47,8 @@ Input takes three parameters:
  */
 new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 ```
+
+Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page). When `Input` is produced using an instance of `Form`, then it is attached to the `Form` data container.
 
 ### HTML attributes
 
