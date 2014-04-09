@@ -7,10 +7,7 @@ Input generation library for value resolution, templates, CSRF and protection fr
 
 ## Form
 
-Dora does not provide a method to generate `<form>`.
-
-* `Form` is a data container.
-* `Input` generated using an instance of the `Form` will inherit `Form` data.
+`Form` is a data container.
 
 ```php
 /**
@@ -24,25 +21,25 @@ $form = new \Gajus\Dora\Form([
     'qux' => ['1', 2 => '3'],
     'corge[grault]' = 'garply'
 ], null);
+```
 
+`Input` generated using an instance of the `Form` will inherit `Form` data.
+
+```php
 echo $form->input('foo');
 ```
 
-In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!" value:
+`Input` with name "foo" will inherit "Heeeere's...Johnny!" value:
 
 ```html
 <input name="foo" type="text" value="Heeeere's...Johnny!">
 ```
 
-`Input` can resolve value for all types of inputs from variable input depth, including array input:
+`Input` can be any type of HTML input.
 
 ```php
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
-echo $form->input('qux[]');
-echo $form->input('qux[]');
-echo $form->input('qux[]');
-echo $form->input('corge[grault]');
 ```
 
 ```html
@@ -51,12 +48,27 @@ echo $form->input('corge[grault]');
     <option value="0" selected="selected">Knock, knock...</option>
     <option value="1">Come in.</option>
 </select>
+```
+
+`Input` name can resolve value from an array:
+
+```php
+echo $form->input('corge[grault]');
+```
+
+When `Input` is declared using variable array syntax, `Input` index (ie., order in which `Input` is generated) will be matched against the value with the respective index in the data array.
+
+```php
+echo $form->input('qux[]');
+echo $form->input('qux[]');
+echo $form->input('qux[]');
+```
+
+```html
 <input name="qux[]" type="text" value="1">
 <input name="qux[]" type="text" value="">
 <input name="qux[]" type="text" value="3">
 ```
-
-`qux[]` inherints an array data because input is declared using array syntax. Input apperance index will be matched against the respective value in the array.
 
 ## Input
 
@@ -74,10 +86,6 @@ new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo'], null);
 
 Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page).
 
-### Input name
-
-The name of the control, which is submitted with the form data.
-
 ### HTML attributes
 
 HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
@@ -93,7 +101,7 @@ Input properties are used at the time of generating the input template.
 
 ## Template
 
-`Input` can be dressed using a `Template`. `Template` is utilsed when input is casted to a string. You can set default template for all `Input` generated using an instance of `Form`:
+`Input` can be dressed using a `Template`. `Template` is utilsed when input is casted into a string. `Form` template will become the default template for all the `Input` generated using an instance of that `Form`:
 
 ```php
 $form = new \Gajus\Dora\Form([], 'Gajus\Dora\Template\Traditional');
@@ -141,13 +149,13 @@ class Traditional extends \Gajus\Dora\Template {
 
 ### Writing a Template
 
-Each template must extend `Gajus\Dora\Template`.
+Template class must extend `Gajus\Dora\Template`.
 
 Refer to the existing templates to learn more.
 
 ## CSRF
 
-Form generated using Dora need to be signed, e.g.
+Form generated using Dora need to be signed:
 
 ```php
 $form = new \Gajus\Dora\Form();
@@ -158,15 +166,15 @@ $form = new \Gajus\Dora\Form();
 </form>
 ```
 
-The generated signature consists of two tokes:
+The generated signature consists of `UID` and `CSRF` tokes:
 
 ```html
 <input type="hidden" name="gajus[dora][uid]" value="2953768934">
 <input type="hidden" name="gajus[dora][csrf]" value="d0be2dc421be4fcd0172e5afceea3970e2f3d940">
 ```
 
-* **UID** is used to recognise the an instance of the `Form` that has been used to generate the input. UID does not change between requests.
-* **CSRF** is used to validate user session.
+* `UID` is used to recognise the an instance of the `Form` that has been used to generate the input. UID does not change between requests.
+* `CSRF` is used to validate user session.
 
 Use `isSubmitted` method to catch when the Form is submitted, e.g.
 
@@ -187,6 +195,8 @@ if (isset($_POST['your']['input'])) {}
 ```
 
 The above example allows CSRF vulnerability.
+
+To bypass CSRF validation but continue to benefit from the UID form recognition, use `isSubmitted(false)`.
 
 If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-surf"), read:
 
