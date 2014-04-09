@@ -1,7 +1,7 @@
 <?php
 class InputGenerationTest extends PHPUnit_Framework_TestCase {
 	/**
-	 * @expectedException RuntimeException
+	 * @expectedException Gajus\Dora\Exception\LogicException
 	 */
 	public function testCovertInputInstanceToStringTwoTimes () {
 		$input = new \Gajus\Dora\Input('test');

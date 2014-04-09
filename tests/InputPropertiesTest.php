@@ -7,7 +7,7 @@ class InputPropertyTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Dora\Exception\InvalidArgumentException
 	 */
 	public function testSetTextInputPropertyUnsupported () {
 		new \Gajus\Dora\Input('test', ['type' => 'text'], ['options' => ['a', 'b']]);

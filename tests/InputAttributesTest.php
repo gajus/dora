@@ -19,7 +19,7 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException LogicException
+	 * @expectedException Gajus\Dora\Exception\LogicException
 	 */
 	public function testGetUndefinedIdAttributeAfterStringification () {
 		$input = new \Gajus\Dora\Input('test');
@@ -36,52 +36,14 @@ class InputAttributesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	/*public function testSetNameAttribute () {
-		$input = new \gajus\dora\Input('test');
-
-		$input->setAttribute('name', 'test');
-	}*/
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	/*public function testSetAttributeNameNotString () {
-		$input = new \gajus\dora\Input('test');
-
-		$input->setAttribute(['?'], 'test');
-	}*/
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	/*public function testSetAttributeValueNotString () {
-		$input = new \gajus\dora\Input('test');
-
-		$input->setAttribute('test', ['?']);
-	}*/
-
-	/**
-	 * @expectedException LogicException
-	 */
-	/*public function testSetAttributeValueAfterStringification () {
-		$input = new \gajus\dora\Input('test');
-
-		(string) $input;
-
-		$input->setAttribute('test', 'test');
-	}*/
-
-	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Dora\Exception\InvalidArgumentException
 	 */
 	public function testSetNameAttribute () {
 		$input = new \Gajus\Dora\Input('test', ['name' => 'test']);
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException Gajus\Dora\Exception\InvalidArgumentException
 	 */
 	public function testSetAttributeValueNotString () {
 		$input = new \Gajus\Dora\Input('test', ['test' => ['?']]);

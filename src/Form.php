@@ -48,8 +48,10 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		
 	/**
 	 * @param array $data Data used to populate Input generated using an instance of this Form.
+	 * @param string $template Template class name.
 	 */
-	public function __construct (array $data = null, $template = 'Gajus\Dora\Template\Default') {
+	public function __construct (array $data = null, $template = 'Gajus\Dora\Template\Traditional') {
+		$this->template = $template;
 		$this->logger = new \Psr\Log\NullLogger();
 
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
@@ -68,35 +70,6 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		}
 
 		unset($this->data['gajus']);
-
-		/*
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-			// $_POST data is captured using agent.php.
-			// It is stored in the $_SESSION['gajus']['dora']['flash'].
-			// It is available until the next GET request that is not a redirect.
-			$this->data = [];
-
-		} else if (isset($_SESSION['gajus']['dora']['flash'])) {
-			$this->data = $_SESSION['gajus']['dora']['flash'];
-
-			$this->logger->debug('Form is using $_SESSION data.', ['method' => __METHOD__, 'uid' => $this->uid]);
-		} else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['gajus']['dora']['uid']) && $_GET['gajus']['dora']['uid'] === $this->uid) {
-			$this->data = $_GET;
-		} else {
-			$this->data = (array) $default_data;
-
-			$this->logger->debug('Form is using $default_data data.', ['method' => __METHOD__, 'uid' => $this->uid]);
-		}
-
-		if (isset($this->data['gajus']['dora']['uid']) && $this->data['gajus']['dora']['uid'] === $this->uid) {
-			$this->logger->debug('Form is submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
-
-			$this->is_submitted = true;
-		} else {
-			$this->logger->debug('Form is not submitted.', ['method' => __METHOD__, 'uid' => $this->uid]);
-		}
-
-		*/
 	}
 
 	/**
@@ -127,6 +100,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 	 * @param string $name
 	 * @param array $attributes
 	 * @param array $properties
+	 * @param string $template
 	 * @return \gajus\dora\Input
 	 */
 	public function input ($name, array $attributes = null, array $properties = [], $template = null) {
@@ -146,8 +120,10 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		}
 
 		$properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);
-		
-		$input = new Input($name, $attributes, $properties);
+
+		$input = new Input($name, $attributes, $properties, $template ? $template : $this->template);
+
+		#$template = $template ? $template : $this->template;
 
 		#$this->input_index[$name][] = $input;
 		$this->input_index[$name][] = null;

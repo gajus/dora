@@ -12,13 +12,14 @@ Dora does not provide a method to generate `<form>`. `Form` is a data container.
 ```php
 /**
  * @param array $data Data used to populate Input generated using an instance of this Form.
+ * @param string $template Template class name.
  */
 $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
     'baz' => 0,
     'qux' => ['1', '2']
-]);
+], null);
 
 echo $form->input('foo');
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);

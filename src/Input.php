@@ -11,7 +11,7 @@ class Input {
 		 * HTML attributes.
 		 * Attributes are accessible to the Label template via getAttribute.
 		 * 
-		 * @param array
+		 * @var array
 		 */
 		$attributes = [],
 		/**
@@ -19,7 +19,7 @@ class Input {
 		 * used together with the <select> input.
 		 * Properties are accessible to the Label template via getProperty.
 		 *
-		 * @param array
+		 * @var array
 		 */
 		$properties = [],
 		/**
@@ -27,16 +27,35 @@ class Input {
 		 * After input is casted to string, some operations are no longer possible, e.g.
 		 * generating a new random ID.
 		 * 
-		 * @param boolean
+		 * @var boolean
 		 */
-		$is_stringified = false;
+		$is_stringified = false,
+		/**
+		 * @var string
+		 */
+		$template;
 	
 	/**
 	 * @param string $name Input name.
 	 * @param array $attributes HTML attributes.
 	 * @param array $properties Input properties, e.g. input name.
+	 * @param string $template
 	 */
-	public function __construct ($name, array $attributes = null, array $properties = []) {
+	public function __construct ($name, array $attributes = null, array $properties = null, $template = null) {
+		if ($properties === null) {
+			$properties = [];
+		}
+
+		$this->template = $template;
+
+		if ($this->template) {
+			if (!class_exists($this->template)) {
+				throw new Exception\LogicException('Template does not exist.');
+			} else if (!is_subclass_of($this->template, 'Gajus\Dora\Template')) {
+				throw new Exception\LogicException('Template does not extend Gajus\Dora\Template.');
+			}
+		}
+
 		$this->attributes['name'] = $name;
 
 		if ($attributes) {
@@ -70,7 +89,7 @@ class Input {
 		}
 
 		if (isset($this->properties['options']) && $this->attributes['type'] !== 'select') {
-			throw new \InvalidArgumentException('[input="' . $this->attributes['type'] . '"] does not support "options" property.');
+			throw new Exception\InvalidArgumentException('[input="' . $this->attributes['type'] . '"] does not support "options" property.');
 		}
 	}
 
@@ -134,9 +153,9 @@ class Input {
 		#	throw new \InvalidArgumentException('Attribute name is not a string.');
 		#} else
 		if (!is_string($value) && !is_int($value)) {
-			throw new \InvalidArgumentException('Attribute value is not a string.');
+			throw new Exception\InvalidArgumentException('Attribute value is not a string.');
 		} else if ($name === 'name') {
-			throw new \InvalidArgumentException('"name" attribute cannot be overwritten.');
+			throw new Exception\InvalidArgumentException('"name" attribute cannot be overwritten.');
 		}
 
 		$this->attributes[$name] = $value;
@@ -150,7 +169,7 @@ class Input {
 	public function getAttribute ($name) {
 		if ($name === 'id' && !isset($this->attributes['id'])) {
 			if ($this->is_stringified) {
-				throw new \LogicException('Too late to generate random [id].');
+				throw new Exception\LogicException('Too late to generate random [id].');
 			}
 			
 			$this->attributes['id'] = isset($this->properties['uid']) ? 'dora-input-' . $this->properties['uid'] : 'dora-input-' . $this->getUid();
@@ -207,7 +226,17 @@ class Input {
 	
 	public function toString () {
 		if ($this->is_stringified) {
-			throw new \RuntimeException('Input has already been stringified.');
+			throw new Exception\LogicException('Input has already been stringified.');
+		}
+
+		if ($this->template) {
+			$template = $this->template;
+
+			$this->template = null;
+
+			$template = new $template ($this);
+
+			return $template->toString();
 		}
 		
 		$this->is_stringified = true;
@@ -270,10 +299,10 @@ class Input {
 				}
 				break;
 		}
-				
+		
 		return $input;
 	}
-	
+
 	public function __toString () {
 		return $this->toString();
 	}

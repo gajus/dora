@@ -1,5 +1,6 @@
 {
 	"name": "gajus/dora",
+	"version": "0.1.0",
 	"description": "Input generation library for value resolution, templates, CSRF and protection from XSS.",
 	"keywords": ["input", "form", "generation", "csrf"],
 	"homepage": "https://github.com/gajus/dora",
