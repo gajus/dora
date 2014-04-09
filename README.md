@@ -7,7 +7,7 @@ Input generation library for value resolution, templates, CSRS and protection fr
 
 ## Form
 
-Dora does not provide a method to generate `<form>`. The `Form` method in Dora represnts form as the container of the data. Input generated using an instance of the `Form` will resolve the instance data.
+Dora does not provide a method to generate `<form>`. `Form` is a data container. `Input` generated using an instance of the `Form` will resolve to the instance data.
 
 ```php
 $form = new \Gajus\Dora\Form([
@@ -38,7 +38,7 @@ The above code will generate the following HTML:
 
 ## CSRF
 
-Form generated using Dora can be signed, e.g.
+Form generated using Dora need to be signed, e.g.
 
 ```php
 $form = new \Gajus\Dora\Form();
@@ -56,10 +56,10 @@ The generated signature consists of two tokes:
 <input type="hidden" name="gajus[dora][csrf]" value="d0be2dc421be4fcd0172e5afceea3970e2f3d940">
 ```
 
-* UID is used to recognise the form that has been submitted. UID does not change between requests.
-* CSRF is used to validate user session.
+* *UID* is used to recognise the form that has been submitted. UID does not change between requests.
+* *CSRF* is used to validate user session.
 
-You can catch request with data from the above form using `isSubmitted` method, e.g.
+You can catch request with the data from the above form using `isSubmitted` method, e.g.
 
 ```php
 // $form from the preceding example.
