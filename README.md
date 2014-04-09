@@ -23,6 +23,8 @@ $form = new \Gajus\Dora\Form([
 echo $form->input('foo');
 echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+echo $form->input('qux[]');
+echo $form->input('qux[]');
 ```
 
 In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!" value:
