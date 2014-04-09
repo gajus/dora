@@ -147,7 +147,7 @@ class Traditional extends \Gajus\Dora\Template {
 }
 ```
 
-### Styling
+#### Styling
 
 Dora or the Traditional template does not impose style. The [example of styling the Tranditional layout](http://jsfiddle.net/vac2E/1/) is for illustration purposes only.
 
