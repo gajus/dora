@@ -93,8 +93,8 @@ if ($form->isSubmitted()) {
 Do not use:
 
 ```php
-if (isset($_POST['gajus'])) {}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {}
+if (isset($_POST['gajus'])) {}
 if (isset($_POST['your']['input'])) {}
 ```
 
