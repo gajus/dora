@@ -209,7 +209,7 @@ Dora assumes that application is designed using [Post/Redirect/Get](http://en.wi
 
 ## Installation
 
-The recommended way to use Dora is through [composer](https://getcomposer.org/).
+The recommended way to use Dora is through [Composer](https://getcomposer.org/).
 
 ```json
 {
