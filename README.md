@@ -48,6 +48,10 @@ Input takes three parameters:
 new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 ```
 
+### HTML attributes
+
+HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
+
 ### Input Properties
 
 Input properties are used at the time of generating the input template.
@@ -55,7 +59,7 @@ Input properties are used at the time of generating the input template.
 |name|description|
 |---|---|
 |`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. label. If input `name` property is not provided, it will be derived from the input HTML "name" attribute.|
-|`options`|`options` property is not required. This proprety is for `<select>` input type.|
+|`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will automatically assume that input type is "select".|
 
 ## CSRF
 
