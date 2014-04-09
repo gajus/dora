@@ -7,7 +7,10 @@ Input generation library for value resolution, templates, CSRF and protection fr
 
 ## Form
 
-Dora does not provide a method to generate `<form>`. `Form` is a data container. `Input` generated using an instance of the `Form` will inherit `Form` data.
+Dora does not provide a method to generate `<form>`.
+
+* `Form` is a data container.
+* `Input` generated using an instance of the `Form` will inherit `Form` data.
 
 ```php
 /**
