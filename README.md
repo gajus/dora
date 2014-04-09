@@ -17,6 +17,7 @@ $form = new \Gajus\Dora\Form([
     'foo' => 'Heeeere\'s...Johnny!',
     'bar' => 'Yada, yada, yada.',
     'baz' => 0,
+    'qux' => ['1', '2']
 ]);
 
 echo $form->input('foo');
@@ -24,7 +25,7 @@ echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
 echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
 ```
 
-In the above example, `Input` with name "foo" generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value:
+In the above example, `Input` with name "foo" will inherit "Heeeere's...Johnny!" value:
 
 ```html
 <input name="foo" type="text" value="Heeeere's...Johnny!">
@@ -33,6 +34,8 @@ In the above example, `Input` with name "foo" generated using an instance of the
     <option value="0" selected="selected">Knock, knock...</option>
     <option value="1">Come in.</option>
 </select>
+<input name="qux[]" type="text" value="1">
+<input name="qux[]" type="text" value="2">
 ```
 
 ## Input
