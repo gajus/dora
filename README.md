@@ -53,15 +53,15 @@ Input is a standalone entity defined with three parameters.
 new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 ```
 
-Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page). When `Input` is produced using an instance of `Form`, then it is attached to the `Form` data container.
-
-### HTML attributes
-
-HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
+Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page).
 
 ### Input name
 
 The name of the control, which is submitted with the form data.
+
+### HTML attributes
+
+HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
 
 ### Input Properties
 
@@ -71,6 +71,33 @@ Input properties are used at the time of generating the input template.
 |---|---|
 |`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. label. If input `name` property is not provided, it will be derived from the input HTML "name" attribute.|
 |`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will automatically assume that input type is "select".|
+
+## Template
+
+Most of the time you do not want naked `<input>`. `Input` can be dressed using templates. Dora comes with a inbuilt template called .. Dora.
+
+```html+php
+<div class="dora-input<?=$class?>">
+    <label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
+    <div class="input">
+        <?=$input_string?>
+    </div>
+    <?php if ($description):?>
+    <div class="description">
+        <p><?=$description?></p>
+    </div>
+    <?php endif;?>
+    <?php if ($errors):?>
+    <ul class="dora-error">
+        <li><?=implode('</li><li>', $errors)?></li>
+    </ul>
+    <?php endif;?>
+</div>
+```
+
+### Custome Template
+
+Each template need to extend `Gajus\Dora\Dress\Manikin`. Refer to the existing templates for examples. 
 
 ## CSRF
 
