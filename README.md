@@ -5,6 +5,26 @@
 
 Input generation library for value resolution, templates, CSRS and protection from XSS.
 
+## Form
+
+Dora does not provide a method to generate `<form>`. The `Form` method in Dora represnts form as the container of the data. Input generated using an instance of the `Form` will resolve the instance data.
+
+```php
+$form = new \Gajus\Dora\Form([
+    'foo' => 'Heeeere\'s...Johnny!',
+    'bar' => 'Yada, yada, yada.',
+    'baz' => 0,
+]);
+```
+
+In the above example, input `foo` generated using an instance of the `Form` will inherit "Heeeere's...Johnny!" value, e.g.
+
+```php
+echo $form->input('foo');
+echo $form->input('bar', ['type' => 'textarea', 'class' => 'test']);
+echo $form->input('baz', null, ['options' => ['Knock, knock...', 'Come in.']]);
+```
+
 ## CSRF
 
 Form generated using Dora can be signed, e.g.
@@ -42,3 +62,7 @@ If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-s
 
 * http://shiflett.org/articles/cross-site-request-forgeries
 * https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29
+
+## Post/Redirect/Get
+
+Dora assumes that application is designed using [Post/Redirect/Get](http://en.wikipedia.org/wiki/Post/Redirect/Get) pattern. Dora will not populate form upon POST request because it is assumed that POST request will result in a redirect. Dora will copy POST data and store it in a temporary session. This is achieved using `./src/inc/agent.php` script. If you are using composer, then this script is automatically included in every request.
