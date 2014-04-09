@@ -127,7 +127,9 @@ class Traditional extends \Gajus\Dora\Template {
 
 ### Writing a Template
 
-Each template must extend `Gajus\Dora\Template`. Refer to the existing templates to learn more.
+Each template must extend `Gajus\Dora\Template`.
+
+Refer to the existing templates to learn more.
 
 ## CSRF
 
