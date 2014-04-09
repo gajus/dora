@@ -52,7 +52,7 @@ Input is a standalone entity defined with three parameters.
  * @param array $properties Input properties, e.g. input name.
  * @param string $template Template class name.
  */
-new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
+new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo'], null);
 ```
 
 Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page).
@@ -76,11 +76,48 @@ Input properties are used at the time of generating the input template.
 
 ## Template
 
-`Input` can be dressed using a template.
+`Input` can be dressed using a `Template`. `Template` is utilsed when input is casted to string. You can set default template for all `Input` generated using an instance of `Form`:
 
 ```php
-$form = new \Gajus\Dora\Form([]);
+$form = new \Gajus\Dora\Form([], 'Gajus\Dora\Template\Traditional');
 ```
+
+"Gajus\Dora\Template\Traditional" is the default template. `null` will return input without template.
+
+### Traditional Template
+
+Traditional template consists of label, input and optional description.
+
+```html+php
+class Traditional extends \Gajus\Dora\Template {
+    public function toString () {
+        $input = $this->getInput();
+        $input_id = $input->getAttribute('id');
+        $description = $input->getProperty('description');
+
+        $class = $input->getProperty('class');
+        $class = $class ? ' ' . $class : '';
+
+        ob_start();?>
+        <div class="dora-input<?=$class?>">
+            <label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
+            <?=$input?>
+            
+            <?php if ($description):?>
+            <div class="description">
+                <p><?=$description?></p>
+            </div>
+            <?php endif;?>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+}
+```
+
+### Writing a Template
+
+Each template must extend `Gajus\Dora\Template`. Refer to the existing templates to learn more.
 
 ## CSRF
 
