@@ -56,7 +56,7 @@ The generated signature consists of two tokes:
 <input type="hidden" name="gajus[dora][csrf]" value="d0be2dc421be4fcd0172e5afceea3970e2f3d940">
 ```
 
-* **UID** is used to recognise the form that has been submitted. UID does not change between requests.
+* **UID** is used to recognise the an instance of the `Form` that has been used to generate the input. UID does not change between requests.
 * **CSRF** is used to validate user session.
 
 You can catch request with the data from the above form using `isSubmitted` method, e.g.
