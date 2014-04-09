@@ -59,7 +59,7 @@ The generated signature consists of two tokes:
 * **UID** is used to recognise the an instance of the `Form` that has been used to generate the input. UID does not change between requests.
 * **CSRF** is used to validate user session.
 
-You can catch request with the data from the above form using `isSubmitted` method, e.g.
+Use `isSubmitted` method to catch when the Form is submitted, e.g.
 
 ```php
 // $form from the preceding example.
@@ -68,6 +68,17 @@ if ($form->isSubmitted()) {
     // This will be triggered if CSRF passed.
 }
 ```
+
+Do not use:
+
+```php
+if (isset($_POST['gajus'])) {}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {}
+if (isset($_POST['your']['input'])) {}
+```
+
+* The above example allows CSRF vulnerability.
+* The above example does not allow to recognise the submitted form.
 
 If you are not familiar with cross-site request forgery (CSRF, pronounced "sea-surf"), read:
 
