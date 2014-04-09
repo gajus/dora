@@ -52,6 +52,10 @@ new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo']);
 
 HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
 
+### Input name
+
+The name of the control, which is submitted with the form data.
+
 ### Input Properties
 
 Input properties are used at the time of generating the input template.
