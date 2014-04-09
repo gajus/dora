@@ -12,7 +12,6 @@ Dora does not in any way interfere with form styling. However, Dora comes with a
 ## Using Dora
 
 ```php
-<?php
 $form = new \Gajus\Dora\Form(['foo' => 2]);
 
 echo $form->input('foo', ['data-custom-attribute' => 'test'], ['options' => [1 => 'Knock, knock...', 2 => 'Come in.']]);
