@@ -9,7 +9,7 @@ class FormDataTest extends PHPUnit_Framework_TestCase {
 
         $this->assertSame($form->getUid(), $uid);
 
-        $this->assertFalse($form->isSubmitted());
+        $this->assertFalse($form->isSubmitted(false));
 
         $this->assertSame(['foo' => 'bar'], $form->getData());
     }
@@ -30,7 +30,7 @@ class FormDataTest extends PHPUnit_Framework_TestCase {
 
         $this->assertSame($form->getUid(), $uid);
 
-        $this->assertTrue($form->isSubmitted());
+        $this->assertTrue($form->isSubmitted(false));
 
         $this->assertSame(['foo' => 'bar'], $form->getData());
     }

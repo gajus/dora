@@ -20,6 +20,12 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		 */
 		$uid,
 		/**
+		 * CSRF token is derived from session_id and therefore is unique to each
+		 * session.
+		 * 
+		 * @var string
+		 */
+		/**
 		 * Input assigned to the form. This data is used together with input_index
 		 * to determine the representable input value.
 		 *
@@ -51,25 +57,26 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 	 * @param string $template Template class name.
 	 */
 	public function __construct (array $data = null, $template = 'Gajus\Dora\Template\Traditional') {
+		if (session_status() === \PHP_SESSION_NONE) {
+	        throw new Exception\LogicException('Session must be started before using Dora.');
+	    }
+
 		$this->template = $template;
 		$this->logger = new \Psr\Log\NullLogger();
 
 		$caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
 
 		$this->uid = (string) crc32($caller['file'] . '_' . $caller['line']);
-
+		
 		unset($caller);
 
-		if (isset($data['gajus']['dora']['uid']) && $data['gajus']['dora']['uid'] === $this->uid) {
-			$this->data = $data;
-			$this->is_submitted = true;
-		} else if (isset($_SESSION['gajus']['dora']['flash'][$this->uid])) {
-			$this->data = $_SESSION['gajus']['dora']['flash'][$this->uid];
-		} else {
-			$this->data = $data;
-		}
+		$this->csrf = sha1(session_id());
 
-		unset($this->data['gajus']);
+		$this->data = $data;
+
+		if (isset($_SESSION['gajus']['dora']['flash'][$this->uid])) {
+			$this->data = $_SESSION['gajus']['dora']['flash'][$this->uid];
+		}
 	}
 
 	/**
@@ -82,16 +89,43 @@ class Form implements \Psr\Log\LoggerAwareInterface {
     	$this->logger = $logger;
     }
 
+    /**
+     * 
+     * 
+     * @return array
+     */
 	public function getData () {
-		return $this->data;
+		$data = $this->data;
+
+		unset($data['gajus']);
+
+		return $data;
 	}
 
-	public function isSubmitted () {
-		return $this->is_submitted;
+	/**
+	 * 
+	 * 
+	 * @return boolean
+	 */
+	public function isSubmitted ($check_csfr = true) {
+		$submitted = false;
+
+		if (isset($this->data['gajus']['dora']['uid']) && $this->data['gajus']['dora']['uid'] === $this->uid) {
+			$submitted = true;
+		}
+
+		if ($check_csfr) {
+			$submitted = isset($this->data['gajus']['dora']['csfr']) && $this->data['gajus']['dora']['csfr'] === $this->csfr;
+		}
+
+		return $submitted;
 	}
 
 	public function sign () {
-		return '<input type="hidden" name="gajus[dora][uid]" value="' . $this->uid . '">';
+		return '
+		<input type="hidden" name="gajus[dora][uid]" value="' . $this->uid . '">
+		<input type="hidden" name="gajus[dora][csrf]" value="' . $this->csrf . '">
+		';
 	}
 
 	/**
@@ -112,11 +146,11 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		$index = count($this->input_index[$name]);
 
 		if (isset($properties['value'])) {
-			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
+			throw new Exception\InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
 		}
 
 		if (isset($properties['uid'])) {
-			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "uid" property.');
+			throw new Exception\InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "uid" property.');
 		}
 
 		$properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);

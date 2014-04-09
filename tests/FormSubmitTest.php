@@ -9,7 +9,7 @@ class FormSubmitTest extends PHPUnit_Framework_TestCase {
 
         $this->assertSame($form->getUid(), $uid);
 
-        $this->assertFalse($form->isSubmitted());
+        $this->assertFalse($form->isSubmitted(false));
     }
 
     public function testIsNotSubmittedWhenDifferentUid () {
@@ -17,10 +17,10 @@ class FormSubmitTest extends PHPUnit_Framework_TestCase {
 
         $form = new \Gajus\Dora\Form($input);
 
-        $this->assertFalse($form->isSubmitted());
+        $this->assertFalse($form->isSubmitted(false));
     }
 
-    public function testIsSubmittedInput () {
+    public function testIsSubmittedInputWithoutCSFRCheck () {
         $uid = (string) crc32(__FILE__ . '_' . (__LINE__ + 4));
 
         $input['gajus']['dora']['uid'] = $uid;
@@ -29,6 +29,22 @@ class FormSubmitTest extends PHPUnit_Framework_TestCase {
 
         $this->assertSame($form->getUid(), $uid);
 
+        $this->assertFalse($form->isSubmitted());
+        $this->assertTrue($form->isSubmitted(false));
+    }
+
+    public function testIsSubmittedInputWithCSFRCheck () {
+        $uid = (string) crc32(__FILE__ . '_' . (__LINE__ + 5));
+        $csfr = sha1(session_id());
+
+        $input['gajus']['dora']['uid'] = $uid;
+        $input['gajus']['dora']['csfr'] = $uid;
+
+        $form = new \Gajus\Dora\Form($input);
+
+        $this->assertSame($form->getUid(), $uid);
+
+        $this->assertTrue($form->isSubmitted());
         $this->assertTrue($form->isSubmitted());
     }
 }
