@@ -40,7 +40,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 		 * 
 		 * @var boolean
 		 */
-		#$is_submitted = false;
+		$is_submitted = false,
 		/**
 		 * @var string
 		 */
@@ -58,8 +58,11 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 
 		unset($caller);
 
-		if (isset($_SESSION['gajus']['dora']['form'][$this->uid])) {
-			$this->data = $_SESSION['gajus']['dora']['form'][$this->uid];
+		if (isset($data['gajus']['dora']['uid']) && $data['gajus']['dora']['uid'] === $this->uid) {
+			$this->data = $data;
+			$this->is_submitted = true;
+		} else if (isset($_SESSION['gajus']['dora']['flash'][$this->uid])) {
+			$this->data = $_SESSION['gajus']['dora']['flash'][$this->uid];
 		} else {
 			$this->data = $data;
 		}
@@ -106,13 +109,17 @@ class Form implements \Psr\Log\LoggerAwareInterface {
     	$this->logger = $logger;
     }
 
-	/*public function getData () {
+	public function getData () {
 		return $this->data;
 	}
 
 	public function isSubmitted () {
 		return $this->is_submitted;
-	}*/
+	}
+
+	public function sign () {
+		return '<input type="hidden" name="gajus[dora][uid]" value="' . $this->uid . '">';
+	}
 
 	/**
 	 * Used to create input that is associated with the Form instance data.
@@ -134,15 +141,10 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "value" property.');
 		}
 
-		if (isset($properties['form_uid'])) {
-			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "form_uid" property.');
-		}
-
 		if (isset($properties['uid'])) {
 			throw new \InvalidArgumentException('Input instantiated using Form::input() method cannot explicitly define "uid" property.');
 		}
 
-		$properties['form_uid'] = $this->uid;
 		$properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);
 		
 		$input = new Input($name, $attributes, $properties);

@@ -13,8 +13,8 @@ register_shutdown_function(function () {
         // It might be that $_POST have been modified during the execution of the script.
         parse_str(file_get_contents('php://input'), $input);
 
-        $_SESSION['gajus']['dora']['form'][$_POST['gajus']['dora']['uid']] = $input;
+        $_SESSION['gajus']['dora']['flash'][$_POST['gajus']['dora']['uid']] = $input;
     } else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
-		unset($_SESSION['gajus']['dora']['form']);
+		unset($_SESSION['gajus']['dora']['flash']);
 	}
 });
