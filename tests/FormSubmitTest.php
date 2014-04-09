@@ -1,13 +1,5 @@
 <?php
 class FormSubmitTest extends PHPUnit_Framework_TestCase {
-	/*
-
-    public function testIsNotSubmitted () {
-        $form = new \Gajus\Dora\Form();
-
-        $this->assertFalse($form->isSubmitted());
-    }*/
-
     public function testIsNotSubmittedWhenSessionIsPresent () {
         $uid = (string) crc32(__FILE__ . '_' . (__LINE__ + 4));
 
