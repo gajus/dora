@@ -6,26 +6,26 @@ namespace Gajus\Dora\Template;
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
  */
 class Traditional extends \Gajus\Dora\Template {
-	public function toString () {
-		$input = $this->getInput();
-		$input_id = $input->getAttribute('id');
-		$description = $input->getProperty('description');
+    public function toString () {
+        $input = $this->getInput();
+        $input_id = $input->getAttribute('id');
+        $description = $input->getProperty('description');
 
-		$class = $input->getProperty('class');
-		$class = $class ? ' ' . $class : '';
+        $class = $input->getProperty('class');
+        $class = $class ? ' ' . $class : '';
 
-		ob_start();?>
-		<div class="dora-input<?=$class?>">
-			<label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
-			<?=$input?>
-			
-			<?php if ($description):?>
-			<div class="description">
-				<p><?=$description?></p>
-			</div>
-			<?php endif;?>
-		</div>
-		<?php
-		return ob_get_clean();
-	}
+        ob_start();?>
+        <div class="dora-input<?=$class?>">
+            <label for="<?=$input_id?>"><?=$input->getProperty('name')?></label>
+            <?=$input?>
+            
+            <?php if ($description):?>
+            <div class="description">
+                <p><?=$description?></p>
+            </div>
+            <?php endif;?>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
 }

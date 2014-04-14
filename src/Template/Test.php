@@ -6,7 +6,7 @@ namespace Gajus\Dora\Template;
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
  */
 class Test extends \Gajus\Dora\Template {
-	public function toString () {
-		return 'test';
-	}
+    public function toString () {
+        return 'test';
+    }
 }

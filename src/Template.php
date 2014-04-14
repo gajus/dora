@@ -6,22 +6,22 @@ namespace Gajus\Dora;
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
  */
 abstract class Template {
-	private
-		$input;
-	
-	final public function __construct (\Gajus\Dora\Input $input) {
-		$this->input = $input;
-	}
-	
-	/**
-	 * @return Gajus\Dora\Input
-	 */
-	public function getInput () {
-		return $this->input;
-	}
+    private
+        $input;
+    
+    final public function __construct (\Gajus\Dora\Input $input) {
+        $this->input = $input;
+    }
+    
+    /**
+     * @return Gajus\Dora\Input
+     */
+    public function getInput () {
+        return $this->input;
+    }
 
-	/**
-	 * @return string
-	 */
-	abstract public function toString ();
+    /**
+     * @return string
+     */
+    abstract public function toString ();
 }

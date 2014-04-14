@@ -6,5 +6,5 @@ namespace Gajus\Dora\Exception;
  * @license https://github.com/gajus/dora/blob/master/LICENSE BSD 3-Clause
  */
 class LogicException extends DoraException {
-
+    
 }

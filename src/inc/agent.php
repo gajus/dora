@@ -4,7 +4,7 @@ if (php_sapi_name() === 'cli') {
 }
 
 register_shutdown_function(function () {
-	if (session_status() === \PHP_SESSION_NONE) {
+    if (session_status() === \PHP_SESSION_NONE) {
         throw new \LogicException('Session must be started before using Dora.');
     }
 
@@ -15,6 +15,6 @@ register_shutdown_function(function () {
 
         $_SESSION['gajus']['dora']['flash'][$_POST['gajus']['dora']['uid']] = $input;
     } else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
-		unset($_SESSION['gajus']['dora']['flash']);
-	}
+        unset($_SESSION['gajus']['dora']['flash']);
+    }
 });
