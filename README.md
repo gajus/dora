@@ -96,7 +96,7 @@ Input properties are used at the time of generating the input template.
 
 |Name|Description|
 |---|---|
-|`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. for the label. If input `name` property is not provided, it will be derived from the input "name" attribute.|
+|`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. for the label. If input `name` property is not provided, English name will be derived from the "name" attribute, e.g. `foo[bar_tar_id]` will come out as "Foo Bar Tar".|
 |`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will assume that input type is "select".|
 
 ## Template

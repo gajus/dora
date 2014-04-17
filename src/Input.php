@@ -81,7 +81,7 @@ class Input {
         if (!isset($this->properties['name'])) {
             $name_path = $this->getNamePath();
             
-            $this->properties['name'] = ucwords(implode(' ', explode('_', $name_path[count($name_path) - 1])));
+            $this->properties['name'] = static::deriveName($name_path);
         }
 
         if (isset($this->attributes['type']) && in_array($this->attributes['type'], ['radio', 'checkbox']) && !isset($this->attributes['value'])) {
@@ -91,6 +91,25 @@ class Input {
         if (isset($this->properties['options']) && $this->attributes['type'] !== 'select') {
             throw new Exception\InvalidArgumentException('[input="' . $this->attributes['type'] . '"] does not support "options" property.');
         }
+    }
+
+    /**
+     * Convert array selector representation (['baz', 'foo_bar']) to
+     * English friendly representation (Bar Foo Bar).
+     *
+     * If selector name is ends with "_id", then Id is dropped off the name.
+     * 
+     * @param array 
+     * @return string
+     */
+    static public function deriveName ($name_path) {
+        $path = explode('_', implode('_', array_filter($name_path)));
+
+        if (count($path) > 1 && $path[count($path) -1] == 'id') {
+            array_pop($path);
+        }
+
+        return ucwords(implode(' ', $path));
     }
 
     public function getUid () {
