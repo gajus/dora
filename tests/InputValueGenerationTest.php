@@ -16,6 +16,18 @@ class InputValueGenerationTest extends PHPUnit_Framework_TestCase {
 		];
 	}
 
+	public function testTextWithDefaultValue () {
+		$input = new \Gajus\Dora\Input('test', ['value' => 'test']);
+
+		$this->assertSame('<input name="test" type="text" value="test">', $input->toString());
+	}
+
+	public function testTextWithDefaultValueOverwritten () {
+		$input = new \Gajus\Dora\Input('test', ['value' => 'a'], ['value' => 'b']);
+
+		$this->assertSame('<input name="test" type="text" value="b">', $input->toString());
+	}
+
 	/**
 	 * @dataProvider testTextareaValueProvider
 	 */

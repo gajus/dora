@@ -134,7 +134,7 @@ class Input {
     }
     
     /**
-     * @return mixed If no value is matched, will return null or (if input name implies that expected value is an array) an empty array.
+     * @return mixed
      */
     public function getValue () {
         return $this->properties['value'];
@@ -311,6 +311,10 @@ class Input {
                 break;
 
             default:
+                if ($value === null && isset($this->attributes['value'])) {
+                    $value = $this->attributes['value'];
+                }
+
                 if ($this->attributes['type'] === 'textarea') {
                     $input = '<textarea ' . $attributes_string . '>' . filter_var($value, \FILTER_SANITIZE_SPECIAL_CHARS) . '</textarea>';
                 } else {
