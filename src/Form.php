@@ -74,10 +74,6 @@ class Form implements \Psr\Log\LoggerAwareInterface {
         $this->csrf = sha1(session_id());
 
         $this->data = $data;
-
-        if (isset($_SESSION['gajus']['dora']['flash'][$this->uid])) {
-            $this->data = $_SESSION['gajus']['dora']['flash'][$this->uid];
-        }
     }
 
     /**
@@ -96,7 +92,11 @@ class Form implements \Psr\Log\LoggerAwareInterface {
      * @return array
      */
     public function getData () {
-        $data = $this->data;
+        if (isset($_SESSION['gajus']['dora']['flash'][$this->uid])) {
+            $data = $_SESSION['gajus']['dora']['flash'][$this->uid];
+        } else {
+            $data = $this->data;
+        }
 
         unset($data['gajus']);
 
@@ -166,7 +166,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
         // Input name path (e.g. foo[bar]) is used to resolve input value from the Form instance data.
         $path = $input->getNamePath();
 
-        $value = $this->data;
+        $value = $this->getData();
 
         // Indicates whether input name attribute implies that expected value is an array, e.g. foo[].
         $declared_as_array = false;

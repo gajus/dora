@@ -14,7 +14,7 @@ register_shutdown_function(function () {
         parse_str(file_get_contents('php://input'), $input);
 
         $_SESSION['gajus']['dora']['flash'][$_POST['gajus']['dora']['uid']] = $input;
-    } else if (!array_filter(headers_list(), function ($e) { return strpos($e, 'Location:'); })) {
+    } else if (!array_filter(headers_list(), function ($e) { return mb_strpos(mb_strtolower($e), 'location:') !== false; })) {
         unset($_SESSION['gajus']['dora']['flash']);
     }
 });
