@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/gajus/dora.png?branch=master)](https://travis-ci.org/gajus/dora)
 [![Coverage Status](https://coveralls.io/repos/gajus/dora/badge.png?branch=master)](https://coveralls.io/r/gajus/dora?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/gajus/dora/version.png)](https://packagist.org/packages/gajus/dora)
+[![License](https://poser.pugx.org/gajus/dora/license.png)](https://packagist.org/packages/gajus/dora)
 
 Input generation library for value resolution, data persistence, templates, CSRF and protection from XSS.
 
