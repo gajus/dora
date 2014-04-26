@@ -7,7 +7,11 @@
 
 Input generation library for value resolution, data persistence, templates, CSRF and protection from XSS.
 
-## Form
+## Documentation
+
+This document serves as Dora API documentation. If you prefer, you can learn Dora API while browsing the [interactive demonstration](http://gajus.com/dora/demo/) and use this document for the API reference.
+
+### Form
 
 `Form` is a data container.
 
@@ -72,7 +76,7 @@ echo $form->input('qux[]');
 <input name="qux[]" type="text" value="3">
 ```
 
-## Input
+### Input
 
 Input is a standalone entity defined with four parameters. Only the first parameter is required.
 
@@ -88,11 +92,11 @@ new \Gajus\Dora\Input('foo', ['type' => 'textarea'], ['name' => 'Foo'], null);
 
 Most of the time, `Form` will act as a factory to produce `Input` (like in all the examples on this page).
 
-### HTML attributes
+#### HTML attributes
 
 HTML attributes that are added to the generated input. All attributes will be taken literally except "type". "type" attribute will change the actual input type, e.g. "select" will make input `<select>`, "textarea" will make it `<textarea>`.
 
-### Input Properties
+#### Input Properties
 
 Input properties are used at the time of generating the input template.
 
@@ -101,7 +105,7 @@ Input properties are used at the time of generating the input template.
 |`name`|Name is not a required property. Input `name` property is used when input is used in template, e.g. for the label. If input `name` property is not provided, English name will be derived from the "name" attribute, e.g. `foo[bar_tar_id]` will come out as "Foo Bar Tar".|
 |`options`|`options` property is not required. This proprety is for `<select>` input type. Passing this property will assume that input type is "select".|
 
-## Template
+### Template
 
 `Input` can be dressed using a `Template`. `Template` is utilsed when input is casted into a string. `Form` template will become the default template for all the `Input` generated using an instance of that `Form`:
 
@@ -111,7 +115,7 @@ $form = new \Gajus\Dora\Form([], 'Gajus\Dora\Template\Traditional');
 
 "Gajus\Dora\Template\Traditional" is the default template. `null` will return input without template.
 
-### Traditional Template
+#### Traditional Template
 
 Traditional template consists of label, input and optional description.
 
@@ -149,19 +153,19 @@ class Traditional extends \Gajus\Dora\Template {
 }
 ```
 
-#### Styling
+##### Styling
 
 Dora or the Traditional template does not impose style. The [example of styling the Tranditional layout](http://jsfiddle.net/vac2E/1/) is for illustration purposes only.
 
 ![Traditional template example](./docs/static/image/traditional-template.png)
 
-### Writing a Template
+#### Writing a Template
 
 Template class must extend `Gajus\Dora\Template`.
 
 Refer to the existing templates to learn more.
 
-## CSRF
+### CSRF
 
 Form generated using Dora need to be signed:
 
