@@ -17,6 +17,7 @@
 		"psr/log": "~1.0"
 	},
 	"require-dev": {
+		"gajus/dindent": "~1.0",
 		"phpunit/phpunit": "~4.0",
 		"satooshi/php-coveralls": "~0.7@dev"
 	},

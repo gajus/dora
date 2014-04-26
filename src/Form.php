@@ -130,15 +130,23 @@ class Form implements \Psr\Log\LoggerAwareInterface {
     }
 
     /**
-     * Used to create input that is associated with the Form instance data.
+     * Create Input associated with the Form instance data.
      * 
      * @param string $name
      * @param array $attributes
      * @param array $properties
      * @param string $template
-     * @return \gajus\dora\Input
+     * @return \Gajus\Dora\Input
      */
-    public function input ($name, array $attributes = null, array $properties = [], $template = null) {
+    public function input ($name, array $attributes = null, array $properties = null, $template = 'replace-with-default') {
+        if ($properties === null) {
+            $properties = [];
+        }
+
+        if ($template === 'replace-with-default') {
+            $template = $this->template;
+        }
+
         // Incremental input index is based on input name.
         if (!isset($this->input_index[$name])) {
             $this->input_index[$name] = [];
@@ -156,7 +164,7 @@ class Form implements \Psr\Log\LoggerAwareInterface {
 
         $properties['uid'] = crc32($this->uid . '_' . $name . '_' . $index);
 
-        $input = new Input($name, $attributes, $properties, $template ? $template : $this->template);
+        $input = new Input($name, $attributes, $properties, $template);
 
         #$template = $template ? $template : $this->template;
 
