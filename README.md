@@ -9,7 +9,7 @@ Input generation library for value resolution, data persistence, templates, CSRF
 
 ## Documentation
 
-This document serves as Dora API documentation. If you prefer, you can learn Dora API while browsing the [interactive demonstration](http://gajus.com/demo/dora/demo/) and use this document for the API reference.
+This document serves as Dora API documentation. If you prefer, you can learn Dora API while browsing the [interactive demonstration](http://gajus.com/sandbox/dora/demo/) and use this document for the API reference.
 
 ### Form
 
